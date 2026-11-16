@@ -1,0 +1,176 @@
+{
+  "versao": "1.0",
+  "nome": "Rubrica Entrelinhas",
+  "faixas_ordenadas": ["Livre", "10+", "12+", "14+", "16+", "18+"],
+  "camada_a": {
+    "descricao": "Eixos de risco. Únicos determinantes da faixa etária. Nível 0-4 por eixo.",
+    "eixos": [
+      {
+        "id": "A1",
+        "nome": "Violência física",
+        "descritores": {
+          "0": "Ausente. Sem conflito físico ou ameaça descrita.",
+          "1": "Conflito verbal, ameaça implícita, violência fora de cena (relatada, não descrita).",
+          "2": "Agressão ou briga descrita sem detalhe gráfico; consequências mostradas (ferimento), sem foco no ato.",
+          "3": "Violência com detalhamento sensorial (movimento, dor, sangue); tortura, guerra ou abuso físico prolongado.",
+          "4": "Violência gráfica extrema: gore, mutilação detalhada, crueldade explorada com riqueza de detalhe."
+        },
+        "mapeamento_faixa": { "0": "Livre", "1": "10+", "2": "12+", "3": "14+", "4": "16+" }
+      },
+      {
+        "id": "A2",
+        "nome": "Sexo e intimidade",
+        "descritores": {
+          "0": "Sem conteúdo além de afeto e beijo.",
+          "1": "Desejo e atração referidos; cena corta antes do ato (fade to black).",
+          "2": "Ato indicado por elipse ou metáfora, sem descrição de corpo ou movimento.",
+          "3": "Cena descrita com clareza, incluindo nudez e contato físico, sem explicitação anatômica.",
+          "4": "Descrição gráfica e detalhada do ato, sem eufemismo, com foco sensorial extenso."
+        },
+        "mapeamento_faixa": { "0": "Livre", "1": "10+", "2": "12+", "3": "16+", "4": "18+" }
+      },
+      {
+        "id": "A3",
+        "nome": "Linguagem ofensiva",
+        "descritores": {
+          "0": "Sem palavrão ou termo ofensivo.",
+          "1": "Um ou dois palavrões leves isolados na obra inteira.",
+          "2": "Palavrões recorrentes, sem linguagem discriminatória.",
+          "3": "Linguagem chula frequente e/ou termos discriminatórios proferidos por personagens.",
+          "4": "Linguagem de ódio estrutural na obra, sem contraponto narrativo."
+        },
+        "mapeamento_faixa": { "0": "Livre", "1": "10+", "2": "12+", "3": "14+", "4": "16+" }
+      },
+      {
+        "id": "A4",
+        "nome": "Substâncias",
+        "descritores": {
+          "0": "Sem menção.",
+          "1": "Substância citada sem cena de uso ('ele bebia').",
+          "2": "Consumo social retratado (festa, bar), sem consequência grave.",
+          "3": "Consumo abusivo descrito, com consequências mostradas (dependência, overdose).",
+          "4": "Dependência como eixo estrutural, com cenas explícitas de uso e degradação, ou descrição com precisão instrucional (dose, preparo, obtenção)."
+        },
+        "mapeamento_faixa": { "0": "Livre", "1": "10+", "2": "12+", "3": "14+", "4": "16+" }
+      },
+      {
+        "id": "A5",
+        "nome": "Risco à integridade e comportamento imitável",
+        "escopo": "Autolesão, suicídio, transtorno alimentar e comportamento de risco replicável.",
+        "descritores": {
+          "0": "Ausente.",
+          "1": "Tema citado sem aprofundamento ('tinha depressão').",
+          "2": "Sintomas e impacto emocional mostrados; sofrimento psíquico retratado sem método descrito.",
+          "3": "Cena explícita de autolesão, ideação suicida detalhada ou comportamento alimentar restritivo com descrição de conduta.",
+          "4": "Método descrito com detalhe suficiente para ser reproduzido, ou autolesão apresentada como solução eficaz, ou tema estrutural com descrição gráfica recorrente."
+        },
+        "mapeamento_faixa": { "0": "Livre", "1": "12+", "2": "14+", "3": "16+", "4": "18+" },
+        "regra_dura": {
+          "condicao": "nivel >= 3",
+          "efeito": "proibir_trecho_literal",
+          "descricao": "Ficha com A5 >= 3 nunca reproduz trecho literal do método, independentemente de qualquer flag de visibilidade. Somente paráfrase neutra, sem detalhe de conduta."
+        }
+      },
+      {
+        "id": "A6",
+        "nome": "Abuso, trauma e opressão",
+        "escopo": "Violência sexual, abuso doméstico e infantil, exploração, tortura psicológica, discriminação sofrida por personagem.",
+        "descritores": {
+          "0": "Ausente.",
+          "1": "Mencionado como passado ou contexto, sem cena.",
+          "2": "Situação de abuso retratada em cena, sem detalhamento do ato.",
+          "3": "Abuso descrito com detalhe, ou trauma retratado de forma prolongada e central à experiência do personagem.",
+          "4": "Violência sexual ou abuso descrito de forma gráfica e extensa."
+        },
+        "mapeamento_faixa": { "0": "Livre", "1": "10+", "2": "14+", "3": "16+", "4": "18+" }
+      }
+    ]
+  },
+  "agregacao": {
+    "regra": "max",
+    "descricao": "Faixa base = maior faixa entre os seis eixos, pela tabela de mapeamento por eixo. Nunca média.",
+    "agravante_acumulo": {
+      "condicao_faixa_minima": "16+",
+      "quantidade_minima_eixos": 2,
+      "efeito_degraus": 1,
+      "aplica_uma_unica_vez": true,
+      "teto": "18+",
+      "descricao": "Se dois ou mais eixos resultarem em faixa 16+ ou superior, a faixa final sobe um degrau. Aplica-se uma única vez."
+    },
+    "camada_b_altera_faixa": false,
+    "camada_c_altera_faixa": false,
+    "valor_formativo_altera_faixa": false
+  },
+  "recomendacao_contextual": {
+    "conteudo_adulto": {
+      "condicao": "qualquer eixo em nível 4",
+      "descricao": "Conteúdo adulto. Não recomendada antes da faixa indicada."
+    },
+    "com_mediacao": {
+      "condicao": "algum eixo em nível 3, ou dois ou mais eixos em nível >= 2",
+      "descricao": "Recomendada com mediação de adulto a partir da faixa indicada."
+    },
+    "independente": {
+      "condicao": "caso contrário",
+      "descricao": "Leitura independente a partir da faixa indicada."
+    }
+  },
+  "camada_b": {
+    "descricao": "Alertas de conteúdo. Binários, vocabulário fechado, não alteram a faixa.",
+    "vocabulario": [
+      "morte_de_personagem_principal", "luto", "morte_ou_maus_tratos_de_animal",
+      "doenca_terminal", "bullying", "violencia_escolar", "gravidez_indesejada",
+      "aborto", "violencia_sexual_fora_de_cena", "sequestro_ou_carcere",
+      "automutilacao", "suicidio", "transtorno_alimentar", "dependencia_quimica",
+      "relacao_abusiva_romantizada", "diferenca_de_poder_em_relacao_afetiva",
+      "discriminacao_sem_critica_narrativa", "conteudo_religioso_sensivel",
+      "final_tragico", "acidente_grave", "arma_de_fogo"
+    ],
+    "flags_com_justificativa_obrigatoria": [
+      "relacao_abusiva_romantizada", "discriminacao_sem_critica_narrativa"
+    ]
+  },
+  "camada_c": {
+    "descricao": "Perfil de leitura. Mede exigência, não risco. Nunca altera a faixa.",
+    "dimensoes": {
+      "vocabulario": { "1": "Cotidiano simples.", "3": "Culto padrão.", "5": "Erudito, técnico ou arcaico." },
+      "estrutura_narrativa": { "1": "Linear, narrador único.", "3": "Múltiplos pontos de vista ou saltos temporais.", "5": "Fragmentada, metaficcional, narrador não confiável." },
+      "densidade_tematica": { "1": "Conflito explícito e resolvido.", "3": "Subtexto relevante, ambiguidade moral pontual.", "5": "Obra filosófica ou alegórica, exige leitura interpretativa." },
+      "extensao": {
+        "derivada_de": "paginas",
+        "limiares": [
+          { "ate_paginas": 149, "nivel": 1 },
+          { "ate_paginas": 300, "nivel": 2 },
+          { "ate_paginas": 500, "nivel": 3 },
+          { "ate_paginas": 800, "nivel": 4 },
+          { "ate_paginas": null, "nivel": 5 }
+        ]
+      }
+    },
+    "nivel_leitura": {
+      "calculo": "média das quatro dimensões, arredondada (meio para cima)",
+      "rotulos": { "1": "Iniciante", "2": "Em formação", "3": "Intermediário", "4": "Avançado", "5": "Especializado" }
+    },
+    "exigencia_repertorio": { "max_itens": 3 },
+    "valor_formativo": {
+      "niveis": ["Baixo", "Médio", "Alto"],
+      "marcadores": ["empatia", "repertorio_cultural", "pensamento_critico", "qualidade_estetica", "conhecimento_historico", "desenvolvimento_moral"],
+      "max_marcadores": 3
+    }
+  },
+  "evidencia": {
+    "nivel_minimo_para_exigir": 2,
+    "formatos": ["parafrase", "trecho_literal"],
+    "parafrase_sempre_gerada": true,
+    "limite_palavras_trecho_padrao": 40,
+    "max_trechos_por_ficha_padrao": 6
+  },
+  "procedencia": {
+    "fontes": {
+      "texto_integral": "Obra analisada por inteiro. Confiança alta.",
+      "amostragem": "Trechos amostrados. Confiança média; a ficha exibe isso.",
+      "fontes_publicas": "Sinopse, metadados e resenhas públicas. Sem acesso ao texto. Confiança limitada; a ficha exibe aviso de estimativa.",
+      "metadados_e_conhecimento_previo": "Sem acesso ao texto nem a resenhas. Confiança baixa; a ficha exibe aviso explícito de estimativa."
+    }
+  }
+}

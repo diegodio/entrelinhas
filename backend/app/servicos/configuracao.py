@@ -31,6 +31,7 @@ FLAGS_PADRAO: dict[str, tuple[bool, str]] = {
 LIMITES_PADRAO: dict[str, tuple[object, str]] = {
     "consultas_gratis_mes": (10, "Fichas completas novas por mês no plano gratuito"),
     "perfis_plano_gratuito": (1, "Perfis de leitor no plano gratuito"),
+    "listas_plano_gratuito": (3, "Listas pessoais no plano gratuito (as duas padrão contam)"),
     "palavras_por_trecho": (40, "Limite de palavras por trecho literal"),
     "trechos_por_ficha": (6, "Máximo de trechos literais por ficha"),
     "tetos_confianca": (

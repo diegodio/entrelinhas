@@ -140,3 +140,68 @@ def ficha_completa(
         "ficha": {**fichas_servico.filtrar_para_exibicao(ficha.dados, config), "slug": ficha.slug},
         "uso": planos.uso(sessao, usuario),
     }
+
+
+@rotas.get("/{obra_id}/ficha/pdf")
+def ficha_pdf(
+    obra_id: str,
+    sessao: Session = Depends(obter_sessao),
+    usuario: Usuario = Depends(usuario_obrigatorio),
+):
+    """Exportação em PDF: planos Família e Escola."""
+    config = cfg_servico.carregar(sessao)
+    if not cfg_servico.pode_exibir(config, "exportar_pdf"):
+        raise ErroApi(404, "indisponivel", "A exportação está desligada.")
+    if planos.plano_do_usuario(sessao, usuario)["plano"] == "gratuito":
+        raise ErroApi(402, "plano_necessario", "A exportação em PDF faz parte dos planos pagos.")
+    obra = obras_servico.obter(sessao, obra_id)
+    if obra is None or obra.ficha is None or obra.ficha.status not in fichas_servico.STATUS_VISIVEIS:
+        raise nao_encontrado("Ficha")
+    planos.registrar_consulta(sessao, usuario, obra.id)
+    from fastapi.responses import Response
+
+    from app.servicos.pdf import gerar_pdf_ficha
+
+    conteudo = gerar_pdf_ficha(
+        obras_servico.resumo(obra), fichas_servico.filtrar_para_exibicao(obra.ficha.dados, config),
+        config,
+    )
+    return Response(
+        conteudo,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f'attachment; filename="entrelinhas-{obra.ficha.slug}.pdf"'},
+    )
+
+
+CAMPOS_CONTESTAVEIS = ("A1", "A2", "A3", "A4", "A5", "A6", "camada_b", "camada_c",
+                       "valor_formativo", "outro")
+
+
+class NovaContestacao(BaseModel):
+    campo: str
+    texto: str = Field(min_length=10, max_length=4000)
+
+
+@rotas.post("/{obra_id}/contestacoes", status_code=201)
+def contestar(
+    obra_id: str,
+    dados: NovaContestacao,
+    sessao: Session = Depends(obter_sessao),
+    usuario: Usuario = Depends(usuario_obrigatorio),
+):
+    """A ficha contestada exibe "Ficha em revisão após contestação" até a resposta."""
+    from app.modelos import Contestacao
+
+    if dados.campo not in CAMPOS_CONTESTAVEIS:
+        raise ErroApi(400, "campo_invalido", "Escolha o que você quer contestar.")
+    obra = obras_servico.obter(sessao, obra_id)
+    if obra is None or obra.ficha is None or obra.ficha.status not in fichas_servico.STATUS_VISIVEIS:
+        raise nao_encontrado("Ficha")
+    ficha = obra.ficha
+    c = Contestacao(usuario_id=usuario.id, ficha_id=ficha.id, campo=dados.campo,
+                    texto=dados.texto.strip())
+    sessao.add(c)
+    ficha.status = "em_revisao"
+    ficha.dados = {**ficha.dados, "status": "em_revisao"}
+    sessao.commit()
+    return {"id": str(c.id), "status": c.status}

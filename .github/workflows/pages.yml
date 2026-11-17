@@ -1,0 +1,59 @@
+# Publica o app web (Flutter) no GitHub Pages a cada push na main.
+#
+# Antes da primeira execução:
+#   1. Settings > Pages > Source: "GitHub Actions".
+#   2. Settings > Secrets and variables > Actions > Variables: API_URL com o endereço público
+#      da API (o Pages hospeda só o app; o backend precisa de hospedagem própria).
+#      Sem API_URL, o app abre, mas busca e fichas mostram "Sem conexão".
+
+name: Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.50.0"
+          channel: stable
+      - run: flutter pub get
+      - run: flutter gen-l10n
+      - name: Build web
+        run: |
+          flutter build web --release --no-web-resources-cdn \
+            --base-href "/${{ github.event.repository.name }}/" \
+            --dart-define=API_URL=${{ vars.API_URL }} \
+            --dart-define=URL_APP=https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+      - name: Rotas da SPA (/obra/..., /ficha/...) no Pages
+        run: cp build/web/index.html build/web/404.html
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: app/build/web
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4

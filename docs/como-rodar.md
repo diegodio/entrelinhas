@@ -77,3 +77,18 @@ iOS: veja `app/ios/Podfile.entrelinhas.md` (iOS 15.5+ e macros do permission_han
 Pontos a validar no aparelho: a orientação das caixas (`rodarCaixa` e o sistema de
 coordenadas do ML Kit), a frequência real de análise, o recorte da foto em alta resolução e
 o consumo de bateria.
+
+## GitHub Pages (app web)
+
+`.github/workflows/pages.yml` publica o app web a cada push na `main`, em
+`https://<dono>.github.io/<repositório>/`. Antes da primeira execução:
+
+1. Settings → Pages → Source: **GitHub Actions**.
+2. Settings → Secrets and variables → Actions → **Variables**: `API_URL` com o endereço
+   público da API. O Pages hospeda só o app estático; o backend (FastAPI, Postgres, Redis)
+   precisa de hospedagem própria. Sem `API_URL`, o app abre, mas busca e fichas mostram
+   "Sem conexão".
+3. Inclua o domínio do Pages em `CORS_ORIGENS` e `URL_PUBLICA_APP` da API.
+
+Links diretos (`/obra/...`, `/ficha/...`) funcionam porque o build copia `index.html` para
+`404.html`. Verificado localmente imitando o Pages; a publicação em si não foi executada.

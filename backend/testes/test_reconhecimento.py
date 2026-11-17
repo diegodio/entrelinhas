@@ -16,9 +16,16 @@ from app.reconhecimento.servico import Candidato, decidir, fundir, indexar_capa
 
 from .conftest import cabecalho
 
-CFG = {"peso_ocr": 0.55, "peso_capa": 0.45, "limiar_identificado": 0.45,
-       "margem_minima": 0.08, "limiar_candidato": 0.2, "max_candidatos": 5,
-       "similaridade_minima_ocr": 0.2, "piso_capa": 0.5}
+CFG = {
+    "peso_ocr": 0.55,
+    "peso_capa": 0.45,
+    "limiar_identificado": 0.45,
+    "margem_minima": 0.08,
+    "limiar_candidato": 0.2,
+    "max_candidatos": 5,
+    "similaridade_minima_ocr": 0.2,
+    "piso_capa": 0.5,
+}
 
 
 def imagem_codigo(texto: str) -> Image.Image:
@@ -55,8 +62,10 @@ def test_localizar_livro_recorta_capa_em_perspectiva():
 
     capa = np.full((300, 200, 3), (140, 70, 50), np.uint8)
     fundo = np.full((600, 600, 3), (230, 230, 230), np.uint8)
-    m = cv2.getPerspectiveTransform(np.float32([[0, 0], [200, 0], [200, 300], [0, 300]]),
-                                    np.float32([[180, 120], [400, 140], [420, 470], [170, 450]]))
+    m = cv2.getPerspectiveTransform(
+        np.float32([[0, 0], [200, 0], [200, 300], [0, 300]]),
+        np.float32([[180, 120], [400, 140], [420, 470], [170, 450]]),
+    )
     quadro = cv2.warpPerspective(capa, m, (600, 600), dst=fundo, borderMode=cv2.BORDER_TRANSPARENT)
     recorte = localizar_livro(Image.fromarray(quadro))
     assert recorte.size != (600, 600)
@@ -79,8 +88,10 @@ def test_fusao_e_decisao():
 
 def test_histograma_reconhece_a_propria_capa_distorcida():
     rng = np.random.default_rng(0)
-    capas = [Image.fromarray(rng.integers(0, 255, (90, 60, 3), dtype=np.uint8)).resize((300, 450))
-             for _ in range(5)]
+    capas = [
+        Image.fromarray(rng.integers(0, 255, (90, 60, 3), dtype=np.uint8)).resize((300, 450))
+        for _ in range(5)
+    ]
     m = Histograma()
     galeria = np.stack([m.embutir(c) for c in capas])
     consulta = m.embutir(capas[3].rotate(3).crop((10, 10, 290, 440)))
@@ -89,10 +100,14 @@ def test_histograma_reconhece_a_propria_capa_distorcida():
 
 # ------------------------------------------------------------------ rota
 
+
 @pytest.fixture
 def catalogo(sessao):
     obras = {}
-    for titulo, cor in (("O Jardim de Vidro", (140, 75, 58)), ("A Ilha dos Relógios", (60, 100, 120))):
+    for titulo, cor in (
+        ("O Jardim de Vidro", (140, 75, 58)),
+        ("A Ilha dos Relógios", (60, 100, 120)),
+    ):
         o = Obra(titulo=titulo, autores=["Autora"], autores_texto="Autora", fonte_metadados="x")
         e = Edicao(capa_url=f"/{titulo}.png")
         o.edicoes.append(e)
@@ -114,9 +129,12 @@ def _usar(ocr_linhas=None):
 
 
 def _enviar(cliente, img, dica="desconhecido", **extra):
-    return cliente.post("/v1/reconhecimento",
-                        files={"imagem": ("f.jpg", jpeg(img), "image/jpeg")},
-                        data={"dica": dica, **extra}, **({}))
+    return cliente.post(
+        "/v1/reconhecimento",
+        files={"imagem": ("f.jpg", jpeg(img), "image/jpeg")},
+        data={"dica": dica, **extra},
+        **({}),
+    )
 
 
 def test_rota_codigo_de_barras(cliente, catalogo):
@@ -162,16 +180,24 @@ def test_amostra_so_com_consentimento(cliente, catalogo, usuario, sessao):
     _usar(["O JARDIM DE VIDRO"])
     img = Image.new("RGB", (300, 450), (140, 75, 58))
     h = cabecalho(usuario)
-    r = cliente.post("/v1/reconhecimento", headers=h,
-                     files={"imagem": ("f.jpg", jpeg(img), "image/jpeg")}).json()
+    r = cliente.post(
+        "/v1/reconhecimento", headers=h, files={"imagem": ("f.jpg", jpeg(img), "image/jpeg")}
+    ).json()
     assert r["amostra_id"] is None and sessao.query(AmostraReconhecimento).count() == 0
     cliente.patch("/v1/eu", json={"contribuir_imagens": True}, headers=h)
-    r = cliente.post("/v1/reconhecimento", headers=h,
-                     files={"imagem": ("f.jpg", jpeg(img), "image/jpeg")}).json()
+    r = cliente.post(
+        "/v1/reconhecimento", headers=h, files={"imagem": ("f.jpg", jpeg(img), "image/jpeg")}
+    ).json()
     assert r["amostra_id"] is not None
     alvo = catalogo["A Ilha dos Relógios"]
-    assert cliente.post(f"/v1/reconhecimento/{r['amostra_id']}/correcao",
-                        json={"obra_id": str(alvo.id)}, headers=h).status_code == 204
+    assert (
+        cliente.post(
+            f"/v1/reconhecimento/{r['amostra_id']}/correcao",
+            json={"obra_id": str(alvo.id)},
+            headers=h,
+        ).status_code
+        == 204
+    )
     amostra = sessao.query(AmostraReconhecimento).one()
     sessao.refresh(amostra)
     assert amostra.obra_corrigida_id == alvo.id

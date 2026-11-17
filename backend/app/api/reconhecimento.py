@@ -34,8 +34,9 @@ def _obra_json(sessao: Session, obra_id) -> dict | None:
     if obra is None:
         return None
     r = obras_servico.resumo(obra)
-    return {k: r[k] for k in ("id", "titulo", "autores", "capa_url", "faixa_final",
-                              "demonstracao")} | {"status_ficha": r["status_ficha"]}
+    return {
+        k: r[k] for k in ("id", "titulo", "autores", "capa_url", "faixa_final", "demonstracao")
+    } | {"status_ficha": r["status_ficha"]}
 
 
 @rotas.post("")
@@ -68,22 +69,33 @@ async def reconhecer_imagem(
         "status": r.status,
         "obra": _obra_json(sessao, r.obra_id) if r.obra_id else None,
         "candidatos": [
-            {"obra": _obra_json(sessao, c.obra_id), "pontuacao": round(c.pontuacao, 3),
-             "sinais": c.sinais}
+            {
+                "obra": _obra_json(sessao, c.obra_id),
+                "pontuacao": round(c.pontuacao, 3),
+                "sinais": c.sinais,
+            }
             for c in r.candidatos
-        ] if r.status == "candidatos" else [],
+        ]
+        if r.status == "candidatos"
+        else [],
         "sinais": {"isbn": r.isbn, "texto_ocr": r.texto_ocr, "tempo_ms": r.tempo_ms},
         "amostra_id": None,
     }
     # Só com consentimento explícito: imagem e resultado viram amostra de treino.
     if usuario is not None and usuario.contribuir_imagens:
         amostra_id = uuid.uuid4()
-        caminho = armazenamento.obter().salvar(f"amostras/{usuario.id}/{amostra_id}.jpg",
-                                               dados, imagem.content_type)
-        sessao.add(AmostraReconhecimento(id=amostra_id, usuario_id=usuario.id,
-                                         caminho_imagem=caminho,
-                                         resultado={k: resposta[k] for k in ("status", "sinais")}
-                                         | {"obra_id": str(r.obra_id) if r.obra_id else None}))
+        caminho = armazenamento.obter().salvar(
+            f"amostras/{usuario.id}/{amostra_id}.jpg", dados, imagem.content_type
+        )
+        sessao.add(
+            AmostraReconhecimento(
+                id=amostra_id,
+                usuario_id=usuario.id,
+                caminho_imagem=caminho,
+                resultado={k: resposta[k] for k in ("status", "sinais")}
+                | {"obra_id": str(r.obra_id) if r.obra_id else None},
+            )
+        )
         sessao.commit()
         resposta["amostra_id"] = str(amostra_id)
     return resposta
@@ -94,8 +106,12 @@ class Correcao(BaseModel):
 
 
 @rotas.post("/{amostra_id}/correcao", status_code=204)
-def corrigir(amostra_id: str, dados: Correcao, sessao: Session = Depends(obter_sessao),
-             usuario: Usuario = Depends(usuario_obrigatorio)):
+def corrigir(
+    amostra_id: str,
+    dados: Correcao,
+    sessao: Session = Depends(obter_sessao),
+    usuario: Usuario = Depends(usuario_obrigatorio),
+):
     """Registra qual era o livro certo ("Não é este" seguido da escolha)."""
     try:
         amostra = sessao.get(AmostraReconhecimento, uuid.UUID(amostra_id))

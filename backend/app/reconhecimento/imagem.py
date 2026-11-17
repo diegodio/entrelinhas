@@ -63,8 +63,9 @@ def ler_codigo(imagem: Image.Image) -> LeituraCodigo:
 
 def _ordenar_cantos(p: np.ndarray) -> np.ndarray:
     s, d = p.sum(axis=1), np.diff(p, axis=1).ravel()
-    return np.array([p[np.argmin(s)], p[np.argmin(d)], p[np.argmax(s)], p[np.argmax(d)]],
-                    dtype=np.float32)
+    return np.array(
+        [p[np.argmin(s)], p[np.argmin(d)], p[np.argmax(s)], p[np.argmax(d)]], dtype=np.float32
+    )
 
 
 def localizar_livro(imagem: Image.Image, area_minima: float = 0.12) -> Image.Image:

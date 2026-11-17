@@ -57,6 +57,7 @@ class Resultado:
 
 # ------------------------------------------------------------------- sinais
 
+
 def pontuar_ocr(sessao: Session, linhas: list[LinhaOcr], minimo: float) -> dict[uuid.UUID, float]:
     """Similaridade de trigramas entre o texto da capa e título/autor do catálogo."""
     texto = normalizar_texto(" ".join(linha.texto for linha in linhas[:12]))
@@ -79,8 +80,9 @@ def pontuar_ocr(sessao: Session, linhas: list[LinhaOcr], minimo: float) -> dict[
     return {r.id: min(1.0, 0.75 * r.st + 0.25 * (r.sa or 0.0)) for r in linhas_sql}
 
 
-def pontuar_capa(sessao: Session, modelo: ModeloDeCapa, imagem: Image.Image,
-                 limite: int = 20) -> dict[uuid.UUID, float]:
+def pontuar_capa(
+    sessao: Session, modelo: ModeloDeCapa, imagem: Image.Image, limite: int = 20
+) -> dict[uuid.UUID, float]:
     """Vizinhos mais próximos no índice de capas (só vetores do mesmo modelo e versão)."""
     vetor = modelo.embutir(imagem)
     distancia = Capa.vetor.cosine_distance(vetor.tolist())
@@ -123,15 +125,17 @@ def decidir(candidatos: list[Candidato], cfg: dict) -> tuple[str, list[Candidato
         return "nao_identificado", []
     melhor = candidatos[0]
     segundo = candidatos[1].pontuacao if len(candidatos) > 1 else 0.0
-    if melhor.pontuacao >= cfg["limiar_identificado"] and melhor.pontuacao - segundo >= cfg[
-        "margem_minima"
-    ]:
+    if (
+        melhor.pontuacao >= cfg["limiar_identificado"]
+        and melhor.pontuacao - segundo >= cfg["margem_minima"]
+    ):
         return "identificado", [melhor]
     plausiveis = [c for c in candidatos if c.pontuacao >= cfg["limiar_candidato"]]
     return "candidatos", plausiveis[: cfg["max_candidatos"]]
 
 
 # ------------------------------------------------------------------ serviço
+
 
 def reconhecer(
     sessao: Session,
@@ -180,25 +184,36 @@ def reconhecer(
         linhas = []  # responde com o que a capa já resolveu
     sinal_ocr = pontuar_ocr(sessao, linhas, cfg.get("similaridade_minima_ocr", 0.2))
     status, escolhidos = decidir(fundir(sinal_ocr, sinal_capa, cfg), cfg)
-    return pronto(Resultado(
-        status,
-        escolhidos[0].obra_id if status == "identificado" else None,
-        escolhidos,
-        texto_ocr=[linha.texto for linha in linhas[:8]],
-    ))
+    return pronto(
+        Resultado(
+            status,
+            escolhidos[0].obra_id if status == "identificado" else None,
+            escolhidos,
+            texto_ocr=[linha.texto for linha in linhas[:8]],
+        )
+    )
 
 
-def indexar_capa(sessao: Session, edicao: Edicao, imagem: Image.Image,
-                 modelo: ModeloDeCapa, url_origem: str) -> Capa:
+def indexar_capa(
+    sessao: Session, edicao: Edicao, imagem: Image.Image, modelo: ModeloDeCapa, url_origem: str
+) -> Capa:
     """Grava (ou atualiza) o vetor da capa de uma edição para o modelo dado."""
     vetor = modelo.embutir(imagem).astype(np.float32).tolist()
     capa = sessao.scalars(
-        select(Capa).where(Capa.edicao_id == edicao.id, Capa.modelo == modelo.nome,
-                           Capa.versao_modelo == modelo.versao)
+        select(Capa).where(
+            Capa.edicao_id == edicao.id,
+            Capa.modelo == modelo.nome,
+            Capa.versao_modelo == modelo.versao,
+        )
     ).first()
     if capa is None:
-        capa = Capa(edicao_id=edicao.id, modelo=modelo.nome, versao_modelo=modelo.versao,
-                    url_origem=url_origem, vetor=vetor)
+        capa = Capa(
+            edicao_id=edicao.id,
+            modelo=modelo.nome,
+            versao_modelo=modelo.versao,
+            url_origem=url_origem,
+            vetor=vetor,
+        )
         sessao.add(capa)
     else:
         capa.vetor, capa.url_origem = vetor, url_origem

@@ -47,8 +47,7 @@ class Histograma:
         hist = np.bincount((h * 16 + s * 4 + v).ravel(), minlength=128).astype(np.float32)
         hist = np.sqrt(hist / hist.sum())
         # Estrutura: miniatura 12x18 em tons de cinza, centrada e equalizada.
-        cinza = np.asarray(ImageOps.equalize(rgb.convert("L")).resize((12, 18)),
-                           dtype=np.float32)
+        cinza = np.asarray(ImageOps.equalize(rgb.convert("L")).resize((12, 18)), dtype=np.float32)
         cinza = (cinza - cinza.mean()) / (cinza.std() + 1e-6)
         return _normalizar(np.concatenate([hist * 2.0, cinza.ravel() / 15.0]))
 

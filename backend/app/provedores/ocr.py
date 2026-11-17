@@ -68,10 +68,14 @@ class GoogleVision:
         r = self.cliente.post(
             "https://vision.googleapis.com/v1/images:annotate",
             params={"key": self.chave},
-            json={"requests": [{
-                "image": {"content": base64.b64encode(buffer.getvalue()).decode()},
-                "features": [{"type": "TEXT_DETECTION"}],
-            }]},
+            json={
+                "requests": [
+                    {
+                        "image": {"content": base64.b64encode(buffer.getvalue()).decode()},
+                        "features": [{"type": "TEXT_DETECTION"}],
+                    }
+                ]
+            },
         )
         r.raise_for_status()
         anotacoes = r.json()["responses"][0].get("textAnnotations", [])[1:]

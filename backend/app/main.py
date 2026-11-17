@@ -9,7 +9,17 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from app import erros
-from app.api import auth, eu, listas, obras, publico, reconhecimento
+from app.api import (
+    assinaturas,
+    auth,
+    eu,
+    listas,
+    obras,
+    organizacoes,
+    publico,
+    reconhecimento,
+    revisao,
+)
 from app.config import configuracoes
 from app.servicos.limitador import LimitadorMiddleware
 
@@ -57,7 +67,7 @@ def criar_app() -> FastAPI:
 
 
 def _modulos_de_rotas():
-    return [auth, eu, listas, obras, publico, reconhecimento]
+    return [assinaturas, auth, eu, listas, obras, organizacoes, publico, reconhecimento, revisao]
 
 
 app = criar_app()

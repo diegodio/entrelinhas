@@ -519,8 +519,7 @@ def _indexar(sessao: Session, edicao: Edicao, caminho: Path) -> None:
     from app.reconhecimento.servico import indexar_capa
 
     with Image.open(caminho) as img:
-        indexar_capa(sessao, edicao, img.convert("RGB"), obter_modelo_capa(),
-                     edicao.capa_url or "")
+        indexar_capa(sessao, edicao, img.convert("RGB"), obter_modelo_capa(), edicao.capa_url or "")
 
 
 def _usuario_demo(sessao: Session, email: str, papel: str, nome: str) -> Usuario:

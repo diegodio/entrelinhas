@@ -55,7 +55,7 @@ def enfileirar_analise(
             obra_id=obra.id, slug=fichas_servico.novo_slug(sessao, obra), status="em_analise"
         )
         sessao.add(ficha)
-    elif ficha.status in ("indisponivel", "em_analise"):
+    elif ficha.status in ("indisponivel", "em_analise") or not ficha.dados:
         ficha.status = "em_analise"
     sessao.commit()
     parametros = {"obra_id": str(obra.id)}

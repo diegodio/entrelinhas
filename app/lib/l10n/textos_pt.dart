@@ -95,7 +95,8 @@ class TextosPt extends Textos {
   String get consultasRecentes => 'Consultas recentes';
 
   @override
-  String get semConsultasRecentes => 'Os livros que você consultar aparecem aqui.';
+  String get semConsultasRecentes =>
+      'Os livros que você consultar aparecem aqui.';
 
   @override
   String get paraQuemELeitura => 'Para quem é a leitura?';
@@ -112,10 +113,12 @@ class TextosPt extends Textos {
   String get buscaMinimo => 'Digite ao menos 3 letras para buscar.';
 
   @override
-  String get buscaVazia => 'Nenhuma obra encontrada. Confira a grafia ou tente o ISBN.';
+  String get buscaVazia =>
+      'Nenhuma obra encontrada. Confira a grafia ou tente o ISBN.';
 
   @override
-  String get isbnInvalido => 'Este número não é um ISBN válido. Confira os dígitos.';
+  String get isbnInvalido =>
+      'Este número não é um ISBN válido. Confira os dígitos.';
 
   @override
   String get buscaErroRede =>
@@ -228,7 +231,8 @@ class TextosPt extends Textos {
   String get poucaLuz => 'Pouca luz. Experimente ligar a lanterna.';
 
   @override
-  String get semRedeCaptura => 'Sem conexão. A foto foi guardada; tente enviar de novo.';
+  String get semRedeCaptura =>
+      'Sem conexão. A foto foi guardada; tente enviar de novo.';
 
   @override
   String get botaoTentarDeNovo => 'Tentar de novo';
@@ -262,7 +266,8 @@ class TextosPt extends Textos {
   String get botaoEnviarFoto => 'Enviar foto';
 
   @override
-  String get dicaVariosLivros => 'Mais de um livro no quadro. Toque no que você quer consultar.';
+  String get dicaVariosLivros =>
+      'Mais de um livro no quadro. Toque no que você quer consultar.';
 
   @override
   String get dicaSegurar => 'Segure firme…';
@@ -337,7 +342,8 @@ class TextosPt extends Textos {
   String get defineAFaixa => 'Define a faixa';
 
   @override
-  String get notaAgravante => 'Dois ou mais eixos em 16 anos ou acima elevam a faixa em um degrau.';
+  String get notaAgravante =>
+      'Dois ou mais eixos em 16 anos ou acima elevam a faixa em um degrau.';
 
   @override
   String get alertasConteudo => 'Alertas de conteúdo';
@@ -365,19 +371,22 @@ class TextosPt extends Textos {
       'Trechos desta obra não são reproduzidos por descreverem conduta de risco. A orientação se baseia em descrição neutra das cenas.';
 
   @override
-  String get estadoAnalisando => 'Estamos analisando esta obra. Isso leva alguns instantes.';
+  String get estadoAnalisando =>
+      'Estamos analisando esta obra. Isso leva alguns instantes.';
 
   @override
   String get estadoSemFicha => 'Obra localizada, ainda sem ficha Entrelinhas.';
 
   @override
-  String get estadoIndisponivel => 'Não conseguimos gerar a ficha desta obra agora.';
+  String get estadoIndisponivel =>
+      'Não conseguimos gerar a ficha desta obra agora.';
 
   @override
   String get botaoPedirAnalise => 'Pedir análise';
 
   @override
-  String get analisePedida => 'Análise pedida. Avisaremos quando a ficha estiver pronta.';
+  String get analisePedida =>
+      'Análise pedida. Avisaremos quando a ficha estiver pronta.';
 
   @override
   String get limiteAtingidoTitulo => 'Você usou as fichas gratuitas deste mês';
@@ -545,10 +554,12 @@ class TextosPt extends Textos {
   String get flagRelacaoAbusivaRomantizada => 'Relação abusiva romantizada';
 
   @override
-  String get flagDiferencaDePoderEmRelacaoAfetiva => 'Diferença de poder em relação afetiva';
+  String get flagDiferencaDePoderEmRelacaoAfetiva =>
+      'Diferença de poder em relação afetiva';
 
   @override
-  String get flagDiscriminacaoSemCriticaNarrativa => 'Discriminação sem crítica narrativa';
+  String get flagDiscriminacaoSemCriticaNarrativa =>
+      'Discriminação sem crítica narrativa';
 
   @override
   String get flagConteudoReligiosoSensivel => 'Conteúdo religioso sensível';
@@ -611,7 +622,8 @@ class TextosPt extends Textos {
   String get listaVazia => 'Nenhum livro nesta lista ainda.';
 
   @override
-  String get semListas => 'Crie listas para guardar os livros que você consultou.';
+  String get semListas =>
+      'Crie listas para guardar os livros que você consultou.';
 
   @override
   String get removerDaLista => 'Remover da lista';
@@ -751,13 +763,15 @@ class TextosPt extends Textos {
   String get recuperarSenhaTitulo => 'Recuperar senha';
 
   @override
-  String get recuperarSenhaTexto => 'Enviaremos um link para criar uma nova senha.';
+  String get recuperarSenhaTexto =>
+      'Enviaremos um link para criar uma nova senha.';
 
   @override
   String get botaoEnviarLink => 'Enviar link';
 
   @override
-  String get linkEnviado => 'Se houver uma conta com este e-mail, o link chegará em instantes.';
+  String get linkEnviado =>
+      'Se houver uma conta com este e-mail, o link chegará em instantes.';
 
   @override
   String get novaSenha => 'Nova senha';
@@ -775,10 +789,12 @@ class TextosPt extends Textos {
   String get ou => 'ou';
 
   @override
-  String get aceitoTermos => 'Li e aceito os Termos de uso e a Política de privacidade.';
+  String get aceitoTermos =>
+      'Li e aceito os Termos de uso e a Política de privacidade.';
 
   @override
-  String get erroAceiteTermos => 'É preciso aceitar os termos para criar a conta.';
+  String get erroAceiteTermos =>
+      'É preciso aceitar os termos para criar a conta.';
 
   @override
   String get erroCredenciais => 'E-mail ou senha incorretos.';
@@ -799,7 +815,8 @@ class TextosPt extends Textos {
   String get naoTemConta => 'Não tem conta? Criar conta';
 
   @override
-  String get loginSocialIndisponivel => 'Este acesso ainda não está configurado.';
+  String get loginSocialIndisponivel =>
+      'Este acesso ainda não está configurado.';
 
   @override
   String get planosTitulo => 'Planos';
@@ -833,7 +850,8 @@ class TextosPt extends Textos {
   String get assinaturaAtivada => 'Assinatura ativada.';
 
   @override
-  String get assinaturaIndisponivel => 'A assinatura não está disponível neste ambiente.';
+  String get assinaturaIndisponivel =>
+      'A assinatura não está disponível neste ambiente.';
 
   @override
   String get falarComEquipe => 'Falar com a equipe';
@@ -855,13 +873,15 @@ class TextosPt extends Textos {
   String get motivo => 'Motivo';
 
   @override
-  String get dicaMotivo => 'Ex.: a violência aparece só em uma cena curta, sem detalhes.';
+  String get dicaMotivo =>
+      'Ex.: a violência aparece só em uma cena curta, sem detalhes.';
 
   @override
   String get botaoEnviar => 'Enviar';
 
   @override
-  String get contestacaoEnviada => 'Contestação enviada. Você será avisado da resposta.';
+  String get contestacaoEnviada =>
+      'Contestação enviada. Você será avisado da resposta.';
 
   @override
   String get minhasContestacoes => 'Minhas contestações';
@@ -976,7 +996,8 @@ class TextosPt extends Textos {
   String get situacaoFicha => 'Situação da ficha';
 
   @override
-  String get semOrganizacao => 'Você ainda não participa de uma escola ou biblioteca.';
+  String get semOrganizacao =>
+      'Você ainda não participa de uma escola ou biblioteca.';
 
   @override
   String get criarOrganizacao => 'Cadastrar escola ou biblioteca';
@@ -1059,7 +1080,8 @@ class TextosPt extends Textos {
   String get tentarNovamente => 'Tentar de novo';
 
   @override
-  String get erroGenerico => 'Algo não saiu como esperado. Tente de novo em instantes.';
+  String get erroGenerico =>
+      'Algo não saiu como esperado. Tente de novo em instantes.';
 
   @override
   String get erroRede => 'Sem conexão com o Entrelinhas. Confira sua internet.';

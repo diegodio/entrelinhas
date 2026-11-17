@@ -67,6 +67,7 @@ class TelaPerfil extends ConsumerWidget {
                   const _ListaLeitores(),
                   _Secao(t.plano),
                   _BlocoPlano(usuario: usuario),
+                  const _MinhasContestacoes(),
                   _Secao(t.privacidade),
                   SwitchListTile(
                     contentPadding: EdgeInsets.zero,
@@ -326,5 +327,41 @@ Future<void> editarLeitor(BuildContext context, WidgetRef ref, PerfilLeitor? lei
     } else {
       mensageiro.showSnackBar(SnackBar(content: Text(mensagemDeErro(context, e))));
     }
+  }
+}
+
+final minhasContestacoesProvider = FutureProvider.autoDispose<List<Map<String, dynamic>>>(
+  (ref) async =>
+      (await ref.watch(clienteApiProvider).get<List<dynamic>>('/v1/eu/contestacoes'))
+          .cast<Map<String, dynamic>>(),
+);
+
+/// Contestações enviadas e as respostas dos editores (a pessoa também recebe e-mail).
+class _MinhasContestacoes extends ConsumerWidget {
+  const _MinhasContestacoes();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final t = Textos.of(context);
+    final lista = ref.watch(minhasContestacoesProvider).value ?? const [];
+    if (lista.isEmpty) return const SizedBox.shrink();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _Secao(t.minhasContestacoes),
+        for (final c in lista)
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text('${c['titulo']}'),
+            subtitle: Text(
+              [
+                t.statusContestacao('${c['status']}'),
+                if (c['resposta'] != null) '${c['resposta']}',
+              ].join(' · '),
+            ),
+            onTap: () => context.push('/obra/${c['obra_id']}'),
+          ),
+      ],
+    );
   }
 }

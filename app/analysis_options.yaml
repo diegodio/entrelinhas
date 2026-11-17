@@ -21,3 +21,6 @@ linter:
     require_trailing_commas: false
     sort_child_properties_last: true
     use_build_context_synchronously: true
+
+formatter:
+  page_width: 100

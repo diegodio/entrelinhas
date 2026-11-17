@@ -13,8 +13,9 @@ class Configuracoes(BaseSettings):
     ambiente: str = "local"  # local | teste | producao
     database_url: str = "postgresql+psycopg://postgres@localhost:5432/entrelinhas"
     redis_url: str | None = None
-    # "fila" usa Redis + RQ; "inline" executa a tarefa na hora (testes e demo sem Redis).
-    tarefas_modo: str = "inline"
+    # "fila": Redis + RQ (produção). "thread": segundo plano no próprio processo (dev sem
+    # Redis). "sincrono": executa na hora (testes).
+    tarefas_modo: str = "thread"
 
     url_publica_api: str = "http://localhost:8000"
     url_publica_app: str = "http://localhost:8080"
@@ -30,6 +31,7 @@ class Configuracoes(BaseSettings):
     # Provedores (seção 4.7). "falso" = implementação determinística para testes.
     provedor_llm: str = "nenhum"  # anthropic | openai | google | falso | nenhum
     modelo_llm: str = ""  # identificador do modelo no provedor; conferir na documentação atual
+    llm_fallbacks: bool = True  # fallback do servidor para recusas (só Anthropic)
     anthropic_api_key: str = ""
     openai_api_key: str = ""
     google_api_key: str = ""
@@ -42,6 +44,7 @@ class Configuracoes(BaseSettings):
     modelo_capa_pesos_locais: str = ""  # caminho de um modelo ajustado exportado por ml/treinar.py
 
     fontes_metadados: str = "google_books,open_library"  # vazio = sem rede
+    fontes_resenhas: str = "wikipedia_pt"  # vazio = nenhuma
     google_books_api_key: str = ""
 
     provedor_pagamento: str = "falso"  # stripe | falso

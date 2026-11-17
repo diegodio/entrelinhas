@@ -67,8 +67,9 @@ def cadastro(dados: Cadastro, sessao: Session = Depends(obter_sessao)):
         raise ErroApi(400, "aceite_obrigatorio", "É preciso aceitar os termos para criar a conta.")
     if _por_email(sessao, dados.email):
         raise ErroApi(409, "email_em_uso", "Já existe uma conta com este e-mail.")
-    usuario = Usuario(email=dados.email.lower(), hash_senha=hash_senha(dados.senha),
-                      nome=dados.nome.strip())
+    usuario = Usuario(
+        email=dados.email.lower(), hash_senha=hash_senha(dados.senha), nome=dados.nome.strip()
+    )
     sessao.add(usuario)
     sessao.flush()
     _registrar_aceite(sessao, usuario)
@@ -121,7 +122,9 @@ def _login_social(provedor: str, dados: LoginSocial, sessao: Session) -> dict:
     try:
         ident = login_social.verificar(provedor, dados.id_token)
     except login_social.LoginSocialIndisponivel as e:
-        raise ErroApi(503, "login_social_indisponivel", "Este acesso ainda não está configurado.") from e
+        raise ErroApi(
+            503, "login_social_indisponivel", "Este acesso ainda não está configurado."
+        ) from e
     except login_social.TokenSocialInvalido as e:
         raise ErroApi(401, "token_social_invalido", "Não conseguimos confirmar seu acesso.") from e
     usuario = sessao.scalars(
@@ -163,13 +166,21 @@ def recuperar(
     usuario = _por_email(sessao, dados.email)
     if usuario is not None:
         token = token_aleatorio()
-        sessao.add(TokenRecuperacao(usuario_id=usuario.id, hash_token=hash_token(token),
-                                    expira_em=datetime.now(UTC) + timedelta(hours=1)))
+        sessao.add(
+            TokenRecuperacao(
+                usuario_id=usuario.id,
+                hash_token=hash_token(token),
+                expira_em=datetime.now(UTC) + timedelta(hours=1),
+            )
+        )
         sessao.commit()
         link = f"{configuracoes().url_publica_app}/redefinir-senha?token={token}"
-        email.enviar(usuario.email, "Entrelinhas: criar nova senha",
-                     f"Para criar uma nova senha, abra o link abaixo em até 1 hora:\n\n{link}\n\n"
-                     "Se você não pediu, ignore este e-mail.")
+        email.enviar(
+            usuario.email,
+            "Entrelinhas: criar nova senha",
+            f"Para criar uma nova senha, abra o link abaixo em até 1 hora:\n\n{link}\n\n"
+            "Se você não pediu, ignore este e-mail.",
+        )
     return {"ok": True}
 
 

@@ -5,8 +5,10 @@ from .conftest import cabecalho, criar_usuario
 
 
 def cadastrar(cliente, email="nova@teste.br", senha="senha-boa-123"):
-    return cliente.post("/v1/auth/cadastro",
-                        json={"email": email, "senha": senha, "nome": "Nova", "aceite_termos": True})
+    return cliente.post(
+        "/v1/auth/cadastro",
+        json={"email": email, "senha": senha, "nome": "Nova", "aceite_termos": True},
+    )
 
 
 def test_cadastro_login_e_eu(cliente):
@@ -24,11 +26,14 @@ def test_cadastro_login_e_eu(cliente):
 
 
 def test_cadastro_exige_aceite_e_senha(cliente):
-    r = cliente.post("/v1/auth/cadastro",
-                     json={"email": "a@b.br", "senha": "senha-boa-1", "aceite_termos": False})
+    r = cliente.post(
+        "/v1/auth/cadastro",
+        json={"email": "a@b.br", "senha": "senha-boa-1", "aceite_termos": False},
+    )
     assert r.json()["codigo"] == "aceite_obrigatorio"
-    r = cliente.post("/v1/auth/cadastro",
-                     json={"email": "a@b.br", "senha": "curta", "aceite_termos": True})
+    r = cliente.post(
+        "/v1/auth/cadastro", json={"email": "a@b.br", "senha": "curta", "aceite_termos": True}
+    )
     assert r.status_code == 422 and r.json()["codigo"] == "dados_invalidos"
 
 
@@ -59,10 +64,18 @@ def test_recuperacao_de_senha(cliente):
     cliente.post("/v1/auth/recuperar", json={"email": "nova@teste.br"})
     link = email.enviados[-1][2]
     token = link.split("token=")[1].split()[0]
-    assert cliente.post("/v1/auth/redefinir",
-                        json={"token": token, "senha": "outra-senha-9"}).status_code == 200
-    assert cliente.post("/v1/auth/redefinir",
-                        json={"token": token, "senha": "outra-senha-9"}).status_code == 400
+    assert (
+        cliente.post(
+            "/v1/auth/redefinir", json={"token": token, "senha": "outra-senha-9"}
+        ).status_code
+        == 200
+    )
+    assert (
+        cliente.post(
+            "/v1/auth/redefinir", json={"token": token, "senha": "outra-senha-9"}
+        ).status_code
+        == 400
+    )
     r = cliente.post("/v1/auth/entrar", json={"email": "nova@teste.br", "senha": "outra-senha-9"})
     assert r.status_code == 200
 
@@ -104,8 +117,12 @@ def test_listas_padrao_itens_e_limite(cliente, usuario, demo):
     assert [lista["nome"] for lista in listas] == ["Quero ler", "Aprovados"]
     obra = demo["O Jardim de Vidro"]
     lid = listas[0]["id"]
-    assert cliente.post(f"/v1/listas/{lid}/itens", json={"obra_id": str(obra.id)},
-                        headers=h).json()["quantidade"] == 1
+    assert (
+        cliente.post(f"/v1/listas/{lid}/itens", json={"obra_id": str(obra.id)}, headers=h).json()[
+            "quantidade"
+        ]
+        == 1
+    )
     # Repetir não duplica.
     cliente.post(f"/v1/listas/{lid}/itens", json={"obra_id": str(obra.id)}, headers=h)
     detalhe = cliente.get(f"/v1/listas/{lid}", headers=h).json()
@@ -127,16 +144,19 @@ def test_lista_de_outra_pessoa_nao_aparece(cliente, usuario, sessao):
 def test_contestacao_coloca_ficha_em_revisao(cliente, usuario, demo, sessao):
     obra = demo["O Jardim de Vidro"]
     h = cabecalho(usuario)
-    r = cliente.post(f"/v1/obras/{obra.id}/contestacoes",
-                     json={"campo": "A1", "texto": "A briga é só mencionada, não descrita."},
-                     headers=h)
+    r = cliente.post(
+        f"/v1/obras/{obra.id}/contestacoes",
+        json={"campo": "A1", "texto": "A briga é só mencionada, não descrita."},
+        headers=h,
+    )
     assert r.status_code == 201
     assert sessao.query(Ficha).filter_by(obra_id=obra.id).one().status == "em_revisao"
     ficha = cliente.get(f"/v1/obras/{obra.id}/ficha", headers=h).json()["ficha"]
     assert ficha["status"] == "em_revisao"
     assert cliente.get("/v1/eu/contestacoes", headers=h).json()[0]["status"] == "aberta"
-    r = cliente.post(f"/v1/obras/{obra.id}/contestacoes", json={"campo": "xyz", "texto": "1234567890"},
-                     headers=h)
+    r = cliente.post(
+        f"/v1/obras/{obra.id}/contestacoes", json={"campo": "xyz", "texto": "1234567890"}, headers=h
+    )
     assert r.json()["codigo"] == "campo_invalido"
 
 

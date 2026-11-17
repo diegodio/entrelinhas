@@ -14,8 +14,10 @@ import jwt
 from app.config import configuracoes
 
 EMISSORES = {
-    "google": ("https://www.googleapis.com/oauth2/v3/certs",
-               ("https://accounts.google.com", "accounts.google.com")),
+    "google": (
+        "https://www.googleapis.com/oauth2/v3/certs",
+        ("https://accounts.google.com", "accounts.google.com"),
+    ),
     "apple": ("https://appleid.apple.com/auth/keys", ("https://appleid.apple.com",)),
 }
 

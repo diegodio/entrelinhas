@@ -81,8 +81,9 @@ def detalhe_lista(sessao: Session, lista: Lista) -> dict:
 
 
 @rotas.get("")
-def minhas_listas(usuario: Usuario = Depends(usuario_obrigatorio),
-                  sessao: Session = Depends(obter_sessao)):
+def minhas_listas(
+    usuario: Usuario = Depends(usuario_obrigatorio), sessao: Session = Depends(obter_sessao)
+):
     listas = sessao.scalars(
         select(Lista).where(Lista.usuario_id == usuario.id).order_by(Lista.criado_em)
     ).all()
@@ -101,14 +102,18 @@ class NovaLista(BaseModel):
 
 
 @rotas.post("", status_code=201)
-def criar(dados: NovaLista, usuario: Usuario = Depends(usuario_obrigatorio),
-          sessao: Session = Depends(obter_sessao)):
+def criar(
+    dados: NovaLista,
+    usuario: Usuario = Depends(usuario_obrigatorio),
+    sessao: Session = Depends(obter_sessao),
+):
     if planos.plano_do_usuario(sessao, usuario)["plano"] == "gratuito":
         limite = cfg_servico.carregar(sessao)["limites"]["listas_plano_gratuito"]
         total = sessao.query(Lista).filter_by(usuario_id=usuario.id).count()
         if total >= limite:
-            raise ErroApi(402, "plano_necessario",
-                          "O plano gratuito tem um número limitado de listas.")
+            raise ErroApi(
+                402, "plano_necessario", "O plano gratuito tem um número limitado de listas."
+            )
     lista = Lista(usuario_id=usuario.id, nome=dados.nome.strip(), tipo="pessoal")
     sessao.add(lista)
     sessao.commit()
@@ -116,14 +121,20 @@ def criar(dados: NovaLista, usuario: Usuario = Depends(usuario_obrigatorio),
 
 
 @rotas.get("/{lista_id}")
-def ver(lista_id: str, usuario: Usuario = Depends(usuario_obrigatorio),
-        sessao: Session = Depends(obter_sessao)):
+def ver(
+    lista_id: str,
+    usuario: Usuario = Depends(usuario_obrigatorio),
+    sessao: Session = Depends(obter_sessao),
+):
     return detalhe_lista(sessao, obter_lista(sessao, usuario, lista_id))
 
 
 @rotas.delete("/{lista_id}", status_code=204)
-def excluir(lista_id: str, usuario: Usuario = Depends(usuario_obrigatorio),
-            sessao: Session = Depends(obter_sessao)):
+def excluir(
+    lista_id: str,
+    usuario: Usuario = Depends(usuario_obrigatorio),
+    sessao: Session = Depends(obter_sessao),
+):
     lista = obter_lista(sessao, usuario, lista_id, editar=True)
     sessao.delete(lista)
     sessao.commit()
@@ -135,8 +146,12 @@ class NovoItem(BaseModel):
 
 
 @rotas.post("/{lista_id}/itens", status_code=201)
-def adicionar(lista_id: str, dados: NovoItem, usuario: Usuario = Depends(usuario_obrigatorio),
-              sessao: Session = Depends(obter_sessao)):
+def adicionar(
+    lista_id: str,
+    dados: NovoItem,
+    usuario: Usuario = Depends(usuario_obrigatorio),
+    sessao: Session = Depends(obter_sessao),
+):
     lista = obter_lista(sessao, usuario, lista_id, editar=True)
     obra = obras_servico.obter(sessao, dados.obra_id)
     if obra is None:
@@ -161,8 +176,12 @@ def adicionar(lista_id: str, dados: NovoItem, usuario: Usuario = Depends(usuario
 
 
 @rotas.delete("/{lista_id}/itens/{obra_id}", status_code=204)
-def remover(lista_id: str, obra_id: str, usuario: Usuario = Depends(usuario_obrigatorio),
-            sessao: Session = Depends(obter_sessao)):
+def remover(
+    lista_id: str,
+    obra_id: str,
+    usuario: Usuario = Depends(usuario_obrigatorio),
+    sessao: Session = Depends(obter_sessao),
+):
     lista = obter_lista(sessao, usuario, lista_id, editar=True)
     try:
         oid = uuid.UUID(obra_id)

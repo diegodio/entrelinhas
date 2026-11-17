@@ -14,8 +14,12 @@ from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, Tabl
 from app.core import textos
 
 CORES_FAIXA = {
-    "Livre": "#2F5D50", "10+": "#2F6F8F", "12+": "#8F6410",
-    "14+": "#B05129", "16+": "#8C2F1B", "18+": "#2B2430",
+    "Livre": "#2F5D50",
+    "10+": "#2F6F8F",
+    "12+": "#8F6410",
+    "14+": "#B05129",
+    "16+": "#8C2F1B",
+    "18+": "#2B2430",
 }
 TINTA = colors.HexColor("#23302B")
 FRACA = colors.HexColor("#5E6A63")
@@ -23,11 +27,25 @@ PAUTA = colors.HexColor("#E3DAC8")
 
 _base = ParagraphStyle("base", fontName="Helvetica", fontSize=10, leading=14, textColor=TINTA)
 _titulo = ParagraphStyle("titulo", parent=_base, fontName="Times-Bold", fontSize=20, leading=24)
-_secao = ParagraphStyle("secao", parent=_base, fontName="Times-Bold", fontSize=13, leading=18,
-                        spaceBefore=10, spaceAfter=4)
+_secao = ParagraphStyle(
+    "secao",
+    parent=_base,
+    fontName="Times-Bold",
+    fontSize=13,
+    leading=18,
+    spaceBefore=10,
+    spaceAfter=4,
+)
 _apoio = ParagraphStyle("apoio", parent=_base, fontSize=9, leading=12, textColor=FRACA)
-_selo = ParagraphStyle("selo", parent=_base, fontName="Times-Bold", fontSize=22, leading=26,
-                       textColor=colors.white, alignment=1)
+_selo = ParagraphStyle(
+    "selo",
+    parent=_base,
+    fontName="Times-Bold",
+    fontSize=22,
+    leading=26,
+    textColor=colors.white,
+    alignment=1,
+)
 
 
 def _p(texto: str, estilo=_base) -> Paragraph:
@@ -37,9 +55,16 @@ def _p(texto: str, estilo=_base) -> Paragraph:
 def gerar_pdf_ficha(obra: dict, ficha: dict, config: dict) -> bytes:
     flags = config["flags"]
     saida = io.BytesIO()
-    doc = SimpleDocTemplate(saida, pagesize=A4, leftMargin=18 * mm, rightMargin=18 * mm,
-                            topMargin=16 * mm, bottomMargin=16 * mm,
-                            title=f"Entrelinhas: {obra['titulo']}", author="Entrelinhas")
+    doc = SimpleDocTemplate(
+        saida,
+        pagesize=A4,
+        leftMargin=18 * mm,
+        rightMargin=18 * mm,
+        topMargin=16 * mm,
+        bottomMargin=16 * mm,
+        title=f"Entrelinhas: {obra['titulo']}",
+        author="Entrelinhas",
+    )
     corpo: list = [
         _p("ENTRELINHAS · ORIENTAÇÃO DE LEITURA", _apoio),
         Spacer(1, 4),
@@ -48,15 +73,19 @@ def gerar_pdf_ficha(obra: dict, ficha: dict, config: dict) -> bytes:
         Spacer(1, 10),
     ]
     faixa = ficha["faixa_final"]
-    selo = Table([[_p(faixa, _selo), _p(ficha["texto_recomendacao"])]],
-                 colWidths=[28 * mm, None])
-    selo.setStyle(TableStyle([
-        ("BACKGROUND", (0, 0), (0, 0), colors.HexColor(CORES_FAIXA.get(faixa, "#5E6A63"))),
-        ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
-        ("BOX", (0, 0), (-1, -1), 0.5, PAUTA),
-        ("LEFTPADDING", (1, 0), (1, 0), 10),
-        ("TOPPADDING", (0, 0), (-1, -1), 8), ("BOTTOMPADDING", (0, 0), (-1, -1), 8),
-    ]))
+    selo = Table([[_p(faixa, _selo), _p(ficha["texto_recomendacao"])]], colWidths=[28 * mm, None])
+    selo.setStyle(
+        TableStyle(
+            [
+                ("BACKGROUND", (0, 0), (0, 0), colors.HexColor(CORES_FAIXA.get(faixa, "#5E6A63"))),
+                ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+                ("BOX", (0, 0), (-1, -1), 0.5, PAUTA),
+                ("LEFTPADDING", (1, 0), (1, 0), 10),
+                ("TOPPADDING", (0, 0), (-1, -1), 8),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 8),
+            ]
+        )
+    )
     corpo += [selo, Spacer(1, 8)]
 
     p = ficha["procedencia"]
@@ -80,11 +109,19 @@ def gerar_pdf_ficha(obra: dict, ficha: dict, config: dict) -> bytes:
         if eixo == ficha["eixo_determinante"] and dados["nivel"] > 0:
             nome += " (define a faixa)"
         just = dados["justificativa"] if flags["justificativa_eixo"] else ""
-        linhas.append([_p(nome), _p(f"{dados['nivel']}/4 · {textos.ROTULOS_NIVEL[dados['nivel']]}"),
-                       _p(just, _apoio)])
+        linhas.append(
+            [
+                _p(nome),
+                _p(f"{dados['nivel']}/4 · {textos.ROTULOS_NIVEL[dados['nivel']]}"),
+                _p(just, _apoio),
+            ]
+        )
     tabela = Table(linhas, colWidths=[48 * mm, 30 * mm, None])
-    tabela.setStyle(TableStyle([("LINEBELOW", (0, 0), (-1, -1), 0.5, PAUTA),
-                                ("VALIGN", (0, 0), (-1, -1), "TOP")]))
+    tabela.setStyle(
+        TableStyle(
+            [("LINEBELOW", (0, 0), (-1, -1), 0.5, PAUTA), ("VALIGN", (0, 0), (-1, -1), "TOP")]
+        )
+    )
     corpo.append(tabela)
     if ficha.get("agravante_acumulo_aplicado"):
         corpo.append(_p(textos.TEXTO_AGRAVANTE, _apoio))
@@ -115,8 +152,10 @@ def gerar_pdf_ficha(obra: dict, ficha: dict, config: dict) -> bytes:
         if vf["justificativa"]:
             corpo.append(_p(vf["justificativa"]))
 
-    corpo += [Spacer(1, 14), _p(textos.AVISO_INDEPENDENCIA, _apoio),
-              _p(f"Rubrica {ficha['versao_rubrica']} · versão {ficha['versao_ficha']} da ficha",
-                 _apoio)]
+    corpo += [
+        Spacer(1, 14),
+        _p(textos.AVISO_INDEPENDENCIA, _apoio),
+        _p(f"Rubrica {ficha['versao_rubrica']} · versão {ficha['versao_ficha']} da ficha", _apoio),
+    ]
     doc.build(corpo)
     return saida.getvalue()

@@ -15,7 +15,8 @@ os.environ["MOTOR_OCR"] = "falso"
 os.environ["MODELO_CAPA"] = "falso"
 os.environ["PROVEDOR_PAGAMENTO"] = "falso"
 os.environ["PROVEDOR_EMAIL"] = "console"
-os.environ["TAREFAS_MODO"] = "inline"
+os.environ["TAREFAS_MODO"] = "sincrono"
+os.environ["FONTES_RESENHAS"] = ""
 os.environ["PASTA_ARQUIVOS"] = "/tmp/entrelinhas-teste-arquivos"
 
 import pytest  # noqa: E402

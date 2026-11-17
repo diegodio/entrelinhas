@@ -155,7 +155,11 @@ def ficha_pdf(
     if planos.plano_do_usuario(sessao, usuario)["plano"] == "gratuito":
         raise ErroApi(402, "plano_necessario", "A exportação em PDF faz parte dos planos pagos.")
     obra = obras_servico.obter(sessao, obra_id)
-    if obra is None or obra.ficha is None or obra.ficha.status not in fichas_servico.STATUS_VISIVEIS:
+    if (
+        obra is None
+        or obra.ficha is None
+        or obra.ficha.status not in fichas_servico.STATUS_VISIVEIS
+    ):
         raise nao_encontrado("Ficha")
     planos.registrar_consulta(sessao, usuario, obra.id)
     from fastapi.responses import Response
@@ -163,18 +167,31 @@ def ficha_pdf(
     from app.servicos.pdf import gerar_pdf_ficha
 
     conteudo = gerar_pdf_ficha(
-        obras_servico.resumo(obra), fichas_servico.filtrar_para_exibicao(obra.ficha.dados, config),
+        obras_servico.resumo(obra),
+        fichas_servico.filtrar_para_exibicao(obra.ficha.dados, config),
         config,
     )
     return Response(
         conteudo,
         media_type="application/pdf",
-        headers={"Content-Disposition": f'attachment; filename="entrelinhas-{obra.ficha.slug}.pdf"'},
+        headers={
+            "Content-Disposition": f'attachment; filename="entrelinhas-{obra.ficha.slug}.pdf"'
+        },
     )
 
 
-CAMPOS_CONTESTAVEIS = ("A1", "A2", "A3", "A4", "A5", "A6", "camada_b", "camada_c",
-                       "valor_formativo", "outro")
+CAMPOS_CONTESTAVEIS = (
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "A5",
+    "A6",
+    "camada_b",
+    "camada_c",
+    "valor_formativo",
+    "outro",
+)
 
 
 class NovaContestacao(BaseModel):
@@ -195,13 +212,40 @@ def contestar(
     if dados.campo not in CAMPOS_CONTESTAVEIS:
         raise ErroApi(400, "campo_invalido", "Escolha o que você quer contestar.")
     obra = obras_servico.obter(sessao, obra_id)
-    if obra is None or obra.ficha is None or obra.ficha.status not in fichas_servico.STATUS_VISIVEIS:
+    if (
+        obra is None
+        or obra.ficha is None
+        or obra.ficha.status not in fichas_servico.STATUS_VISIVEIS
+    ):
         raise nao_encontrado("Ficha")
     ficha = obra.ficha
-    c = Contestacao(usuario_id=usuario.id, ficha_id=ficha.id, campo=dados.campo,
-                    texto=dados.texto.strip())
+    c = Contestacao(
+        usuario_id=usuario.id, ficha_id=ficha.id, campo=dados.campo, texto=dados.texto.strip()
+    )
     sessao.add(c)
     ficha.status = "em_revisao"
     ficha.dados = {**ficha.dados, "status": "em_revisao"}
     sessao.commit()
     return {"id": str(c.id), "status": c.status}
+
+
+@rotas.post("/{obra_id}/analise", status_code=202)
+def pedir_analise(
+    obra_id: str,
+    sessao: Session = Depends(obter_sessao),
+    _: Usuario = Depends(usuario_obrigatorio),
+):
+    """ "Pedir análise": enfileira o pipeline. A obra fica em análise até a tarefa terminar."""
+    from app import tarefas
+
+    obra = obras_servico.obter(sessao, obra_id)
+    if obra is None:
+        raise nao_encontrado("Obra")
+    if obra.ficha is not None and obra.ficha.status in fichas_servico.STATUS_VISIVEIS:
+        raise ErroApi(409, "ficha_existente", "Esta obra já tem ficha.")
+    if obra.ficha is not None and obra.ficha.status == "em_analise":
+        return {"status_ficha": "em_analise"}
+    tarefa = tarefas.enfileirar_analise(sessao, obra)
+    ficha = obras_servico.ficha_da_obra(sessao, obra.id)
+    sessao.refresh(ficha)  # a tarefa pode ter rodado em outra sessão
+    return {"status_ficha": ficha.status, "tarefa_id": str(tarefa.id)}

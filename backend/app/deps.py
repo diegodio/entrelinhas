@@ -24,3 +24,14 @@ def obter_cascata() -> Cascata | None:
 
 def obter_cliente_http() -> httpx.Client:
     return _cliente_http()
+
+
+def obter_fontes_resenhas() -> list:
+    from app.provedores.resenhas import Wikipedia
+
+    nomes = [n.strip() for n in configuracoes().fontes_resenhas.split(",") if n.strip()]
+    fontes = []
+    for nome in nomes:
+        if nome == "wikipedia_pt":
+            fontes.append(Wikipedia(_cliente_http()))
+    return fontes

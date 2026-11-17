@@ -31,7 +31,8 @@ Future<void> salvarNaLista(BuildContext context, WidgetRef ref, ObraResumo obra)
   );
   if (escolha == null) return;
   try {
-    await ref.read(listasRepositorioProvider)
+    await ref
+        .read(listasRepositorioProvider)
         .adicionar(escolha.id, obra.id, perfilId: ref.read(leitorSelecionadoProvider));
     ref.invalidate(listasProvider);
     mensageiro.showSnackBar(SnackBar(content: Text(t.salvoEm(escolha.nome))));
@@ -59,7 +60,8 @@ class _EscolherLista extends ConsumerWidget {
             Text(t.escolherLista, style: context.estilos.tituloSecao),
             const SizedBox(height: Espaco.s),
             switch (listas) {
-              AsyncData(:final value) => Column(children: [
+              AsyncData(:final value) => Column(
+                children: [
                   for (final l in value.where((l) => l.tipo == 'pessoal'))
                     ListTile(
                       contentPadding: EdgeInsets.zero,
@@ -78,12 +80,13 @@ class _EscolherLista extends ConsumerWidget {
                       if (context.mounted) Navigator.pop(context, nova);
                     },
                   ),
-                ]),
+                ],
+              ),
               AsyncError(:final error) => EstadoErro(erro: error),
               _ => const Padding(
-                  padding: EdgeInsets.all(Espaco.l),
-                  child: Center(child: CircularProgressIndicator()),
-                ),
+                padding: EdgeInsets.all(Espaco.l),
+                child: Center(child: CircularProgressIndicator()),
+              ),
             },
           ],
         ),
@@ -92,8 +95,13 @@ class _EscolherLista extends ConsumerWidget {
   }
 }
 
-Future<String?> pedirTexto(BuildContext context, String titulo, String rotulo,
-    {String inicial = '', TextInputType? teclado}) {
+Future<String?> pedirTexto(
+  BuildContext context,
+  String titulo,
+  String rotulo, {
+  String inicial = '',
+  TextInputType? teclado,
+}) {
   final controle = TextEditingController(text: inicial);
   final t = Textos.of(context);
   return showDialog<String>(
@@ -110,7 +118,9 @@ Future<String?> pedirTexto(BuildContext context, String titulo, String rotulo,
       actions: [
         TextButton(onPressed: () => Navigator.pop(contexto), child: Text(t.cancelar)),
         FilledButton(
-            onPressed: () => Navigator.pop(contexto, controle.text), child: Text(t.salvar)),
+          onPressed: () => Navigator.pop(contexto, controle.text),
+          child: Text(t.salvar),
+        ),
       ],
     ),
   );
@@ -169,10 +179,14 @@ class MenuFicha extends ConsumerWidget {
   Future<void> _exportarPdf(BuildContext context, WidgetRef ref) async {
     final mensageiro = ScaffoldMessenger.of(context);
     try {
-      final bytes =
-          await ref.read(clienteApiProvider).baixar('/v1/obras/${estado.obra.id}/ficha/pdf');
-      await salvarArquivo(bytes, 'entrelinhas-${estado.ficha.slug ?? estado.obra.id}.pdf',
-          'application/pdf');
+      final bytes = await ref
+          .read(clienteApiProvider)
+          .baixar('/v1/obras/${estado.obra.id}/ficha/pdf');
+      await salvarArquivo(
+        bytes,
+        'entrelinhas-${estado.ficha.slug ?? estado.obra.id}.pdf',
+        'application/pdf',
+      );
     } catch (e) {
       if (!context.mounted) return;
       if (e is ErroApi && e.codigo == 'plano_necessario') {

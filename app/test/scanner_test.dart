@@ -30,12 +30,18 @@ void main() {
   });
 
   test('livro parado e nítido dispara a captura depois de ~0,7 s', () {
-    var e = rodar([(0, quadro([capa(livro)]))]);
+    var e = rodar([
+      (0, quadro([capa(livro)])),
+    ]);
     expect(e.fase, FaseScanner.estavel);
-    e = rodar([(400, quadro([capa(livro)]))], e);
+    e = rodar([
+      (400, quadro([capa(livro)])),
+    ], e);
     expect(e.fase, FaseScanner.estavel);
     expect(e.progresso(ms(400), const ParametrosScanner()), closeTo(0.57, 0.01));
-    e = rodar([(720, quadro([capa(livro.translate(0.01, 0)) ]))], e);
+    e = rodar([
+      (720, quadro([capa(livro.translate(0.01, 0))])),
+    ], e);
     expect(e.fase, FaseScanner.capturando);
   });
 
@@ -46,26 +52,52 @@ void main() {
       (800, quadro([capa(livro.translate(0.2, 0))])),
     ]);
     expect(e.fase, FaseScanner.estavel); // só 400 ms parado
-    expect(rodar([(1150, quadro([capa(livro.translate(0.2, 0))]))], e).fase,
-        FaseScanner.capturando);
+    expect(
+      rodar([
+        (1150, quadro([capa(livro.translate(0.2, 0))])),
+      ], e).fase,
+      FaseScanner.capturando,
+    );
   });
 
   test('imagem tremida ou livro pequeno não disparam', () {
-    expect(rodar([(0, quadro([capa(livro)], nitidez: 10)), (900, quadro([capa(livro)], nitidez: 10))]).fase,
-        FaseScanner.detectado);
+    expect(
+      rodar([
+        (0, quadro([capa(livro)], nitidez: 10)),
+        (900, quadro([capa(livro)], nitidez: 10)),
+      ]).fase,
+      FaseScanner.detectado,
+    );
     const pequeno = Rect.fromLTRB(0.45, 0.45, 0.55, 0.55);
-    expect(rodar([(0, quadro([capa(pequeno)])), (900, quadro([capa(pequeno)]))]).fase,
-        FaseScanner.detectado);
+    expect(
+      rodar([
+        (0, quadro([capa(pequeno)])),
+        (900, quadro([capa(pequeno)])),
+      ]).fase,
+      FaseScanner.detectado,
+    );
   });
 
   test('código lido no aparelho dispara na hora', () {
-    final codigo = Regiao(tipo: TipoRegiao.codigoDeBarras,
-        caixa: const Rect.fromLTRB(0.3, 0.6, 0.6, 0.7), confianca: 1, valor: '9780306406157');
-    expect(rodar([(0, quadro([capa(livro), codigo]))]).fase, FaseScanner.capturando);
+    const codigo = Regiao(
+      tipo: TipoRegiao.codigoDeBarras,
+      caixa: Rect.fromLTRB(0.3, 0.6, 0.6, 0.7),
+      confianca: 1,
+      valor: '9780306406157',
+    );
+    expect(
+      rodar([
+        (0, quadro([capa(livro), codigo])),
+      ]).fase,
+      FaseScanner.capturando,
+    );
   });
 
   test('falha curta do detector é tolerada; longa volta a procurar', () {
-    var e = rodar([(0, quadro([capa(livro)])), (300, quadro([capa(livro)]))]);
+    var e = rodar([
+      (0, quadro([capa(livro)])),
+      (300, quadro([capa(livro)])),
+    ]);
     e = rodar([(500, Analise.vazia)], e);
     expect(e.fase, FaseScanner.estavel);
     e = rodar([(900, Analise.vazia)], e);
@@ -113,7 +145,8 @@ void main() {
 
     final liso = Uint8List(64 * 64)..fillRange(0, 64 * 64, 128);
     final xadrez = Uint8List.fromList(
-        List.generate(64 * 64, (i) => ((i ~/ 64) ~/ 4 + (i % 64) ~/ 4).isEven ? 0 : 255));
+      List.generate(64 * 64, (i) => ((i ~/ 64) ~/ 4 + (i % 64) ~/ 4).isEven ? 0 : 255),
+    );
     expect(nitidezLaplaciano(liso, 64, 64), 0);
     expect(nitidezLaplaciano(xadrez, 64, 64), greaterThan(1000));
     expect(luminanciaMedia(liso), 128);

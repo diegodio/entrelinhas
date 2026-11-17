@@ -3,7 +3,11 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../funcionalidades/busca/tela_busca.dart';
+import '../../funcionalidades/busca/tela_cadastrar_obra.dart';
 import '../../funcionalidades/conta/apresentacao/tela_entrar.dart';
+import '../../funcionalidades/escanear/apresentacao/tela_escanear.dart';
+import '../../funcionalidades/escanear/apresentacao/tela_resultado.dart';
+import '../../funcionalidades/escanear/dados/reconhecimento_repositorio.dart';
 import '../../funcionalidades/ficha/tela_ficha.dart';
 import '../../funcionalidades/inicio/tela_inicio.dart';
 import 'casca.dart';
@@ -18,21 +22,21 @@ final roteadorProvider = Provider<GoRouter>((ref) {
       StatefulShellRoute.indexedStack(
         builder: (_, _, shell) => CascaNavegacao(shell: shell),
         branches: [
-          StatefulShellBranch(routes: [
-            GoRoute(path: '/', builder: (_, _) => const TelaInicio()),
-          ]),
-          StatefulShellBranch(routes: [
-            GoRoute(path: '/listas', builder: (_, _) => const _Provisoria('Listas')),
-          ]),
-          StatefulShellBranch(routes: [
-            GoRoute(path: '/perfil', builder: (_, _) => const _Provisoria('Perfil')),
-          ]),
-          StatefulShellBranch(routes: [
-            GoRoute(path: '/acervo', builder: (_, _) => const _Provisoria('Acervo')),
-          ]),
-          StatefulShellBranch(routes: [
-            GoRoute(path: '/revisao', builder: (_, _) => const _Provisoria('Revisão')),
-          ]),
+          StatefulShellBranch(
+            routes: [GoRoute(path: '/', builder: (_, _) => const TelaInicio())],
+          ),
+          StatefulShellBranch(
+            routes: [GoRoute(path: '/listas', builder: (_, _) => const _Provisoria('Listas'))],
+          ),
+          StatefulShellBranch(
+            routes: [GoRoute(path: '/perfil', builder: (_, _) => const _Provisoria('Perfil'))],
+          ),
+          StatefulShellBranch(
+            routes: [GoRoute(path: '/acervo', builder: (_, _) => const _Provisoria('Acervo'))],
+          ),
+          StatefulShellBranch(
+            routes: [GoRoute(path: '/revisao', builder: (_, _) => const _Provisoria('Revisão'))],
+          ),
         ],
       ),
       GoRoute(
@@ -47,6 +51,30 @@ final roteadorProvider = Provider<GoRouter>((ref) {
           obraId: s.pathParameters['id']!,
           confirmarReconhecimento: s.uri.queryParameters['reconhecido'] == '1',
         ),
+      ),
+      GoRoute(
+        path: '/escanear',
+        parentNavigatorKey: chaveRaiz,
+        builder: (_, s) => TelaEscanear(abrirIsbn: s.uri.queryParameters['isbn'] == '1'),
+      ),
+      GoRoute(
+        path: '/reconhecimento',
+        parentNavigatorKey: chaveRaiz,
+        builder: (_, s) => TelaResultadoReconhecimento(
+          resultado:
+              s.extra as ResultadoReconhecimento? ??
+              const ResultadoReconhecimento(status: 'nao_identificado'),
+        ),
+      ),
+      GoRoute(
+        path: '/reconhecimento/correcao',
+        parentNavigatorKey: chaveRaiz,
+        builder: (_, s) => TelaCorrecaoReconhecimento(obraRecusadaId: s.extra as String? ?? ''),
+      ),
+      GoRoute(
+        path: '/cadastrar-obra',
+        parentNavigatorKey: chaveRaiz,
+        builder: (_, s) => TelaCadastrarObra(isbn: s.uri.queryParameters['isbn'] ?? ''),
       ),
       GoRoute(
         path: '/entrar',

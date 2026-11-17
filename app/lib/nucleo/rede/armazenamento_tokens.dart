@@ -14,7 +14,7 @@ abstract interface class ArmazenamentoTokens {
 
 class ArmazenamentoTokensSeguro implements ArmazenamentoTokens {
   ArmazenamentoTokensSeguro([FlutterSecureStorage? armazenamento])
-      : _a = armazenamento ?? const FlutterSecureStorage();
+    : _a = armazenamento ?? const FlutterSecureStorage();
   final FlutterSecureStorage _a;
   static const _chaveAcesso = 'token_acesso';
   static const _chaveRenovacao = 'token_renovacao';

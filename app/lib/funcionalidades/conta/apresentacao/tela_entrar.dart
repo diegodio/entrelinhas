@@ -74,9 +74,11 @@ class _TelaEntrarState extends ConsumerState<TelaEntrar> {
       if (mounted) _concluir();
     } on ErroApi catch (e) {
       if (!mounted) return;
-      setState(() => _erro = e.codigo == 'credenciais_invalidas'
-          ? t.erroCredenciais
-          : mensagemDeErro(context, e));
+      setState(
+        () => _erro = e.codigo == 'credenciais_invalidas'
+            ? t.erroCredenciais
+            : mensagemDeErro(context, e),
+      );
     } finally {
       if (mounted) setState(() => _enviando = false);
     }
@@ -88,7 +90,8 @@ class _TelaEntrarState extends ConsumerState<TelaEntrar> {
     try {
       final credencial = await ref.read(loginSocialProvider).entrar(provedor);
       if (credencial == null) return; // a pessoa cancelou
-      await ref.read(sessaoProvider.notifier)
+      await ref
+          .read(sessaoProvider.notifier)
           .entrarComProvedor(provedor, credencial.idToken, nome: credencial.nome);
       if (mounted) _concluir();
     } on LoginSocialIndisponivel {
@@ -117,8 +120,10 @@ class _TelaEntrarState extends ConsumerState<TelaEntrar> {
                 children: [
                   Semantics(
                     header: true,
-                    child: Text(widget.cadastro ? t.criarContaTitulo : t.entrarTitulo,
-                        style: e.tituloObra),
+                    child: Text(
+                      widget.cadastro ? t.criarContaTitulo : t.entrarTitulo,
+                      style: e.tituloObra,
+                    ),
                   ),
                   const SizedBox(height: Espaco.l),
                   for (final p in social.disponiveis) ...[
@@ -131,14 +136,16 @@ class _TelaEntrarState extends ConsumerState<TelaEntrar> {
                   ],
                   if (social.disponiveis.isNotEmpty) ...[
                     const SizedBox(height: Espaco.xs),
-                    Row(children: [
-                      const Expanded(child: Divider()),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: Espaco.s),
-                        child: Text(t.ou, style: e.apoio),
-                      ),
-                      const Expanded(child: Divider()),
-                    ]),
+                    Row(
+                      children: [
+                        const Expanded(child: Divider()),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: Espaco.s),
+                          child: Text(t.ou, style: e.apoio),
+                        ),
+                        const Expanded(child: Divider()),
+                      ],
+                    ),
                     const SizedBox(height: Espaco.m),
                   ],
                   if (widget.cadastro) ...[
@@ -182,23 +189,28 @@ class _TelaEntrarState extends ConsumerState<TelaEntrar> {
                       onChanged: (v) => setState(() => _aceite = v ?? false),
                       title: Text(t.aceitoTermos, style: e.corpo),
                     ),
-                    Wrap(spacing: Espaco.s, children: [
-                      TextButton(
-                        onPressed: () => launchUrl(Uri.parse(Ambiente.urlTermos)),
-                        child: Text(t.termos),
-                      ),
-                      TextButton(
-                        onPressed: () => launchUrl(Uri.parse(Ambiente.urlPolitica)),
-                        child: Text(t.politica),
-                      ),
-                    ]),
+                    Wrap(
+                      spacing: Espaco.s,
+                      children: [
+                        TextButton(
+                          onPressed: () => launchUrl(Uri.parse(Ambiente.urlTermos)),
+                          child: Text(t.termos),
+                        ),
+                        TextButton(
+                          onPressed: () => launchUrl(Uri.parse(Ambiente.urlPolitica)),
+                          child: Text(t.politica),
+                        ),
+                      ],
+                    ),
                   ],
                   if (_erro != null) ...[
                     const SizedBox(height: Espaco.s),
                     Semantics(
                       liveRegion: true,
-                      child: Text(_erro!,
-                          style: e.corpo.copyWith(color: context.cores.alertaForte)),
+                      child: Text(
+                        _erro!,
+                        style: e.corpo.copyWith(color: context.cores.alertaForte),
+                      ),
                     ),
                   ],
                   const SizedBox(height: Espaco.m),
@@ -214,7 +226,8 @@ class _TelaEntrarState extends ConsumerState<TelaEntrar> {
                     ),
                   TextButton(
                     onPressed: () => context.pushReplacement(
-                        (widget.cadastro ? '/entrar' : '/cadastro') + depois),
+                      (widget.cadastro ? '/entrar' : '/cadastro') + depois,
+                    ),
                     child: Text(widget.cadastro ? t.jaTemConta : t.naoTemConta),
                   ),
                   const SizedBox(height: Espaco.xl),

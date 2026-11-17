@@ -61,8 +61,7 @@ import 'textos_pt.dart';
 /// be consistent with the languages listed in the Textos.supportedLocales
 /// property.
 abstract class Textos {
-  Textos(String locale)
-    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  Textos(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -2125,8 +2124,7 @@ class _TextosDelegate extends LocalizationsDelegate<Textos> {
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['pt'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['pt'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_TextosDelegate old) => false;

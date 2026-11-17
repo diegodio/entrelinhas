@@ -16,9 +16,20 @@ class ConfiguracaoServidor {
   final Map<String, dynamic> limites;
 
   static const chavesConhecidas = {
-    'trechos_literais', 'parafrase_evidencia', 'camada_b', 'camada_c', 'valor_formativo',
-    'eixo_a6', 'confianca', 'justificativa_eixo', 'selo_revisao_humana', 'metodologia',
-    'exportar_pdf', 'compartilhar', 'scanner', 'busca_titulo',
+    'trechos_literais',
+    'parafrase_evidencia',
+    'camada_b',
+    'camada_c',
+    'valor_formativo',
+    'eixo_a6',
+    'confianca',
+    'justificativa_eixo',
+    'selo_revisao_humana',
+    'metodologia',
+    'exportar_pdf',
+    'compartilhar',
+    'scanner',
+    'busca_titulo',
   };
 
   /// Valores iniciais da seção 4.8, usados enquanto o servidor não responde.

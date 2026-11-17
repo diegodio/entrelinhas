@@ -8,8 +8,9 @@ import 'config/configuracao_servidor.dart';
 import 'rede/armazenamento_tokens.dart';
 import 'rede/cliente_api.dart';
 
-final armazenamentoTokensProvider =
-    Provider<ArmazenamentoTokens>((ref) => ArmazenamentoTokensSeguro());
+final armazenamentoTokensProvider = Provider<ArmazenamentoTokens>(
+  (ref) => ArmazenamentoTokensSeguro(),
+);
 
 final cacheLocalProvider = Provider<CacheLocal>((ref) => CachePreferencias());
 
@@ -36,9 +37,7 @@ const _chaveCacheConfig = 'configuracao_servidor';
 final configuracaoServidorProvider = FutureProvider<ConfiguracaoServidor>((ref) async {
   final cache = ref.watch(cacheLocalProvider);
   try {
-    final json = await ref.watch(clienteApiProvider).get<Map<String, dynamic>>(
-          '/v1/configuracao',
-        );
+    final json = await ref.watch(clienteApiProvider).get<Map<String, dynamic>>('/v1/configuracao');
     await cache.gravarJson(_chaveCacheConfig, json);
     return ConfiguracaoServidor.fromJson(json);
   } catch (_) {

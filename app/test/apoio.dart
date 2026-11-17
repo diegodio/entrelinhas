@@ -37,7 +37,10 @@ Future<void> carregarFontes() async {
     await loader.load();
   }
 
-  await carregar('Fraunces', ['assets/fontes/Fraunces-Medium.ttf', 'assets/fontes/Fraunces-SemiBold.ttf']);
+  await carregar('Fraunces', [
+    'assets/fontes/Fraunces-Medium.ttf',
+    'assets/fontes/Fraunces-SemiBold.ttf',
+  ]);
   await carregar('NunitoSans', [
     'assets/fontes/NunitoSans-Regular.ttf',
     'assets/fontes/NunitoSans-Italic.ttf',
@@ -45,7 +48,8 @@ Future<void> carregarFontes() async {
     'assets/fontes/NunitoSans-Bold.ttf',
   ]);
   final icones = File(
-      '${Platform.environment['FLUTTER_ROOT'] ?? '/opt/sdk/flutter'}/bin/cache/artifacts/material_fonts/MaterialIcons-Regular.otf');
+    '${Platform.environment['FLUTTER_ROOT'] ?? '/opt/sdk/flutter'}/bin/cache/artifacts/material_fonts/MaterialIcons-Regular.otf',
+  );
   if (icones.existsSync()) {
     await carregar('MaterialIcons', [icones.path]);
   }
@@ -123,12 +127,19 @@ Ficha fichaExemplo({
           justificativa: (niveis[e] ?? 0) > 0 ? 'Justificativa do eixo $e.' : '',
         ),
     },
-    evidencias: evidencias ??
+    evidencias:
+        evidencias ??
         const [
-          Evidencia(eixo: 'A1', parafrase: 'Em uma discussão, o tio empurra o irmão.',
-              fonte: 'sinopse da editora'),
-          Evidencia(eixo: 'A6', parafrase: 'Lembrança de abuso narrada pela avó.',
-              fonte: 'resenha pública'),
+          Evidencia(
+            eixo: 'A1',
+            parafrase: 'Em uma discussão, o tio empurra o irmão.',
+            fonte: 'sinopse da editora',
+          ),
+          Evidencia(
+            eixo: 'A6',
+            parafrase: 'Lembrança de abuso narrada pela avó.',
+            fonte: 'resenha pública',
+          ),
         ],
     camadaB: CamadaB(flags: flags),
     camadaC: const CamadaC(
@@ -157,7 +168,7 @@ class ApiNula extends ClienteApi {
 
 class ObrasFalso extends ObrasRepositorio {
   ObrasFalso({this.obra = obraJardim, this.respostaFicha, this.erroFicha})
-      : super(ApiNula(), CacheMemoria());
+    : super(ApiNula(), CacheMemoria());
 
   final ObraDetalhe obra;
   final RespostaFicha? respostaFicha;
@@ -179,7 +190,7 @@ class ObrasFalso extends ObrasRepositorio {
 
 class ContaFalsa extends ContaRepositorio {
   ContaFalsa({this.usuario, this.leitoresIniciais = const []})
-      : super(ApiNula(), ArmazenamentoTokensMemoria());
+    : super(ApiNula(), ArmazenamentoTokensMemoria());
   final Usuario? usuario;
   final List<PerfilLeitor> leitoresIniciais;
 
@@ -203,8 +214,7 @@ List<Override> overridesFicha({
     cacheLocalProvider.overrideWithValue(CacheMemoria()),
     configuracaoServidorProvider.overrideWith((_) async => config),
     relogioProvider.overrideWithValue(() => hoje ?? DateTime(2026, 11, 16)),
-    if (leitorId != null)
-      leitorSelecionadoProvider.overrideWith(() => _LeitorFixo(leitorId)),
+    if (leitorId != null) leitorSelecionadoProvider.overrideWith(() => _LeitorFixo(leitorId)),
   ];
 }
 

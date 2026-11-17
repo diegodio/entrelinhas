@@ -30,8 +30,11 @@ class EstadoErro extends StatelessWidget {
         children: [
           Icon(Icons.cloud_off_outlined, size: 32, color: context.cores.tintaFraca),
           const SizedBox(height: Espaco.s),
-          Text(mensagemDeErro(context, erro),
-              textAlign: TextAlign.center, style: context.estilos.corpo),
+          Text(
+            mensagemDeErro(context, erro),
+            textAlign: TextAlign.center,
+            style: context.estilos.corpo,
+          ),
           if (aoTentarDeNovo != null) ...[
             const SizedBox(height: Espaco.m),
             OutlinedButton(onPressed: aoTentarDeNovo, child: Text(t.tentarNovamente)),
@@ -43,8 +46,12 @@ class EstadoErro extends StatelessWidget {
 }
 
 class EstadoVazio extends StatelessWidget {
-  const EstadoVazio({super.key, required this.mensagem, this.icone = Icons.menu_book_outlined,
-      this.acao});
+  const EstadoVazio({
+    super.key,
+    required this.mensagem,
+    this.icone = Icons.menu_book_outlined,
+    this.acao,
+  });
   final String mensagem;
   final IconData icone;
   final Widget? acao;
@@ -68,8 +75,13 @@ class EstadoVazio extends StatelessWidget {
 
 /// Bloco de esqueleto: a forma do conteúdo enquanto carrega, sem indicador giratório.
 class BlocoEsqueleto extends StatefulWidget {
-  const BlocoEsqueleto({super.key, this.largura, required this.altura, this.raio = 6,
-      this.circulo = false});
+  const BlocoEsqueleto({
+    super.key,
+    this.largura,
+    required this.altura,
+    this.raio = 6,
+    this.circulo = false,
+  });
   final double? largura;
   final double altura;
   final double raio;
@@ -124,7 +136,12 @@ class _BlocoEsqueletoState extends State<BlocoEsqueleto> with SingleTickerProvid
 
 /// Cartão de aviso discreto (procedência, estimativa, A5, revisão).
 class Aviso extends StatelessWidget {
-  const Aviso({super.key, required this.texto, this.icone = Icons.info_outline, this.forte = false});
+  const Aviso({
+    super.key,
+    required this.texto,
+    this.icone = Icons.info_outline,
+    this.forte = false,
+  });
   final String texto;
   final IconData icone;
   final bool forte;

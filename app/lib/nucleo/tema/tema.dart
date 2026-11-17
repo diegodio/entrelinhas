@@ -124,35 +124,77 @@ class EstilosTexto extends ThemeExtension<EstilosTexto> {
   final CoresEntrelinhas c;
 
   TextStyle get marca => TextStyle(
-      fontFamily: Fontes.editorial, fontWeight: FontWeight.w600, fontSize: Tamanhos.marca,
-      letterSpacing: -0.5, color: c.tinta, height: 1.1);
+    fontFamily: Fontes.editorial,
+    fontWeight: FontWeight.w600,
+    fontSize: Tamanhos.marca,
+    letterSpacing: -0.5,
+    color: c.tinta,
+    height: 1.1,
+  );
   TextStyle get tituloObra => TextStyle(
-      fontFamily: Fontes.editorial, fontWeight: FontWeight.w600, fontSize: Tamanhos.tituloObra,
-      color: c.tinta, height: 1.15);
+    fontFamily: Fontes.editorial,
+    fontWeight: FontWeight.w600,
+    fontSize: Tamanhos.tituloObra,
+    color: c.tinta,
+    height: 1.15,
+  );
   TextStyle get tituloSecao => TextStyle(
-      fontFamily: Fontes.editorial, fontWeight: FontWeight.w600, fontSize: Tamanhos.tituloSecao,
-      color: c.tinta, height: 1.2);
+    fontFamily: Fontes.editorial,
+    fontWeight: FontWeight.w600,
+    fontSize: Tamanhos.tituloSecao,
+    color: c.tinta,
+    height: 1.2,
+  );
   TextStyle get destaque => TextStyle(
-      fontFamily: Fontes.editorial, fontWeight: FontWeight.w500, fontSize: Tamanhos.destaque,
-      color: c.tinta, height: 1.25);
+    fontFamily: Fontes.editorial,
+    fontWeight: FontWeight.w500,
+    fontSize: Tamanhos.destaque,
+    color: c.tinta,
+    height: 1.25,
+  );
   TextStyle get corpo => TextStyle(
-      fontFamily: Fontes.interface, fontSize: Tamanhos.corpoMenor, color: c.tinta, height: 1.5);
+    fontFamily: Fontes.interface,
+    fontSize: Tamanhos.corpoMenor,
+    color: c.tinta,
+    height: 1.5,
+  );
   TextStyle get corpoFraco => corpo.copyWith(color: c.tintaFraca);
   TextStyle get apoio => TextStyle(
-      fontFamily: Fontes.interface, fontSize: Tamanhos.apoio, color: c.tintaFraca, height: 1.4);
+    fontFamily: Fontes.interface,
+    fontSize: Tamanhos.apoio,
+    color: c.tintaFraca,
+    height: 1.4,
+  );
   TextStyle get rotulo => TextStyle(
-      fontFamily: Fontes.interface, fontSize: Tamanhos.apoioMenor, fontWeight: FontWeight.w700,
-      color: c.tintaFraca);
+    fontFamily: Fontes.interface,
+    fontSize: Tamanhos.apoioMenor,
+    fontWeight: FontWeight.w700,
+    color: c.tintaFraca,
+  );
   TextStyle get rotuloMaiusculo => TextStyle(
-      fontFamily: Fontes.interface, fontSize: Tamanhos.legenda, fontWeight: FontWeight.w700,
-      letterSpacing: 1, color: c.tintaFraca);
+    fontFamily: Fontes.interface,
+    fontSize: Tamanhos.legenda,
+    fontWeight: FontWeight.w700,
+    letterSpacing: 1,
+    color: c.tintaFraca,
+  );
   TextStyle get legenda => TextStyle(
-      fontFamily: Fontes.interface, fontSize: Tamanhos.legenda, color: c.tintaFraca, height: 1.4);
+    fontFamily: Fontes.interface,
+    fontSize: Tamanhos.legenda,
+    color: c.tintaFraca,
+    height: 1.4,
+  );
   TextStyle get botao => const TextStyle(
-      fontFamily: Fontes.interface, fontSize: Tamanhos.corpoMenor, fontWeight: FontWeight.w700);
+    fontFamily: Fontes.interface,
+    fontSize: Tamanhos.corpoMenor,
+    fontWeight: FontWeight.w700,
+  );
   TextStyle get slogan => TextStyle(
-      fontFamily: Fontes.interface, fontSize: Tamanhos.corpoMenor, fontStyle: FontStyle.italic,
-      color: c.tintaFraca);
+    fontFamily: Fontes.interface,
+    fontSize: Tamanhos.corpoMenor,
+    fontStyle: FontStyle.italic,
+    color: c.tintaFraca,
+  );
 
   @override
   EstilosTexto copyWith() => this;

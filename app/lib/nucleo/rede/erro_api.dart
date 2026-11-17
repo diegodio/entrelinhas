@@ -29,7 +29,8 @@ class ErroApi implements Exception {
         status: resposta?.statusCode,
       );
     }
-    final semResposta = resposta == null &&
+    final semResposta =
+        resposta == null &&
         (e.type == DioExceptionType.connectionError ||
             e.type == DioExceptionType.connectionTimeout ||
             e.type == DioExceptionType.receiveTimeout ||

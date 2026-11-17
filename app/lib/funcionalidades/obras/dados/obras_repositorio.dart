@@ -75,14 +75,17 @@ class ObrasRepositorio {
     int? ano,
     int? paginas,
   }) async {
-    final json = await api.post<Map<String, dynamic>>('/v1/obras', dados: {
-      'isbn': isbn,
-      'titulo': titulo,
-      'autores': autores,
-      'editora': ?editora,
-      'ano': ?ano,
-      'paginas': ?paginas,
-    });
+    final json = await api.post<Map<String, dynamic>>(
+      '/v1/obras',
+      dados: {
+        'isbn': isbn,
+        'titulo': titulo,
+        'autores': autores,
+        'editora': ?editora,
+        'ano': ?ano,
+        'paginas': ?paginas,
+      },
+    );
     return ObraDetalhe.fromJson(json);
   }
 
@@ -91,10 +94,7 @@ class ObrasRepositorio {
   Future<List<ObraResumo>> historico() async {
     final salvo = await cache.lerJson(_chaveHistorico);
     if (salvo is! List) return const [];
-    return salvo
-        .whereType<Map<String, dynamic>>()
-        .map(ObraResumo.fromJson)
-        .toList(growable: false);
+    return salvo.whereType<Map<String, dynamic>>().map(ObraResumo.fromJson).toList(growable: false);
   }
 
   Future<List<ObraResumo>> registrarNoHistorico(ObraResumo obra) async {

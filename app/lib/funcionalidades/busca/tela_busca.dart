@@ -154,8 +154,7 @@ class _TelaBuscaState extends ConsumerState<TelaBusca> {
   void initState() {
     super.initState();
     if (widget.termoInicial.isNotEmpty) {
-      Future.microtask(
-          () => ref.read(buscaProvider.notifier).buscarAgora(widget.termoInicial));
+      Future.microtask(() => ref.read(buscaProvider.notifier).buscarAgora(widget.termoInicial));
     }
   }
 
@@ -187,9 +186,14 @@ class _TelaBuscaState extends ConsumerState<TelaBusca> {
             ),
           ),
           const SizedBox(height: Espaco.s),
-          Expanded(child: _Resultados(estado: estado, aoTentar: () {
-            ref.read(buscaProvider.notifier).buscarAgora(_controle.text);
-          })),
+          Expanded(
+            child: _Resultados(
+              estado: estado,
+              aoTentar: () {
+                ref.read(buscaProvider.notifier).buscarAgora(_controle.text);
+              },
+            ),
+          ),
         ],
       ),
     );
@@ -209,48 +213,54 @@ class _Resultados extends StatelessWidget {
       BuscaCurta() => EstadoVazio(mensagem: t.buscaMinimo, icone: Icons.keyboard_outlined),
       BuscaIsbnInvalido() => EstadoVazio(mensagem: t.isbnInvalido, icone: Icons.pin_outlined),
       BuscaCarregando() => ListView(
-          children: [
-            for (var i = 0; i < 4; i++)
-              const LarguraLeitura(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: Espaco.s),
-                  child: Row(children: [
+        children: [
+          for (var i = 0; i < 4; i++)
+            const LarguraLeitura(
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: Espaco.s),
+                child: Row(
+                  children: [
                     BlocoEsqueleto(largura: 44, altura: 64, raio: 3),
                     SizedBox(width: 14),
                     Expanded(child: BlocoEsqueleto(altura: 18)),
-                  ]),
+                  ],
                 ),
               ),
-          ],
-        ),
+            ),
+        ],
+      ),
       BuscaIsbnNaoEncontrado(:final isbn) => EstadoVazio(
-          mensagem: t.obraNaoEncontrada,
-          acao: FilledButton(
-            onPressed: () => context.push('/cadastrar-obra?isbn=$isbn'),
-            child: Text(t.botaoCadastrarManual),
-          ),
+        mensagem: t.obraNaoEncontrada,
+        acao: FilledButton(
+          onPressed: () => context.push('/cadastrar-obra?isbn=$isbn'),
+          child: Text(t.botaoCadastrarManual),
         ),
+      ),
       BuscaErro(:final erro) => EstadoErro(erro: erro, aoTentarDeNovo: aoTentar),
       BuscaResultado(:final resultado) => ListView(
-          children: [
-            if (resultado.fontesExternasIndisponiveis)
-              LarguraLeitura(child: Aviso(texto: t.buscaErroRede, icone: Icons.cloud_off)),
-            if (resultado.resultados.isEmpty)
-              EstadoVazio(mensagem: t.buscaVazia, icone: Icons.search_off)
-            else
-              for (final obra in resultado.resultados)
-                LarguraLeitura(
-                  child: Column(children: [
+        children: [
+          if (resultado.fontesExternasIndisponiveis)
+            LarguraLeitura(
+              child: Aviso(texto: t.buscaErroRede, icone: Icons.cloud_off),
+            ),
+          if (resultado.resultados.isEmpty)
+            EstadoVazio(mensagem: t.buscaVazia, icone: Icons.search_off)
+          else
+            for (final obra in resultado.resultados)
+              LarguraLeitura(
+                child: Column(
+                  children: [
                     LinhaLivro(
                       obra: obra,
                       complemento: t.origem(obra.origem),
                       aoTocar: () => context.push('/obra/${obra.id}'),
                     ),
                     const Divider(),
-                  ]),
+                  ],
                 ),
-          ],
-        ),
+              ),
+        ],
+      ),
     };
   }
 }

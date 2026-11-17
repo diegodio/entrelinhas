@@ -37,11 +37,15 @@ class CascaNavegacao extends ConsumerWidget {
       _Destino(t.navListas, Icons.bookmarks_outlined, Icons.bookmarks, '/listas', ramo: 1),
       _Destino(t.navPerfil, Icons.person_outline, Icons.person, '/perfil', ramo: 2),
       if (mostraExtras && (usuario?.temOrganizacao ?? false))
-        _Destino(t.navAcervo, Icons.local_library_outlined, Icons.local_library, '/acervo',
-            ramo: 3),
+        _Destino(
+          t.navAcervo,
+          Icons.local_library_outlined,
+          Icons.local_library,
+          '/acervo',
+          ramo: 3,
+        ),
       if (mostraExtras && (usuario?.revisor ?? false))
-        _Destino(t.navRevisao, Icons.rate_review_outlined, Icons.rate_review, '/revisao',
-            ramo: 4),
+        _Destino(t.navRevisao, Icons.rate_review_outlined, Icons.rate_review, '/revisao', ramo: 4),
     ];
     final selecionado = destinos.indexWhere((d) => d.ramo == shell.currentIndex);
 
@@ -85,7 +89,9 @@ class CascaNavegacao extends ConsumerWidget {
     return Scaffold(
       body: shell,
       bottomNavigationBar: DecoratedBox(
-        decoration: BoxDecoration(border: Border(top: BorderSide(color: context.cores.pauta))),
+        decoration: BoxDecoration(
+          border: Border(top: BorderSide(color: context.cores.pauta)),
+        ),
         child: NavigationBar(
           selectedIndex: selecionado < 0 ? 0 : selecionado,
           onDestinationSelected: ir,

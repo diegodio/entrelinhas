@@ -12,21 +12,27 @@ import 'apoio.dart';
 
 const _usuario = Usuario(id: 'u1', email: 'a@b.br');
 
-Future<void> abrirFicha(WidgetTester tester, ObrasFalso obras,
-    {ConfiguracaoServidor config = ConfiguracaoServidor.padrao,
-    ContaFalsa? conta,
-    String? leitorId,
-    Size tamanho = const Size(390, 2600)}) async {
+Future<void> abrirFicha(
+  WidgetTester tester,
+  ObrasFalso obras, {
+  ConfiguracaoServidor config = ConfiguracaoServidor.padrao,
+  ContaFalsa? conta,
+  String? leitorId,
+  Size tamanho = const Size(390, 2600),
+}) async {
   definirTela(tester, tamanho);
-  await tester.pumpWidget(appDeTeste(
-    const TelaFicha(obraId: 'o1'),
-    overrides: overridesFicha(obras: obras, config: config, conta: conta, leitorId: leitorId),
-  ));
+  await tester.pumpWidget(
+    appDeTeste(
+      const TelaFicha(obraId: 'o1'),
+      overrides: overridesFicha(obras: obras, config: config, conta: conta, leitorId: leitorId),
+    ),
+  );
   await tester.pumpAndSettle();
 }
 
-ObrasFalso _pronta(Ficha ficha) =>
-    ObrasFalso(respostaFicha: RespostaFicha(statusFicha: ficha.status, ficha: ficha));
+ObrasFalso _pronta(Ficha ficha) => ObrasFalso(
+  respostaFicha: RespostaFicha(statusFicha: ficha.status, ficha: ficha),
+);
 
 void main() {
   setUpAll(carregarFontes);
@@ -62,8 +68,11 @@ void main() {
       determinante: 'A5',
       faixa: '16+',
       evidencias: const [
-        Evidencia(eixo: 'A5', parafrase: 'Cena descrita de forma neutra.',
-            trechoLiteral: 'TRECHO PROIBIDO'),
+        Evidencia(
+          eixo: 'A5',
+          parafrase: 'Cena descrita de forma neutra.',
+          trechoLiteral: 'TRECHO PROIBIDO',
+        ),
         Evidencia(eixo: 'A1', parafrase: 'Briga breve.', trechoLiteral: 'TRECHO PERMITIDO'),
       ],
       fonte: 'texto_integral',
@@ -75,8 +84,10 @@ void main() {
     await t.pumpAndSettle();
     expect(find.textContaining('TRECHO PROIBIDO'), findsNothing);
     expect(find.textContaining('TRECHO PERMITIDO'), findsOneWidget);
-    expect(find.textContaining('não são reproduzidos por descreverem conduta de risco'),
-        findsOneWidget);
+    expect(
+      find.textContaining('não são reproduzidos por descreverem conduta de risco'),
+      findsOneWidget,
+    );
   });
 
   testWidgets('trechos literais desligados não aparecem', (t) async {
@@ -110,12 +121,20 @@ void main() {
 
   testWidgets('limite atingido mantém selo e recomendação e oferece planos', (t) async {
     final obras = ObrasFalso(
-      erroFicha: const ErroApi(codigo: 'limite_atingido', mensagem: '', status: 402, detalhes: {
-        'resumo': {
-          'obra_id': 'o1', 'slug': 's', 'status': 'publicada', 'faixa_final': '14+',
-          'texto_recomendacao': 'Recomendada com mediação de adulto a partir de 14 anos.',
+      erroFicha: const ErroApi(
+        codigo: 'limite_atingido',
+        mensagem: '',
+        status: 402,
+        detalhes: {
+          'resumo': {
+            'obra_id': 'o1',
+            'slug': 's',
+            'status': 'publicada',
+            'faixa_final': '14+',
+            'texto_recomendacao': 'Recomendada com mediação de adulto a partir de 14 anos.',
+          },
         },
-      }),
+      ),
     );
     await abrirFicha(t, obras, conta: ContaFalsa(usuario: _usuario));
     expect(find.byType(SeloFaixa), findsOneWidget);
@@ -126,10 +145,20 @@ void main() {
 
   testWidgets('sem conta: resumo e convite para entrar', (t) async {
     final obras = ObrasFalso(
-      erroFicha: const ErroApi(codigo: 'nao_autenticado', mensagem: '', status: 401, detalhes: {
-        'resumo': {'obra_id': 'o1', 'slug': 's', 'status': 'publicada', 'faixa_final': '14+',
-          'texto_recomendacao': 'x'},
-      }),
+      erroFicha: const ErroApi(
+        codigo: 'nao_autenticado',
+        mensagem: '',
+        status: 401,
+        detalhes: {
+          'resumo': {
+            'obra_id': 'o1',
+            'slug': 's',
+            'status': 'publicada',
+            'faixa_final': '14+',
+            'texto_recomendacao': 'x',
+          },
+        },
+      ),
     );
     await abrirFicha(t, obras);
     expect(find.text('Entrar'), findsOneWidget);
@@ -140,8 +169,12 @@ void main() {
     FichaNotifier.intervaloAnalise = const Duration(milliseconds: 50);
     final obras = ObrasFalso(respostaFicha: const RespostaFicha(statusFicha: 'em_analise'));
     definirTela(t, const Size(390, 844));
-    await t.pumpWidget(appDeTeste(const TelaFicha(obraId: 'o1'),
-        overrides: overridesFicha(obras: obras)));
+    await t.pumpWidget(
+      appDeTeste(
+        const TelaFicha(obraId: 'o1'),
+        overrides: overridesFicha(obras: obras),
+      ),
+    );
     await t.pump();
     await t.pump();
     expect(find.textContaining('Estamos analisando esta obra'), findsOneWidget);
@@ -165,8 +198,10 @@ void main() {
     );
     await abrirFicha(t, _pronta(fichaExemplo()), conta: conta, leitorId: 'l1');
     expect(
-      find.text('A faixa é 14 anos; Lia tem 12. A orientação é leitura com mediação de adulto '
-          'ou aguardar.'),
+      find.text(
+        'A faixa é 14 anos; Lia tem 12. A orientação é leitura com mediação de adulto '
+        'ou aguardar.',
+      ),
       findsOneWidget,
     );
   });
@@ -180,8 +215,10 @@ void main() {
   testWidgets('semântica do eixo descreve nível e rótulo', (t) async {
     final semantica = t.ensureSemantics();
     await abrirFicha(t, _pronta(fichaExemplo()));
-    expect(find.bySemanticsLabel(RegExp(r'Violência física: nível 2 de 4, Moderado')),
-        findsOneWidget);
+    expect(
+      find.bySemanticsLabel(RegExp(r'Violência física: nível 2 de 4, Moderado')),
+      findsOneWidget,
+    );
     expect(find.bySemanticsLabel('Orientação de leitura: 14+'), findsOneWidget);
     semantica.dispose();
   });
@@ -190,17 +227,32 @@ void main() {
     final hoje = DateTime(2026, 11, 16);
     test('dentro da faixa', () {
       final r = compararLeitor(
-          const PerfilLeitor(id: 'a', apelido: 'Téo', anoNascimento: 2010), '14+', hoje);
+        const PerfilLeitor(id: 'a', apelido: 'Téo', anoNascimento: 2010),
+        '14+',
+        hoje,
+      );
       expect(r, isA<DentroDaFaixa>());
       expect(r!.idade, 16);
     });
     test('abaixo da faixa', () {
-      expect(compararLeitor(const PerfilLeitor(id: 'a', apelido: 'Téo', anoNascimento: 2016),
-          '12+', hoje), isA<AbaixoDaFaixa>());
+      expect(
+        compararLeitor(
+          const PerfilLeitor(id: 'a', apelido: 'Téo', anoNascimento: 2016),
+          '12+',
+          hoje,
+        ),
+        isA<AbaixoDaFaixa>(),
+      );
     });
     test('livre serve para todos e sem leitor não há bloco', () {
-      expect(compararLeitor(const PerfilLeitor(id: 'a', apelido: 'Bia', anoNascimento: 2024),
-          'Livre', hoje), isA<DentroDaFaixa>());
+      expect(
+        compararLeitor(
+          const PerfilLeitor(id: 'a', apelido: 'Bia', anoNascimento: 2024),
+          'Livre',
+          hoje,
+        ),
+        isA<DentroDaFaixa>(),
+      );
       expect(compararLeitor(null, '14+', hoje), isNull);
     });
   });

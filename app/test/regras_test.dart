@@ -45,7 +45,10 @@ void main() {
     });
     // Cores de faixa usadas como texto na pílula, sobre papel e superfície.
     for (final MapEntry(:key, :value) in c.faixas.entries) {
-      test('pílula $key sobre papel', () => expect(contraste(value, c.papel), greaterThanOrEqualTo(4.5)));
+      test(
+        'pílula $key sobre papel',
+        () => expect(contraste(value, c.papel), greaterThanOrEqualTo(4.5)),
+      );
     }
   });
 
@@ -65,15 +68,19 @@ void main() {
 
   group('configuração do servidor', () {
     test('chave desconhecida é erro, nunca verdadeiro', () {
-      expect(() => ConfiguracaoServidor.padrao.podeExibir('inventada'),
-          throwsA(isA<FlagDesconhecida>()));
+      expect(
+        () => ConfiguracaoServidor.padrao.podeExibir('inventada'),
+        throwsA(isA<FlagDesconhecida>()),
+      );
     });
     test('valores iniciais da seção 4.8', () {
       expect(ConfiguracaoServidor.padrao.podeExibir('trechos_literais'), isFalse);
       expect(ConfiguracaoServidor.padrao.podeExibir('camada_b'), isTrue);
     });
     test('ignora chaves desconhecidas vindas do servidor', () {
-      final c = ConfiguracaoServidor.fromJson({'flags': {'nova': true, 'camada_b': false}});
+      final c = ConfiguracaoServidor.fromJson({
+        'flags': {'nova': true, 'camada_b': false},
+      });
       expect(c.podeExibir('camada_b'), isFalse);
       expect(() => c.podeExibir('nova'), throwsA(isA<FlagDesconhecida>()));
     });
@@ -87,7 +94,9 @@ void main() {
   test('a expressão do sistema oficial não aparece em nenhum arquivo de textos', () {
     final proibida = RegExp('classifica[cç][aã]o\\s+indicativa', caseSensitive: false);
     final arquivos = [
-      ...Directory('lib').listSync(recursive: true).whereType<File>()
+      ...Directory('lib')
+          .listSync(recursive: true)
+          .whereType<File>()
           .where((f) => f.path.endsWith('.dart') || f.path.endsWith('.arb')),
       File('../backend/app/core/textos.py'),
       File('../backend/app/api/publico.py'),
@@ -101,19 +110,28 @@ void main() {
   testWidgets('imagem de referência: selos de todas as faixas', (t) async {
     await carregarFontes();
     definirTela(t, const Size(560, 220));
-    await t.pumpWidget(appDeTeste(Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(children: [
-          Wrap(spacing: 12, children: [for (final f in faixasOrdenadas) SeloFaixa(faixa: f)]),
-          const SizedBox(height: 12),
-          Wrap(spacing: 8, children: [
-            for (final f in faixasOrdenadas) SeloFaixa(faixa: f, tamanho: 48),
-            for (final f in faixasOrdenadas.take(3)) PilulaFaixa(faixa: f),
-          ]),
-        ]),
+    await t.pumpWidget(
+      appDeTeste(
+        Scaffold(
+          body: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                Wrap(spacing: 12, children: [for (final f in faixasOrdenadas) SeloFaixa(faixa: f)]),
+                const SizedBox(height: 12),
+                Wrap(
+                  spacing: 8,
+                  children: [
+                    for (final f in faixasOrdenadas) SeloFaixa(faixa: f, tamanho: 48),
+                    for (final f in faixasOrdenadas.take(3)) PilulaFaixa(faixa: f),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
-    )));
+    );
     await expectLater(find.byType(Scaffold), matchesGoldenFile('goldens/selos.png'));
   });
 }

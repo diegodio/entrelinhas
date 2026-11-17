@@ -12,33 +12,37 @@ class ContaRepositorio {
   final ArmazenamentoTokens tokens;
 
   Future<Usuario> _guardar(Map<String, dynamic> json) async {
-    await tokens.gravar(Tokens(
-      acesso: json['token_acesso'] as String,
-      renovacao: json['token_renovacao'] as String,
-    ));
+    await tokens.gravar(
+      Tokens(acesso: json['token_acesso'] as String, renovacao: json['token_renovacao'] as String),
+    );
     return eu();
   }
 
   Future<Usuario> entrar(String email, String senha) async => _guardar(
-        await api.post<Map<String, dynamic>>('/v1/auth/entrar',
-            dados: {'email': email, 'senha': senha}),
-      );
+    await api.post<Map<String, dynamic>>(
+      '/v1/auth/entrar',
+      dados: {'email': email, 'senha': senha},
+    ),
+  );
 
   Future<Usuario> cadastrar({
     required String email,
     required String senha,
     required String nome,
-  }) async =>
-      _guardar(await api.post<Map<String, dynamic>>('/v1/auth/cadastro', dados: {
-        'email': email,
-        'senha': senha,
-        'nome': nome,
-        'aceite_termos': true,
-      }));
+  }) async => _guardar(
+    await api.post<Map<String, dynamic>>(
+      '/v1/auth/cadastro',
+      dados: {'email': email, 'senha': senha, 'nome': nome, 'aceite_termos': true},
+    ),
+  );
 
   Future<Usuario> entrarComProvedor(String provedor, String idToken, {String? nome}) async =>
-      _guardar(await api.post<Map<String, dynamic>>('/v1/auth/$provedor',
-          dados: {'id_token': idToken, 'nome': ?nome}));
+      _guardar(
+        await api.post<Map<String, dynamic>>(
+          '/v1/auth/$provedor',
+          dados: {'id_token': idToken, 'nome': ?nome},
+        ),
+      );
 
   Future<void> recuperarSenha(String email) =>
       api.post<dynamic>('/v1/auth/recuperar', dados: {'email': email});
@@ -61,11 +65,12 @@ class ContaRepositorio {
 
   Future<Usuario> eu() async => Usuario.fromJson(await api.get<Map<String, dynamic>>('/v1/eu'));
 
-  Future<Usuario> atualizar({String? nome, bool? contribuirImagens}) async =>
-      Usuario.fromJson(await api.patch<Map<String, dynamic>>('/v1/eu', dados: {
-        'nome': ?nome,
-        'contribuir_imagens': ?contribuirImagens,
-      }));
+  Future<Usuario> atualizar({String? nome, bool? contribuirImagens}) async => Usuario.fromJson(
+    await api.patch<Map<String, dynamic>>(
+      '/v1/eu',
+      dados: {'nome': ?nome, 'contribuir_imagens': ?contribuirImagens},
+    ),
+  );
 
   Future<Map<String, dynamic>> exportarDados() =>
       api.get<Map<String, dynamic>>('/v1/eu/exportacao');
@@ -142,8 +147,8 @@ class SessaoNotifier extends AsyncNotifier<Usuario?> {
 
   Future<void> recarregar() async => state = AsyncData(await _repo.eu());
 
-  Future<void> atualizar({String? nome, bool? contribuirImagens}) async => state =
-      AsyncData(await _repo.atualizar(nome: nome, contribuirImagens: contribuirImagens));
+  Future<void> atualizar({String? nome, bool? contribuirImagens}) async =>
+      state = AsyncData(await _repo.atualizar(nome: nome, contribuirImagens: contribuirImagens));
 
   Future<void> sair() async {
     await _repo.sair();
@@ -168,9 +173,14 @@ class LeitoresNotifier extends AsyncNotifier<List<PerfilLeitor>> {
     return ref.read(contaRepositorioProvider).leitores();
   }
 
-  Future<void> salvar({String? id, required String apelido, required int ano,
-      required String icone}) async {
-    await ref.read(contaRepositorioProvider)
+  Future<void> salvar({
+    String? id,
+    required String apelido,
+    required int ano,
+    required String icone,
+  }) async {
+    await ref
+        .read(contaRepositorioProvider)
         .salvarLeitor(id: id, apelido: apelido, anoNascimento: ano, icone: icone);
     ref.invalidateSelf();
     await future;
@@ -187,8 +197,9 @@ class LeitoresNotifier extends AsyncNotifier<List<PerfilLeitor>> {
 }
 
 /// Leitor escolhido em "Para quem é a leitura?". Lembrado localmente.
-final leitorSelecionadoProvider =
-    NotifierProvider<LeitorSelecionado, String?>(LeitorSelecionado.new);
+final leitorSelecionadoProvider = NotifierProvider<LeitorSelecionado, String?>(
+  LeitorSelecionado.new,
+);
 
 class LeitorSelecionado extends Notifier<String?> {
   static const _chave = 'leitor_selecionado';

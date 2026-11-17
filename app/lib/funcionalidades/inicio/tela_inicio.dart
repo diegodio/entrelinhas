@@ -48,30 +48,24 @@ class TelaInicio extends ConsumerWidget {
                     const _SeletorLeitor(),
                     if (uso != null && uso.consultasLimite != null) ...[
                       const SizedBox(height: Espaco.s),
-                      Text(t.usoMes(uso.consultasUsadas, uso.consultasLimite!),
-                          style: e.legenda),
+                      Text(t.usoMes(uso.consultasUsadas, uso.consultasLimite!), style: e.legenda),
                     ],
                     const SizedBox(height: Espaco.l),
-                    Semantics(
-                      header: true,
-                      child: Text(t.consultasRecentes, style: e.tituloSecao),
-                    ),
+                    Semantics(header: true, child: Text(t.consultasRecentes, style: e.tituloSecao)),
                     const SizedBox(height: 6),
                     const Divider(),
                     switch (historico) {
-                      AsyncData(:final value) when value.isEmpty =>
-                        EstadoVazio(mensagem: t.semConsultasRecentes),
+                      AsyncData(:final value) when value.isEmpty => EstadoVazio(
+                        mensagem: t.semConsultasRecentes,
+                      ),
                       AsyncData(:final value) => Column(
-                          children: [
-                            for (final obra in value) ...[
-                              LinhaLivro(
-                                obra: obra,
-                                aoTocar: () => context.push('/obra/${obra.id}'),
-                              ),
-                              const Divider(),
-                            ],
+                        children: [
+                          for (final obra in value) ...[
+                            LinhaLivro(obra: obra, aoTocar: () => context.push('/obra/${obra.id}')),
+                            const Divider(),
                           ],
-                        ),
+                        ],
+                      ),
                       AsyncError(:final error) => EstadoErro(erro: error),
                       _ => const SizedBox.shrink(),
                     },
@@ -102,10 +96,7 @@ class CampoBusca extends StatelessWidget {
         const SizedBox(height: 6),
         TextField(
           textInputAction: TextInputAction.search,
-          decoration: InputDecoration(
-            hintText: t.dicaBusca,
-            prefixIcon: const Icon(Icons.search),
-          ),
+          decoration: InputDecoration(hintText: t.dicaBusca, prefixIcon: const Icon(Icons.search)),
           onSubmitted: (v) {
             if (v.trim().isNotEmpty) context.push('/busca?q=${Uri.encodeQueryComponent(v)}');
           },

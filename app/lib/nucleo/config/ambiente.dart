@@ -20,8 +20,12 @@ abstract final class Ambiente {
   static const urlApp = String.fromEnvironment('URL_APP', defaultValue: 'http://localhost:8080');
 
   static const googleClientIdWeb = String.fromEnvironment('GOOGLE_CLIENT_ID_WEB');
-  static const urlTermos = String.fromEnvironment('URL_TERMOS',
-      defaultValue: 'https://entrelinhas.app/termos');
-  static const urlPolitica = String.fromEnvironment('URL_POLITICA',
-      defaultValue: 'https://entrelinhas.app/privacidade');
+  static const urlTermos = String.fromEnvironment(
+    'URL_TERMOS',
+    defaultValue: 'https://entrelinhas.app/termos',
+  );
+  static const urlPolitica = String.fromEnvironment(
+    'URL_POLITICA',
+    defaultValue: 'https://entrelinhas.app/privacidade',
+  );
 }

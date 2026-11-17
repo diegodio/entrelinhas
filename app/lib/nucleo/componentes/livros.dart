@@ -41,8 +41,13 @@ class CapaLivro extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(largura > 60 ? Raio.capa : 3),
           boxShadow: sombra
-              ? [BoxShadow(color: c.tinta.withValues(alpha: 0.22), blurRadius: 14,
-                  offset: const Offset(0, 6))]
+              ? [
+                  BoxShadow(
+                    color: c.tinta.withValues(alpha: 0.22),
+                    blurRadius: 14,
+                    offset: const Offset(0, 6),
+                  ),
+                ]
               : null,
         ),
         clipBehavior: Clip.antiAlias,
@@ -98,13 +103,21 @@ class LinhaLivro extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(obra.titulo, style: e.destaque, maxLines: 2,
-                        overflow: TextOverflow.ellipsis),
+                    Text(
+                      obra.titulo,
+                      style: e.destaque,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                     if (obra.autores.isNotEmpty)
                       Padding(
                         padding: const EdgeInsets.only(top: 2),
-                        child: Text(obra.autores.join(', '), style: e.apoio, maxLines: 1,
-                            overflow: TextOverflow.ellipsis),
+                        child: Text(
+                          obra.autores.join(', '),
+                          style: e.apoio,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     if (complemento != null || obra.demonstracao)
                       Padding(
@@ -159,15 +172,20 @@ class BotaoEscanear extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(t.botaoApontar,
-                            style: TextStyle(
-                                fontFamily: Fontes.editorial,
-                                fontSize: 21,
-                                fontWeight: FontWeight.w500,
-                                color: c.sobreMarca)),
+                        Text(
+                          t.botaoApontar,
+                          style: TextStyle(
+                            fontFamily: Fontes.editorial,
+                            fontSize: 21,
+                            fontWeight: FontWeight.w500,
+                            color: c.sobreMarca,
+                          ),
+                        ),
                         const SizedBox(height: Espaco.xxs),
-                        Text(t.botaoApontarSub,
-                            style: context.estilos.apoio.copyWith(color: c.sobreMarca)),
+                        Text(
+                          t.botaoApontarSub,
+                          style: context.estilos.apoio.copyWith(color: c.sobreMarca),
+                        ),
                       ],
                     ),
                   ),

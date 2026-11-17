@@ -69,17 +69,17 @@ abstract class ObraDetalhe with _$ObraDetalhe {
   factory ObraDetalhe.fromJson(Map<String, dynamic> json) => _$ObraDetalheFromJson(json);
 
   ObraResumo get resumo => ObraResumo(
-        id: id,
-        titulo: titulo,
-        subtitulo: subtitulo,
-        autores: autores,
-        capaUrl: capaUrl,
-        isbn13: isbn13,
-        faixaFinal: faixaFinal,
-        statusFicha: statusFicha,
-        origem: origem,
-        demonstracao: demonstracao,
-      );
+    id: id,
+    titulo: titulo,
+    subtitulo: subtitulo,
+    autores: autores,
+    capaUrl: capaUrl,
+    isbn13: isbn13,
+    faixaFinal: faixaFinal,
+    statusFicha: statusFicha,
+    origem: origem,
+    demonstracao: demonstracao,
+  );
 }
 
 @freezed
@@ -158,8 +158,7 @@ abstract class CamadaC with _$CamadaC {
 abstract class FonteProcedencia with _$FonteProcedencia {
   const factory FonteProcedencia({required String tipo, String? url}) = _FonteProcedencia;
 
-  factory FonteProcedencia.fromJson(Map<String, dynamic> json) =>
-      _$FonteProcedenciaFromJson(json);
+  factory FonteProcedencia.fromJson(Map<String, dynamic> json) => _$FonteProcedenciaFromJson(json);
 }
 
 @freezed
@@ -246,11 +245,8 @@ abstract class Uso with _$Uso {
 
 @freezed
 abstract class RespostaFicha with _$RespostaFicha {
-  const factory RespostaFicha({
-    required String statusFicha,
-    Ficha? ficha,
-    Uso? uso,
-  }) = _RespostaFicha;
+  const factory RespostaFicha({required String statusFicha, Ficha? ficha, Uso? uso}) =
+      _RespostaFicha;
 
   factory RespostaFicha.fromJson(Map<String, dynamic> json) => _$RespostaFichaFromJson(json);
 }

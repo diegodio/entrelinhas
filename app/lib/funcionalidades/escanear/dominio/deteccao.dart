@@ -72,7 +72,8 @@ double nitidezLaplaciano(Uint8List cinza, int largura, int altura, {int passo = 
     final linha = y * largura;
     for (var x = passo; x < largura - passo; x += passo) {
       final c = cinza[linha + x];
-      final l = cinza[linha + x - passo] +
+      final l =
+          cinza[linha + x - passo] +
           cinza[linha + x + passo] +
           cinza[linha - passo * largura + x] +
           cinza[linha + passo * largura + x] -

@@ -71,8 +71,7 @@ class EstadoScanner {
   /// Progresso da estabilização (0 a 1), para o contorno mudar de cor aos poucos.
   double progresso(Duration agora, ParametrosScanner p) {
     if (estavelDesde == null) return 0;
-    return ((agora - estavelDesde!).inMilliseconds / p.tempoEstavel.inMilliseconds)
-        .clamp(0.0, 1.0);
+    return ((agora - estavelDesde!).inMilliseconds / p.tempoEstavel.inMilliseconds).clamp(0.0, 1.0);
   }
 
   EstadoScanner copiar({
@@ -87,17 +86,16 @@ class EstadoScanner {
     Offset? toque,
     bool limparToque = false,
     String? mensagemErro,
-  }) =>
-      EstadoScanner(
-        fase: fase ?? this.fase,
-        regiao: limparRegiao ? null : (regiao ?? this.regiao),
-        estavelDesde: limparEstavel ? null : (estavelDesde ?? this.estavelDesde),
-        ultimaDeteccao: ultimaDeteccao ?? this.ultimaDeteccao,
-        poucaLuz: poucaLuz ?? this.poucaLuz,
-        variasRegioes: variasRegioes ?? this.variasRegioes,
-        toque: limparToque ? null : (toque ?? this.toque),
-        mensagemErro: mensagemErro,
-      );
+  }) => EstadoScanner(
+    fase: fase ?? this.fase,
+    regiao: limparRegiao ? null : (regiao ?? this.regiao),
+    estavelDesde: limparEstavel ? null : (estavelDesde ?? this.estavelDesde),
+    ultimaDeteccao: ultimaDeteccao ?? this.ultimaDeteccao,
+    poucaLuz: poucaLuz ?? this.poucaLuz,
+    variasRegioes: variasRegioes ?? this.variasRegioes,
+    toque: limparToque ? null : (toque ?? this.toque),
+    mensagemErro: mensagemErro,
+  );
 }
 
 /// Transições puras. [agora] é o tempo desde o início da sessão de câmera.
@@ -124,18 +122,30 @@ class MaquinaScanner {
       return e.copiar(poucaLuz: poucaLuz);
     }
 
-    final parado = e.regiao != null &&
+    final parado =
+        e.regiao != null &&
         e.regiao!.tipo == principal.tipo &&
         iou(e.regiao!.caixa, principal.caixa) >= p.iouMinimo;
     final apto = _grandeOSuficiente(principal) && a.nitidez >= p.nitidezMinima;
     // Código de barras já decodificado no aparelho: não precisa esperar.
     if (principal.valor != null) {
-      return e.copiar(fase: FaseScanner.capturando, regiao: principal, ultimaDeteccao: agora,
-          poucaLuz: poucaLuz, variasRegioes: varias);
+      return e.copiar(
+        fase: FaseScanner.capturando,
+        regiao: principal,
+        ultimaDeteccao: agora,
+        poucaLuz: poucaLuz,
+        variasRegioes: varias,
+      );
     }
     if (!apto) {
-      return e.copiar(fase: FaseScanner.detectado, regiao: principal, limparEstavel: true,
-          ultimaDeteccao: agora, poucaLuz: poucaLuz, variasRegioes: varias);
+      return e.copiar(
+        fase: FaseScanner.detectado,
+        regiao: principal,
+        limparEstavel: true,
+        ultimaDeteccao: agora,
+        poucaLuz: poucaLuz,
+        variasRegioes: varias,
+      );
     }
     final desde = parado && e.estavelDesde != null ? e.estavelDesde! : agora;
     final pronto = agora - desde >= p.tempoEstavel;

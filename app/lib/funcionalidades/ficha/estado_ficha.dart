@@ -39,8 +39,9 @@ class FichaLimiteAtingido extends EstadoFicha {
   final Uso? uso;
 }
 
-final fichaProvider =
-    AsyncNotifierProvider.autoDispose.family<FichaNotifier, EstadoFicha, String>(FichaNotifier.new);
+final fichaProvider = AsyncNotifierProvider.autoDispose.family<FichaNotifier, EstadoFicha, String>(
+  FichaNotifier.new,
+);
 
 class FichaNotifier extends AsyncNotifier<EstadoFicha> {
   FichaNotifier(this.obraId);
@@ -58,12 +59,18 @@ class FichaNotifier extends AsyncNotifier<EstadoFicha> {
     final repo = ref.read(obrasRepositorioProvider);
     final obra = await repo.obter(obraId);
     final estado = await _carregarFicha(repo, obra);
-    unawaited(ref.read(historicoProvider.notifier).registrar(
-          estado is FichaPronta
-              ? obra.resumo.copyWith(faixaFinal: estado.ficha.faixaFinal,
-                  statusFicha: estado.ficha.status)
-              : obra.resumo,
-        ));
+    unawaited(
+      ref
+          .read(historicoProvider.notifier)
+          .registrar(
+            estado is FichaPronta
+                ? obra.resumo.copyWith(
+                    faixaFinal: estado.ficha.faixaFinal,
+                    statusFicha: estado.ficha.status,
+                  )
+                : obra.resumo,
+          ),
+    );
     _atualizacao?.cancel();
     if (estado is FichaEmAnalise) {
       _atualizacao = Timer(intervaloAnalise, () => ref.invalidateSelf());
@@ -82,7 +89,10 @@ class FichaNotifier extends AsyncNotifier<EstadoFicha> {
       if (e.limiteAtingido) {
         final uso = e.detalhes['uso'];
         return FichaLimiteAtingido(
-            obra, resumoFicha, uso is Map<String, dynamic> ? Uso.fromJson(uso) : null);
+          obra,
+          resumoFicha,
+          uso is Map<String, dynamic> ? Uso.fromJson(uso) : null,
+        );
       }
       if (e.naoAutenticado) return FichaPrecisaEntrar(obra, resumoFicha);
       rethrow;
@@ -90,10 +100,10 @@ class FichaNotifier extends AsyncNotifier<EstadoFicha> {
   }
 
   EstadoFicha _semFicha(ObraDetalhe obra, String status) => switch (status) {
-        'em_analise' => FichaEmAnalise(obra),
-        'indisponivel' => FichaInexistente(obra, indisponivel: true),
-        _ => FichaInexistente(obra),
-      };
+    'em_analise' => FichaEmAnalise(obra),
+    'indisponivel' => FichaInexistente(obra, indisponivel: true),
+    _ => FichaInexistente(obra),
+  };
 
   Future<void> pedirAnalise() async {
     await ref.read(obrasRepositorioProvider).pedirAnalise(obraId);

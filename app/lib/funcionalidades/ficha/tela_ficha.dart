@@ -47,15 +47,15 @@ class TelaFicha extends ConsumerWidget {
       ),
       body: switch (estado) {
         AsyncData(:final value) => _Conteudo(
-            estado: value,
-            confirmarReconhecimento: confirmarReconhecimento,
-          ),
+          estado: value,
+          confirmarReconhecimento: confirmarReconhecimento,
+        ),
         AsyncError(:final error) => Center(
-            child: EstadoErro(
-              erro: error,
-              aoTentarDeNovo: () => ref.invalidate(fichaProvider(obraId)),
-            ),
+          child: EstadoErro(
+            erro: error,
+            aoTentarDeNovo: () => ref.invalidate(fichaProvider(obraId)),
           ),
+        ),
         _ => const EsqueletoFicha(),
       },
     );
@@ -121,8 +121,10 @@ class _Conteudo extends ConsumerWidget {
               Expanded(child: Column(children: [...cabecalho, ...principal])),
               const SizedBox(width: 48),
               Expanded(
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [...detalhes, ...rodape]),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [...detalhes, ...rodape],
+                ),
               ),
             ],
           ),
@@ -161,10 +163,7 @@ class CabecalhoObra extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Textos.of(context);
     final e = context.estilos;
-    final info = [
-      ?obra.genero,
-      if (obra.paginas != null) t.paginasN(obra.paginas!),
-    ].join(' · ');
+    final info = [?obra.genero, if (obra.paginas != null) t.paginasN(obra.paginas!)].join(' · ');
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
@@ -246,8 +245,11 @@ class BlocoLeitor extends ConsumerWidget {
     final texto = switch (comparacao) {
       null => null,
       DentroDaFaixa(:final leitor, :final idade) => t.dentroDaFaixa(leitor.apelido, idade),
-      AbaixoDaFaixa(:final leitor, :final idade, :final faixa) =>
-        t.acimaDaIdade(t.faixaEmFrase(faixa), leitor.apelido, idade),
+      AbaixoDaFaixa(:final leitor, :final idade, :final faixa) => t.acimaDaIdade(
+        t.faixaEmFrase(faixa),
+        leitor.apelido,
+        idade,
+      ),
     };
     if (texto == null) return const SizedBox.shrink();
     return Padding(
@@ -279,12 +281,16 @@ class BlocoProcedencia extends ConsumerWidget {
           Aviso(texto: t.emRevisao, icone: Icons.rate_review_outlined),
         ] else if (p.revisadaPorHumano && cfg.podeExibir('selo_revisao_humana')) ...[
           const SizedBox(height: Espaco.s),
-          Row(children: [
-            Icon(Icons.verified_outlined, size: 18, color: context.cores.marca),
-            const SizedBox(width: Espaco.xs),
-            Text(t.revisadoHumano,
-                style: context.estilos.rotulo.copyWith(color: context.cores.marca)),
-          ]),
+          Row(
+            children: [
+              Icon(Icons.verified_outlined, size: 18, color: context.cores.marca),
+              const SizedBox(width: Espaco.xs),
+              Text(
+                t.revisadoHumano,
+                style: context.estilos.rotulo.copyWith(color: context.cores.marca),
+              ),
+            ],
+          ),
         ],
         if (ficha.semAcessoAoTexto) ...[
           const SizedBox(height: Espaco.s),
@@ -301,9 +307,9 @@ class TituloSecao extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(top: Espaco.l, bottom: Espaco.xs),
-        child: Semantics(header: true, child: Text(texto, style: context.estilos.tituloSecao)),
-      );
+    padding: const EdgeInsets.only(top: Espaco.l, bottom: Espaco.xs),
+    child: Semantics(header: true, child: Text(texto, style: context.estilos.tituloSecao)),
+  );
 }
 
 class BlocoConteudoSensivel extends StatefulWidget {
@@ -325,7 +331,8 @@ class _BlocoConteudoSensivelState extends State<BlocoConteudoSensivel> {
     final cfg = widget.config;
     final a5Duro = (f.camadaA['A5']?.nivel ?? 0) >= 3;
     final eixos = idsEixos.where((e) => e != 'A6' || cfg.podeExibir('eixo_a6'));
-    final temDetalhe = cfg.podeExibir('justificativa_eixo') || cfg.podeExibir('parafrase_evidencia');
+    final temDetalhe =
+        cfg.podeExibir('justificativa_eixo') || cfg.podeExibir('parafrase_evidencia');
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -337,8 +344,9 @@ class _BlocoConteudoSensivelState extends State<BlocoConteudoSensivel> {
             determinante: eixo == f.eixoDeterminante && (f.camadaA[eixo]?.nivel ?? 0) > 0,
             aberto: _abertos.contains(eixo),
             aoTocar: temDetalhe && (f.camadaA[eixo]?.nivel ?? 0) > 0
-                ? () => setState(() =>
-                    _abertos.contains(eixo) ? _abertos.remove(eixo) : _abertos.add(eixo))
+                ? () => setState(
+                    () => _abertos.contains(eixo) ? _abertos.remove(eixo) : _abertos.add(eixo),
+                  )
                 : null,
           ),
           if (_abertos.contains(eixo))
@@ -359,8 +367,12 @@ class _BlocoConteudoSensivelState extends State<BlocoConteudoSensivel> {
 }
 
 class _DetalheEixo extends StatelessWidget {
-  const _DetalheEixo({required this.ficha, required this.eixo, required this.config,
-      required this.a5Duro});
+  const _DetalheEixo({
+    required this.ficha,
+    required this.eixo,
+    required this.config,
+    required this.a5Duro,
+  });
   final Ficha ficha;
   final String eixo;
   final ConfiguracaoServidor config;
@@ -396,8 +408,10 @@ class _DetalheEixo extends StatelessWidget {
                     Text(ev.parafrase, style: e.corpo.copyWith(fontSize: 14)),
                     if (mostrarTrecho && ev.trechoLiteral != null) ...[
                       const SizedBox(height: Espaco.xxs),
-                      Text('“${ev.trechoLiteral}”',
-                          style: e.corpo.copyWith(fontStyle: FontStyle.italic, fontSize: 14)),
+                      Text(
+                        '“${ev.trechoLiteral}”',
+                        style: e.corpo.copyWith(fontStyle: FontStyle.italic, fontSize: 14),
+                      ),
                     ],
                     if (ev.fonte != null) ...[
                       const SizedBox(height: Espaco.xxs),
@@ -438,16 +452,18 @@ class BlocoAlertas extends StatelessWidget {
                   aoTocar: ficha.camadaB.justificativas[f] == null
                       ? null
                       : () => showDialog<void>(
-                            context: context,
-                            builder: (_) => AlertDialog(
-                              title: Text(t.alerta(f)),
-                              content: Text(ficha.camadaB.justificativas[f]!),
-                              actions: [
-                                TextButton(
-                                    onPressed: () => Navigator.pop(context), child: Text(t.ok)),
-                              ],
-                            ),
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: Text(t.alerta(f)),
+                            content: Text(ficha.camadaB.justificativas[f]!),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: Text(t.ok),
+                              ),
+                            ],
                           ),
+                        ),
                 ),
             ],
           ),
@@ -494,10 +510,12 @@ class BlocoPerfilLeitura extends StatelessWidget {
                   excludeSemantics: true,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 6),
-                    child: Row(children: [
-                      Expanded(child: Text(nome, style: e.corpo.copyWith(fontSize: 14))),
-                      BarraSegmentos(valor: valor, maximo: 5, largura: 100),
-                    ]),
+                    child: Row(
+                      children: [
+                        Expanded(child: Text(nome, style: e.corpo.copyWith(fontSize: 14))),
+                        BarraSegmentos(valor: valor, maximo: 5, largura: 100),
+                      ],
+                    ),
                   ),
                 ),
             ],
@@ -530,9 +548,11 @@ class BlocoValorFormativo extends StatelessWidget {
         Text(vf.nivel, style: context.estilos.destaque),
         if (vf.marcadores.isNotEmpty) ...[
           const SizedBox(height: Espaco.xs),
-          Wrap(spacing: Espaco.xs, runSpacing: Espaco.xs, children: [
-            for (final m in vf.marcadores) ChipAlerta(rotulo: t.marcador(m)),
-          ]),
+          Wrap(
+            spacing: Espaco.xs,
+            runSpacing: Espaco.xs,
+            children: [for (final m in vf.marcadores) ChipAlerta(rotulo: t.marcador(m))],
+          ),
         ],
         if (vf.justificativa.isNotEmpty) ...[
           const SizedBox(height: Espaco.xs),
@@ -578,14 +598,15 @@ class _FaixaConfirmacao extends StatelessWidget {
         color: context.cores.superficieSuave,
         borderRadius: BorderRadius.circular(Raio.campo),
       ),
-      child: Row(children: [
-        Expanded(child: Text(t.eEsteLivro, style: context.estilos.corpo)),
-        TextButton(
-          onPressed: () => context.pushReplacement('/reconhecimento/correcao',
-              extra: obra.id),
-          child: Text(t.naoEEste),
-        ),
-      ]),
+      child: Row(
+        children: [
+          Expanded(child: Text(t.eEsteLivro, style: context.estilos.corpo)),
+          TextButton(
+            onPressed: () => context.pushReplacement('/reconhecimento/correcao', extra: obra.id),
+            child: Text(t.naoEEste),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -642,10 +663,7 @@ class _EmAnalise extends StatelessWidget {
   Widget build(BuildContext context) {
     return Semantics(
       liveRegion: true,
-      child: Aviso(
-        texto: Textos.of(context).estadoAnalisando,
-        icone: Icons.hourglass_top_outlined,
-      ),
+      child: Aviso(texto: Textos.of(context).estadoAnalisando, icone: Icons.hourglass_top_outlined),
     );
   }
 }
@@ -689,10 +707,7 @@ class _SemFichaState extends ConsumerState<_SemFicha> {
       children: [
         Aviso(texto: widget.indisponivel ? t.estadoIndisponivel : t.estadoSemFicha),
         const SizedBox(height: Espaco.m),
-        FilledButton(
-          onPressed: _enviando ? null : _pedir,
-          child: Text(t.botaoPedirAnalise),
-        ),
+        FilledButton(onPressed: _enviando ? null : _pedir, child: Text(t.botaoPedirAnalise)),
       ],
     );
   }
@@ -712,17 +727,23 @@ class EsqueletoFicha extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                BlocoEsqueleto(largura: 108, altura: 160, raio: 4),
-                SizedBox(width: 18),
-                Expanded(
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    BlocoEsqueleto(largura: 180, altura: 26),
-                    SizedBox(height: 8),
-                    BlocoEsqueleto(largura: 120, altura: 16),
-                  ]),
-                ),
-              ]),
+              const Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  BlocoEsqueleto(largura: 108, altura: 160, raio: 4),
+                  SizedBox(width: 18),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        BlocoEsqueleto(largura: 180, altura: 26),
+                        SizedBox(height: 8),
+                        BlocoEsqueleto(largura: 120, altura: 16),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(height: Espaco.l),
               const BlocoEsqueleto(altura: 108, raio: Raio.cartao),
               const SizedBox(height: Espaco.l),

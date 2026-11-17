@@ -75,7 +75,8 @@ class LinhaEixo extends StatelessWidget {
     return Semantics(
       button: aoTocar != null,
       expanded: aoTocar != null ? aberto : null,
-      label: t.semanticaEixo(t.eixo(eixo), nivel, rotulo) +
+      label:
+          t.semanticaEixo(t.eixo(eixo), nivel, rotulo) +
           (determinante ? '. ${t.defineAFaixa}' : ''),
       excludeSemantics: true,
       child: InkWell(
@@ -100,9 +101,10 @@ class LinhaEixo extends StatelessWidget {
                             color: c.superficieSuave,
                             borderRadius: BorderRadius.circular(Raio.pilula),
                           ),
-                          child: Text(t.defineAFaixa,
-                              style: e.legenda.copyWith(
-                                  color: c.tinta, fontWeight: FontWeight.w700)),
+                          child: Text(
+                            t.defineAFaixa,
+                            style: e.legenda.copyWith(color: c.tinta, fontWeight: FontWeight.w700),
+                          ),
                         ),
                     ],
                   ),
@@ -119,8 +121,11 @@ class LinhaEixo extends StatelessWidget {
                   ),
                 ),
                 if (aoTocar != null)
-                  Icon(aberto ? Icons.expand_less : Icons.expand_more,
-                      size: 20, color: c.tintaFraca),
+                  Icon(
+                    aberto ? Icons.expand_less : Icons.expand_more,
+                    size: 20,
+                    color: c.tintaFraca,
+                  ),
               ],
             ),
           ),

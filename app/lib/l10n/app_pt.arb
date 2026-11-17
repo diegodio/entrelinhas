@@ -377,5 +377,15 @@
   "fechar": "Fechar",
   "editar": "Editar",
   "ok": "Ok",
-  "copiado": "Link copiado."
+  "copiado": "Link copiado.",
+
+  "verFichaCompleta": "Ver a ficha completa",
+  "tipoAcervo": "Acervo",
+  "tipoTurma": "Turma",
+  "situacaoPublicada": "Publicada",
+  "situacaoEmAnalise": "Em análise",
+  "situacaoSemFicha": "Sem ficha",
+  "situacaoEmRevisao": "Em revisão",
+  "situacaoIndisponivel": "Indisponível",
+  "botaoPrevia": "Ver faixa recalculada"
 }

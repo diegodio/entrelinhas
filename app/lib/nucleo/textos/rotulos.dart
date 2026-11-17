@@ -41,7 +41,7 @@ extension RotulosRubrica on Textos {
     _ => origemBase,
   };
 
-  String plano(String plano) => switch (plano) {
+  String nomePlano(String plano) => switch (plano) {
     'familia' => planoFamilia,
     'escola' => planoEscola,
     _ => planoGratuito,
@@ -90,4 +90,18 @@ extension RotulosRubrica on Textos {
 
   String rotuloConfianca(double c) =>
       c < 0.45 ? confiancaBaixa : (c < 0.75 ? confiancaMedia : confiancaAlta);
+
+  String situacao(String status) => switch (status) {
+    'publicada' => situacaoPublicada,
+    'em_analise' => situacaoEmAnalise,
+    'em_revisao' => situacaoEmRevisao,
+    'indisponivel' => situacaoIndisponivel,
+    _ => situacaoSemFicha,
+  };
+
+  String statusContestacao(String status) => switch (status) {
+    'aceita' => contestacaoAceita,
+    'recusada' => contestacaoRecusada,
+    _ => contestacaoAberta,
+  };
 }

@@ -223,6 +223,22 @@ void main() {
     semantica.dispose();
   });
 
+  testWidgets('texto ampliado a 200% não estoura a ficha', (t) async {
+    definirTela(t, const Size(390, 4200));
+    await t.pumpWidget(
+      MediaQuery(
+        data: const MediaQueryData(size: Size(390, 4200), textScaler: TextScaler.linear(2)),
+        child: appDeTeste(
+          const TelaFicha(obraId: 'o1'),
+          overrides: overridesFicha(obras: _pronta(fichaExemplo())),
+        ),
+      ),
+    );
+    await t.pumpAndSettle();
+    expect(t.takeException(), isNull);
+    expect(find.text('Conteúdo sensível'), findsOneWidget);
+  });
+
   group('compararLeitor', () {
     final hoje = DateTime(2026, 11, 16);
     test('dentro da faixa', () {

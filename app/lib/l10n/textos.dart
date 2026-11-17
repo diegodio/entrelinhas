@@ -61,8 +61,7 @@ import 'textos_pt.dart';
 /// be consistent with the languages listed in the Textos.supportedLocales
 /// property.
 abstract class Textos {
-  Textos(String locale)
-    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  Textos(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -2114,6 +2113,60 @@ abstract class Textos {
   /// In pt, this message translates to:
   /// **'Link copiado.'**
   String get copiado;
+
+  /// No description provided for @verFichaCompleta.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ver a ficha completa'**
+  String get verFichaCompleta;
+
+  /// No description provided for @tipoAcervo.
+  ///
+  /// In pt, this message translates to:
+  /// **'Acervo'**
+  String get tipoAcervo;
+
+  /// No description provided for @tipoTurma.
+  ///
+  /// In pt, this message translates to:
+  /// **'Turma'**
+  String get tipoTurma;
+
+  /// No description provided for @situacaoPublicada.
+  ///
+  /// In pt, this message translates to:
+  /// **'Publicada'**
+  String get situacaoPublicada;
+
+  /// No description provided for @situacaoEmAnalise.
+  ///
+  /// In pt, this message translates to:
+  /// **'Em análise'**
+  String get situacaoEmAnalise;
+
+  /// No description provided for @situacaoSemFicha.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sem ficha'**
+  String get situacaoSemFicha;
+
+  /// No description provided for @situacaoEmRevisao.
+  ///
+  /// In pt, this message translates to:
+  /// **'Em revisão'**
+  String get situacaoEmRevisao;
+
+  /// No description provided for @situacaoIndisponivel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Indisponível'**
+  String get situacaoIndisponivel;
+
+  /// No description provided for @botaoPrevia.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ver faixa recalculada'**
+  String get botaoPrevia;
 }
 
 class _TextosDelegate extends LocalizationsDelegate<Textos> {
@@ -2125,8 +2178,7 @@ class _TextosDelegate extends LocalizationsDelegate<Textos> {
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['pt'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['pt'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_TextosDelegate old) => false;

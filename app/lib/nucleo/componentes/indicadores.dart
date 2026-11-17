@@ -190,9 +190,11 @@ class BarraConfianca extends StatelessWidget {
       excludeSemantics: true,
       child: Row(
         children: [
-          Text(t.confiancaAnalise, style: context.estilos.apoio),
+          // Com texto ampliado, o rótulo quebra linha em vez de empurrar a barra.
+          Flexible(flex: 3, child: Text(t.confiancaAnalise, style: context.estilos.apoio)),
           const SizedBox(width: Espaco.s),
           Expanded(
+            flex: 2,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(2),
               child: LinearProgressIndicator(

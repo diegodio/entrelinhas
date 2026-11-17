@@ -102,6 +102,6 @@ Lista completa em `docs/decisoes.md`. As mais importantes:
 
 ## 5. Repositório
 
-Os commits estão no branch `claude/cool-edison-lachef`. O push para o GitHub foi recusado
-(403: a sessão não tem permissão de escrita em `diegodio/entrelinhas`); os commits estão
-salvos localmente e são enviados assim que o acesso for liberado.
+Desenvolvido no branch `claude/cool-edison-lachef` e enviado à `main` pelo PR #1, com a CI
+(backend e app) passando. O app web é publicado no GitHub Pages pelo workflow `pages.yml`
+(veja "GitHub Pages" em `docs/como-rodar.md`).

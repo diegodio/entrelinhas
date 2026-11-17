@@ -1,0 +1,1150 @@
+{
+  "modelo_capa": "histograma/1",
+  "ocr": "tesseract",
+  "capas_no_indice": 60,
+  "piso_capa_calibrado": 0.819,
+  "sinteticas": {
+    "consultas": 180,
+    "top1": {
+      "capa": 0.3,
+      "ocr": 0.561,
+      "fusao": 0.661
+    },
+    "top5": {
+      "capa": 0.744,
+      "ocr": 0.639,
+      "fusao": 0.889
+    },
+    "por_caso": {
+      "edicoes": {
+        "consultas": 30,
+        "top1_fusao": 0.833
+      },
+      "serie": {
+        "consultas": 108,
+        "top1_fusao": 0.574
+      },
+      "simples": {
+        "consultas": 42,
+        "top1_fusao": 0.762
+      }
+    },
+    "tempo_ms_mediana": 314
+  },
+  "curva_sinteticas": {
+    "precisao_alvo": 0.99,
+    "recomendado": {
+      "limiar": 0.4,
+      "margem": 0.05,
+      "cobertura": 0.294,
+      "precisao": 1.0
+    },
+    "pontos": [
+      {
+        "limiar": 0.4,
+        "margem": 0.0,
+        "cobertura": 0.45,
+        "precisao": 0.9753
+      },
+      {
+        "limiar": 0.4,
+        "margem": 0.05,
+        "cobertura": 0.294,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.4,
+        "margem": 0.08,
+        "cobertura": 0.206,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.4,
+        "margem": 0.12,
+        "cobertura": 0.2,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.4,
+        "margem": 0.16,
+        "cobertura": 0.167,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.4,
+        "margem": 0.2,
+        "cobertura": 0.15,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.4,
+        "margem": 0.25,
+        "cobertura": 0.106,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.42,
+        "margem": 0.0,
+        "cobertura": 0.272,
+        "precisao": 0.9796
+      },
+      {
+        "limiar": 0.42,
+        "margem": 0.05,
+        "cobertura": 0.189,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.42,
+        "margem": 0.08,
+        "cobertura": 0.156,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.42,
+        "margem": 0.12,
+        "cobertura": 0.156,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.42,
+        "margem": 0.16,
+        "cobertura": 0.15,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.42,
+        "margem": 0.2,
+        "cobertura": 0.139,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.42,
+        "margem": 0.25,
+        "cobertura": 0.106,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.44,
+        "margem": 0.0,
+        "cobertura": 0.194,
+        "precisao": 0.9714
+      },
+      {
+        "limiar": 0.44,
+        "margem": 0.05,
+        "cobertura": 0.128,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.44,
+        "margem": 0.08,
+        "cobertura": 0.122,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.44,
+        "margem": 0.12,
+        "cobertura": 0.122,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.44,
+        "margem": 0.16,
+        "cobertura": 0.122,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.44,
+        "margem": 0.2,
+        "cobertura": 0.117,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.44,
+        "margem": 0.25,
+        "cobertura": 0.106,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.46,
+        "margem": 0.0,
+        "cobertura": 0.172,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.46,
+        "margem": 0.05,
+        "cobertura": 0.111,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.46,
+        "margem": 0.08,
+        "cobertura": 0.106,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.46,
+        "margem": 0.12,
+        "cobertura": 0.106,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.46,
+        "margem": 0.16,
+        "cobertura": 0.106,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.46,
+        "margem": 0.2,
+        "cobertura": 0.106,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.46,
+        "margem": 0.25,
+        "cobertura": 0.106,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.48,
+        "margem": 0.0,
+        "cobertura": 0.156,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.48,
+        "margem": 0.05,
+        "cobertura": 0.094,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.48,
+        "margem": 0.08,
+        "cobertura": 0.089,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.48,
+        "margem": 0.12,
+        "cobertura": 0.089,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.48,
+        "margem": 0.16,
+        "cobertura": 0.089,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.48,
+        "margem": 0.2,
+        "cobertura": 0.089,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.48,
+        "margem": 0.25,
+        "cobertura": 0.089,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.5,
+        "margem": 0.0,
+        "cobertura": 0.15,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.5,
+        "margem": 0.05,
+        "cobertura": 0.094,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.5,
+        "margem": 0.08,
+        "cobertura": 0.089,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.5,
+        "margem": 0.12,
+        "cobertura": 0.089,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.5,
+        "margem": 0.16,
+        "cobertura": 0.089,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.5,
+        "margem": 0.2,
+        "cobertura": 0.089,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.5,
+        "margem": 0.25,
+        "cobertura": 0.089,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.52,
+        "margem": 0.0,
+        "cobertura": 0.15,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.52,
+        "margem": 0.05,
+        "cobertura": 0.094,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.52,
+        "margem": 0.08,
+        "cobertura": 0.089,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.52,
+        "margem": 0.12,
+        "cobertura": 0.089,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.52,
+        "margem": 0.16,
+        "cobertura": 0.089,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.52,
+        "margem": 0.2,
+        "cobertura": 0.089,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.52,
+        "margem": 0.25,
+        "cobertura": 0.089,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.54,
+        "margem": 0.0,
+        "cobertura": 0.139,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.54,
+        "margem": 0.05,
+        "cobertura": 0.083,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.54,
+        "margem": 0.08,
+        "cobertura": 0.078,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.54,
+        "margem": 0.12,
+        "cobertura": 0.078,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.54,
+        "margem": 0.16,
+        "cobertura": 0.078,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.54,
+        "margem": 0.2,
+        "cobertura": 0.078,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.54,
+        "margem": 0.25,
+        "cobertura": 0.078,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.56,
+        "margem": 0.0,
+        "cobertura": 0.094,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.56,
+        "margem": 0.05,
+        "cobertura": 0.061,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.56,
+        "margem": 0.08,
+        "cobertura": 0.056,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.56,
+        "margem": 0.12,
+        "cobertura": 0.056,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.56,
+        "margem": 0.16,
+        "cobertura": 0.056,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.56,
+        "margem": 0.2,
+        "cobertura": 0.056,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.56,
+        "margem": 0.25,
+        "cobertura": 0.056,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.58,
+        "margem": 0.0,
+        "cobertura": 0.094,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.58,
+        "margem": 0.05,
+        "cobertura": 0.061,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.58,
+        "margem": 0.08,
+        "cobertura": 0.056,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.58,
+        "margem": 0.12,
+        "cobertura": 0.056,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.58,
+        "margem": 0.16,
+        "cobertura": 0.056,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.58,
+        "margem": 0.2,
+        "cobertura": 0.056,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.58,
+        "margem": 0.25,
+        "cobertura": 0.056,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.6,
+        "margem": 0.0,
+        "cobertura": 0.094,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.6,
+        "margem": 0.05,
+        "cobertura": 0.061,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.6,
+        "margem": 0.08,
+        "cobertura": 0.056,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.6,
+        "margem": 0.12,
+        "cobertura": 0.056,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.6,
+        "margem": 0.16,
+        "cobertura": 0.056,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.6,
+        "margem": 0.2,
+        "cobertura": 0.056,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.6,
+        "margem": 0.25,
+        "cobertura": 0.056,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.62,
+        "margem": 0.0,
+        "cobertura": 0.094,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.62,
+        "margem": 0.05,
+        "cobertura": 0.061,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.62,
+        "margem": 0.08,
+        "cobertura": 0.056,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.62,
+        "margem": 0.12,
+        "cobertura": 0.056,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.62,
+        "margem": 0.16,
+        "cobertura": 0.056,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.62,
+        "margem": 0.2,
+        "cobertura": 0.056,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.62,
+        "margem": 0.25,
+        "cobertura": 0.056,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.64,
+        "margem": 0.0,
+        "cobertura": 0.094,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.64,
+        "margem": 0.05,
+        "cobertura": 0.061,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.64,
+        "margem": 0.08,
+        "cobertura": 0.056,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.64,
+        "margem": 0.12,
+        "cobertura": 0.056,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.64,
+        "margem": 0.16,
+        "cobertura": 0.056,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.64,
+        "margem": 0.2,
+        "cobertura": 0.056,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.64,
+        "margem": 0.25,
+        "cobertura": 0.056,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.66,
+        "margem": 0.0,
+        "cobertura": 0.094,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.66,
+        "margem": 0.05,
+        "cobertura": 0.061,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.66,
+        "margem": 0.08,
+        "cobertura": 0.056,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.66,
+        "margem": 0.12,
+        "cobertura": 0.056,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.66,
+        "margem": 0.16,
+        "cobertura": 0.056,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.66,
+        "margem": 0.2,
+        "cobertura": 0.056,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.66,
+        "margem": 0.25,
+        "cobertura": 0.056,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.68,
+        "margem": 0.0,
+        "cobertura": 0.089,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.68,
+        "margem": 0.05,
+        "cobertura": 0.056,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.68,
+        "margem": 0.08,
+        "cobertura": 0.05,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.68,
+        "margem": 0.12,
+        "cobertura": 0.05,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.68,
+        "margem": 0.16,
+        "cobertura": 0.05,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.68,
+        "margem": 0.2,
+        "cobertura": 0.05,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.68,
+        "margem": 0.25,
+        "cobertura": 0.05,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.7,
+        "margem": 0.0,
+        "cobertura": 0.078,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.7,
+        "margem": 0.05,
+        "cobertura": 0.05,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.7,
+        "margem": 0.08,
+        "cobertura": 0.044,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.7,
+        "margem": 0.12,
+        "cobertura": 0.044,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.7,
+        "margem": 0.16,
+        "cobertura": 0.044,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.7,
+        "margem": 0.2,
+        "cobertura": 0.044,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.7,
+        "margem": 0.25,
+        "cobertura": 0.044,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.72,
+        "margem": 0.0,
+        "cobertura": 0.067,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.72,
+        "margem": 0.05,
+        "cobertura": 0.044,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.72,
+        "margem": 0.08,
+        "cobertura": 0.039,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.72,
+        "margem": 0.12,
+        "cobertura": 0.039,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.72,
+        "margem": 0.16,
+        "cobertura": 0.039,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.72,
+        "margem": 0.2,
+        "cobertura": 0.039,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.72,
+        "margem": 0.25,
+        "cobertura": 0.039,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.74,
+        "margem": 0.0,
+        "cobertura": 0.061,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.74,
+        "margem": 0.05,
+        "cobertura": 0.039,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.74,
+        "margem": 0.08,
+        "cobertura": 0.033,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.74,
+        "margem": 0.12,
+        "cobertura": 0.033,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.74,
+        "margem": 0.16,
+        "cobertura": 0.033,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.74,
+        "margem": 0.2,
+        "cobertura": 0.033,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.74,
+        "margem": 0.25,
+        "cobertura": 0.033,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.76,
+        "margem": 0.0,
+        "cobertura": 0.061,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.76,
+        "margem": 0.05,
+        "cobertura": 0.039,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.76,
+        "margem": 0.08,
+        "cobertura": 0.033,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.76,
+        "margem": 0.12,
+        "cobertura": 0.033,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.76,
+        "margem": 0.16,
+        "cobertura": 0.033,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.76,
+        "margem": 0.2,
+        "cobertura": 0.033,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.76,
+        "margem": 0.25,
+        "cobertura": 0.033,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.78,
+        "margem": 0.0,
+        "cobertura": 0.056,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.78,
+        "margem": 0.05,
+        "cobertura": 0.039,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.78,
+        "margem": 0.08,
+        "cobertura": 0.033,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.78,
+        "margem": 0.12,
+        "cobertura": 0.033,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.78,
+        "margem": 0.16,
+        "cobertura": 0.033,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.78,
+        "margem": 0.2,
+        "cobertura": 0.033,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.78,
+        "margem": 0.25,
+        "cobertura": 0.033,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.8,
+        "margem": 0.0,
+        "cobertura": 0.05,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.8,
+        "margem": 0.05,
+        "cobertura": 0.033,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.8,
+        "margem": 0.08,
+        "cobertura": 0.028,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.8,
+        "margem": 0.12,
+        "cobertura": 0.028,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.8,
+        "margem": 0.16,
+        "cobertura": 0.028,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.8,
+        "margem": 0.2,
+        "cobertura": 0.028,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.8,
+        "margem": 0.25,
+        "cobertura": 0.028,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.82,
+        "margem": 0.0,
+        "cobertura": 0.022,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.82,
+        "margem": 0.05,
+        "cobertura": 0.017,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.82,
+        "margem": 0.08,
+        "cobertura": 0.017,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.82,
+        "margem": 0.12,
+        "cobertura": 0.017,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.82,
+        "margem": 0.16,
+        "cobertura": 0.017,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.82,
+        "margem": 0.2,
+        "cobertura": 0.017,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.82,
+        "margem": 0.25,
+        "cobertura": 0.017,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.84,
+        "margem": 0.0,
+        "cobertura": 0.017,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.84,
+        "margem": 0.05,
+        "cobertura": 0.011,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.84,
+        "margem": 0.08,
+        "cobertura": 0.011,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.84,
+        "margem": 0.12,
+        "cobertura": 0.011,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.84,
+        "margem": 0.16,
+        "cobertura": 0.011,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.84,
+        "margem": 0.2,
+        "cobertura": 0.011,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.84,
+        "margem": 0.25,
+        "cobertura": 0.011,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.86,
+        "margem": 0.0,
+        "cobertura": 0.011,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.86,
+        "margem": 0.05,
+        "cobertura": 0.006,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.86,
+        "margem": 0.08,
+        "cobertura": 0.006,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.86,
+        "margem": 0.12,
+        "cobertura": 0.006,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.86,
+        "margem": 0.16,
+        "cobertura": 0.006,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.86,
+        "margem": 0.2,
+        "cobertura": 0.006,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.86,
+        "margem": 0.25,
+        "cobertura": 0.006,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.88,
+        "margem": 0.0,
+        "cobertura": 0.011,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.88,
+        "margem": 0.05,
+        "cobertura": 0.006,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.88,
+        "margem": 0.08,
+        "cobertura": 0.006,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.88,
+        "margem": 0.12,
+        "cobertura": 0.006,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.88,
+        "margem": 0.16,
+        "cobertura": 0.006,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.88,
+        "margem": 0.2,
+        "cobertura": 0.006,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.88,
+        "margem": 0.25,
+        "cobertura": 0.006,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.9,
+        "margem": 0.0,
+        "cobertura": 0.011,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.9,
+        "margem": 0.05,
+        "cobertura": 0.006,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.9,
+        "margem": 0.08,
+        "cobertura": 0.006,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.9,
+        "margem": 0.12,
+        "cobertura": 0.006,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.9,
+        "margem": 0.16,
+        "cobertura": 0.006,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.9,
+        "margem": 0.2,
+        "cobertura": 0.006,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.9,
+        "margem": 0.25,
+        "cobertura": 0.006,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.92,
+        "margem": 0.0,
+        "cobertura": 0.006,
+        "precisao": 1.0
+      },
+      {
+        "limiar": 0.94,
+        "margem": 0.0,
+        "cobertura": 0.006,
+        "precisao": 1.0
+      }
+    ]
+  },
+  "fotos_reais": "nenhuma foto real rotulada"
+}

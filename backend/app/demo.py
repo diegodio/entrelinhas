@@ -458,13 +458,13 @@ def semear_demo(sessao: Session) -> list[Obra]:
             fonte_metadados="base_entrelinhas",
             demonstracao=True,
         )
-        obra.edicoes.append(
-            Edicao(
-                editora="Edição de demonstração", ano=2026, capa_url=f"/estatico/capas/{arquivo}"
-            )
+        edicao = Edicao(
+            editora="Edição de demonstração", ano=2026, capa_url=f"/estatico/capas/{arquivo}"
         )
+        obra.edicoes.append(edicao)
         sessao.add(obra)
         sessao.flush()
+        _indexar(sessao, edicao, PASTA_CAPAS / arquivo)
         if not dados.get("sem_ficha"):
             saida = {**dados["saida"], "confianca": dados["confianca"], "observacoes": ""}
             validar_saida_modelo(saida, dados["fonte"])
@@ -511,6 +511,16 @@ def semear_demo(sessao: Session) -> list[Obra]:
         sessao.commit()
         criadas.append(obra)
     return criadas
+
+
+def _indexar(sessao: Session, edicao: Edicao, caminho: Path) -> None:
+    """Põe a capa no índice de reconhecimento com o modelo configurado."""
+    from app.provedores.modelo_capa import obter_modelo_capa
+    from app.reconhecimento.servico import indexar_capa
+
+    with Image.open(caminho) as img:
+        indexar_capa(sessao, edicao, img.convert("RGB"), obter_modelo_capa(),
+                     edicao.capa_url or "")
 
 
 def _usuario_demo(sessao: Session, email: str, papel: str, nome: str) -> Usuario:

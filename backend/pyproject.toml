@@ -42,3 +42,6 @@ ignore = ["B008", "E501"]
 [tool.pytest.ini_options]
 testpaths = ["testes"]
 addopts = "-q"
+
+[tool.ruff.lint.isort]
+known-first-party = ["app", "distorcoes"]

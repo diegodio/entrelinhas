@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+backend/dados_locais/
+*.egg-info/
+
+# Flutter
+app/.dart_tool/
+app/build/
+app/.flutter-plugins
+app/.flutter-plugins-dependencies
+app/.packages
+app/pubspec_overrides.yaml
+
+# ML
+ml/.venv/
+ml/dados/cache/
+ml/dados/fotos_reais/**/*.jpg
+ml/dados/fotos_reais/**/*.png
+ml/modelos/
+ml/resultados/*.npz
+
+# Ambiente
+.env
+*.log

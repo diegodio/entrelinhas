@@ -1,0 +1,6 @@
+Detector de objetos no aparelho: COCO SSD MobileNet v1 quantizado (TensorFlow Lite, licença
+Apache 2.0), com pós-processamento embutido (caixas, classes, pontuações, contagem).
+Origem: storage.googleapis.com/download.tensorflow.org/models/tflite/coco_ssd_mobilenet_v1_1.0_quant_2018_06_29.zip
+
+Em testes com fotos simuladas, capas vistas de frente saem como "tv" ou "book"; por isso o
+app aceita uma lista de classes retangulares e confere a geometria. Ver docs/reconhecimento.md.

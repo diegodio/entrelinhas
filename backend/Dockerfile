@@ -3,9 +3,9 @@ FROM python:3.12-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PIP_NO_CACHE_DIR=1
 
-# Tesseract (OCR, por+eng), fontes para gerar capas de demonstração e cliente do Postgres.
+# Fontes para gerar capas de demonstração, bibliotecas do OpenCV e cliente do Postgres.
 RUN apt-get update \
- && apt-get install -y --no-install-recommends tesseract-ocr tesseract-ocr-por \
+ && apt-get install -y --no-install-recommends \
       fonts-dejavu-core libgl1 libglib2.0-0 postgresql-client \
  && rm -rf /var/lib/apt/lists/*
 

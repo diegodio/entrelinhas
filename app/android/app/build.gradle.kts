@@ -19,7 +19,7 @@ android {
         applicationId = "app.entrelinhas.entrelinhas"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        // ML Kit e TFLite exigem Android 7 (API 24) ou superior.
+        // O ML Kit exige Android 7 (API 24) ou superior.
         minSdk = 24
         targetSdk = flutter.targetSdkVersion
         // Uses the version code from pubspec.yaml. When using split APKs, 1000 * ABI_VERSION

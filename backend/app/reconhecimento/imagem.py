@@ -1,4 +1,4 @@
-"""Leitura de código de barras e localização do livro numa imagem (OpenCV + zxing-cpp)."""
+"""Leitura do código de barras numa foto (OpenCV para realce + zxing-cpp)."""
 
 from __future__ import annotations
 
@@ -59,47 +59,3 @@ def ler_codigo(imagem: Image.Image) -> LeituraCodigo:
         if lidos:
             break  # leu algo que não é livro; não adianta insistir
     return LeituraCodigo(None, lidos)
-
-
-def _ordenar_cantos(p: np.ndarray) -> np.ndarray:
-    s, d = p.sum(axis=1), np.diff(p, axis=1).ravel()
-    return np.array(
-        [p[np.argmin(s)], p[np.argmin(d)], p[np.argmax(s)], p[np.argmax(d)]], dtype=np.float32
-    )
-
-
-def localizar_livro(imagem: Image.Image, area_minima: float = 0.12) -> Image.Image:
-    """Acha o maior quadrilátero plausível (a capa) e corrige a perspectiva.
-
-    Se nada convincente aparecer, devolve a imagem inteira: o recorte é uma ajuda, não um
-    requisito.
-    """
-    bgr = cv2.cvtColor(np.asarray(imagem), cv2.COLOR_RGB2BGR)
-    altura, largura = bgr.shape[:2]
-    escala = 800 / max(altura, largura)
-    pequena = cv2.resize(bgr, None, fx=escala, fy=escala) if escala < 1 else bgr.copy()
-    escala = min(escala, 1.0)
-    cinza = cv2.GaussianBlur(cv2.cvtColor(pequena, cv2.COLOR_BGR2GRAY), (5, 5), 0)
-    bordas = cv2.dilate(cv2.Canny(cinza, 40, 120), np.ones((3, 3), np.uint8), iterations=2)
-    contornos, _ = cv2.findContours(bordas, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    area_total = pequena.shape[0] * pequena.shape[1]
-    melhor = None
-    for c in sorted(contornos, key=cv2.contourArea, reverse=True)[:8]:
-        area = cv2.contourArea(c)
-        if area < area_minima * area_total or area > 0.98 * area_total:
-            continue
-        aprox = cv2.approxPolyDP(c, 0.03 * cv2.arcLength(c, True), True)
-        if len(aprox) == 4 and cv2.isContourConvex(aprox):
-            melhor = aprox.reshape(4, 2).astype(np.float32) / escala
-            break
-    if melhor is None:
-        return imagem
-    cantos = _ordenar_cantos(melhor)
-    larg = int(max(np.linalg.norm(cantos[0] - cantos[1]), np.linalg.norm(cantos[3] - cantos[2])))
-    alt = int(max(np.linalg.norm(cantos[0] - cantos[3]), np.linalg.norm(cantos[1] - cantos[2])))
-    if larg < 40 or alt < 40:
-        return imagem
-    destino = np.array([[0, 0], [larg, 0], [larg, alt], [0, alt]], dtype=np.float32)
-    matriz = cv2.getPerspectiveTransform(cantos, destino)
-    corrigida = cv2.warpPerspective(np.asarray(imagem), matriz, (larg, alt))
-    return Image.fromarray(corrigida)

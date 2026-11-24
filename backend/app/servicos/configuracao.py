@@ -43,22 +43,6 @@ LIMITES_PADRAO: dict[str, tuple[object, str]] = {
         },
         "Teto de confiança por fonte da análise",
     ),
-    # Calibrados por ml/avaliar.py em capas SINTÉTICAS (modelo histograma + Tesseract):
-    # precisão 100% em ~20% de identificações diretas; o resto vira lista de candidatos.
-    # Recalibrar com fotos reais e a cada troca de modelo (docs/reconhecimento.md).
-    "reconhecimento": (
-        {
-            "peso_ocr": 0.55,
-            "peso_capa": 0.45,
-            "limiar_identificado": 0.45,
-            "margem_minima": 0.08,
-            "limiar_candidato": 0.2,
-            "max_candidatos": 5,
-            "similaridade_minima_ocr": 0.2,
-            "piso_capa": 0.82,
-        },
-        "Pesos e limiares da fusão de sinais do reconhecimento",
-    ),
 }
 
 

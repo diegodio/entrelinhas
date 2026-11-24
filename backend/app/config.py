@@ -36,13 +36,6 @@ class Configuracoes(BaseSettings):
     openai_api_key: str = ""
     google_api_key: str = ""
 
-    motor_ocr: str = "tesseract"  # tesseract | google_vision | falso
-    google_vision_api_key: str = ""
-
-    modelo_capa: str = "histograma"  # dinov2 | histograma | falso
-    modelo_capa_nome: str = "facebook/dinov2-small"
-    modelo_capa_pesos_locais: str = ""  # caminho de um modelo ajustado exportado por ml/treinar.py
-
     fontes_metadados: str = "google_books,open_library"  # vazio = sem rede
     fontes_resenhas: str = "wikipedia_pt"  # vazio = nenhuma
     google_books_api_key: str = ""

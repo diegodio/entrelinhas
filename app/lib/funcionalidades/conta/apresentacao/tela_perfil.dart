@@ -69,14 +69,6 @@ class TelaPerfil extends ConsumerWidget {
                   _BlocoPlano(usuario: usuario),
                   const _MinhasContestacoes(),
                   _Secao(t.privacidade),
-                  SwitchListTile(
-                    contentPadding: EdgeInsets.zero,
-                    value: usuario.contribuirImagens,
-                    title: Text(t.contribuirImagens, style: e.corpo),
-                    subtitle: Text(t.contribuirImagensExplicacao, style: e.apoio),
-                    onChanged: (v) =>
-                        ref.read(sessaoProvider.notifier).atualizar(contribuirImagens: v),
-                  ),
                   ListTile(
                     contentPadding: EdgeInsets.zero,
                     leading: const Icon(Icons.download_outlined),

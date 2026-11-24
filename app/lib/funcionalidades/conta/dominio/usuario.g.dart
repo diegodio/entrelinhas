@@ -23,7 +23,6 @@ _Usuario _$UsuarioFromJson(Map<String, dynamic> json) => _Usuario(
   email: json['email'] as String,
   nome: json['nome'] as String? ?? '',
   papel: json['papel'] as String? ?? 'usuario',
-  contribuirImagens: json['contribuir_imagens'] as bool? ?? false,
   organizacoes:
       (json['organizacoes'] as List<dynamic>?)
           ?.map((e) => MembroDe.fromJson(e as Map<String, dynamic>))
@@ -39,7 +38,6 @@ Map<String, dynamic> _$UsuarioToJson(_Usuario instance) => <String, dynamic>{
   'email': instance.email,
   'nome': instance.nome,
   'papel': instance.papel,
-  'contribuir_imagens': instance.contribuirImagens,
   'organizacoes': instance.organizacoes.map((e) => e.toJson()).toList(),
   'uso': instance.uso?.toJson(),
 };

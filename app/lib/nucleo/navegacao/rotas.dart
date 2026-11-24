@@ -67,13 +67,7 @@ final roteadorProvider = Provider<GoRouter>((ref) {
       ),
       _tela('/boas-vindas', (_) => const TelaBoasVindas()),
       _tela('/busca', (s) => TelaBusca(termoInicial: s.uri.queryParameters['q'] ?? '')),
-      _tela(
-        '/obra/:id',
-        (s) => TelaFicha(
-          obraId: s.pathParameters['id']!,
-          confirmarReconhecimento: s.uri.queryParameters['reconhecido'] == '1',
-        ),
-      ),
+      _tela('/obra/:id', (s) => TelaFicha(obraId: s.pathParameters['id']!)),
       _tela('/obra/:id/contestar', (s) => TelaContestar(obraId: s.pathParameters['id']!)),
       _tela('/ficha/:slug', (s) => TelaFichaPublica(slug: s.pathParameters['slug']!)),
       _tela('/escanear', (s) => TelaEscanear(abrirIsbn: s.uri.queryParameters['isbn'] == '1')),
@@ -82,12 +76,8 @@ final roteadorProvider = Provider<GoRouter>((ref) {
         (s) => TelaResultadoReconhecimento(
           resultado:
               s.extra as ResultadoReconhecimento? ??
-              const ResultadoReconhecimento(status: 'nao_identificado'),
+              const ResultadoReconhecimento(status: 'sem_codigo'),
         ),
-      ),
-      _tela(
-        '/reconhecimento/correcao',
-        (s) => TelaCorrecaoReconhecimento(obraRecusadaId: s.extra as String? ?? ''),
       ),
       _tela('/cadastrar-obra', (s) => TelaCadastrarObra(isbn: s.uri.queryParameters['isbn'] ?? '')),
       _tela('/lista/:id', (s) => TelaLista(listaId: s.pathParameters['id']!)),

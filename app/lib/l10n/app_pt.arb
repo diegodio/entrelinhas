@@ -377,5 +377,13 @@
   "situacaoSemFicha": "Sem ficha",
   "situacaoEmRevisao": "Em revisão",
   "situacaoIndisponivel": "Indisponível",
-  "botaoPrevia": "Ver faixa recalculada"
+  "botaoPrevia": "Ver faixa recalculada",
+  "simplesNaoCadastrado": "Livro não cadastrado",
+  "simplesNaoCadastradoTexto": "Lemos o ISBN {isbn}, mas ele não está entre os livros cadastrados.",
+  "@simplesNaoCadastradoTexto": {"placeholders": {"isbn": {"type": "String"}}},
+  "simplesLivroLido": "Livro lido",
+  "simplesLerOutro": "Ler outro livro",
+  "simplesVerCatalogo": "Livros cadastrados",
+  "simplesIsbn": "ISBN {isbn}",
+  "@simplesIsbn": {"placeholders": {"isbn": {"type": "String"}}}
 }

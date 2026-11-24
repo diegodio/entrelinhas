@@ -1,10 +1,11 @@
 # Publica o app web (Flutter) no GitHub Pages a cada push na main.
 #
-# Antes da primeira execução:
-#   1. Settings > Pages > Source: "GitHub Actions".
-#   2. Settings > Secrets and variables > Actions > Variables: API_URL com o endereço público
-#      da API (o Pages hospeda só o app; o backend precisa de hospedagem própria).
-#      Sem API_URL, o app abre, mas busca e fichas mostram "Sem conexão".
+# Antes da primeira execução: Settings > Pages > Source: "GitHub Actions".
+#
+# Por enquanto o app publicado é o modo simples (lê o código de barras e mostra o nome do
+# livro a partir de app/assets/catalogo.json), que não precisa de servidor. Para publicar o
+# app completo, acrescente --dart-define=MODO_COMPLETO=true e defina a variável API_URL
+# (Settings > Secrets and variables > Actions > Variables) com o endereço da API.
 
 name: Pages
 

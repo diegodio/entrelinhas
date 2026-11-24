@@ -4,7 +4,7 @@ Estado do projeto ao fim da construção a partir de `docs/prompt-app-flutter.md
 
 ## 1. Funciona e foi verificado
 
-**Testes automatizados:** 167 no backend e 74 no app, todos passando. A análise estática
+**Testes automatizados:** 167 no backend e 85 no app, todos passando. A análise estática
 não acusa nenhum aviso (`ruff check` e `flutter analyze --fatal-infos`).
 
 **Método**

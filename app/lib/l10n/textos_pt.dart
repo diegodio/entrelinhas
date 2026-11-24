@@ -1089,4 +1089,26 @@ class TextosPt extends Textos {
 
   @override
   String get botaoPrevia => 'Ver faixa recalculada';
+
+  @override
+  String get simplesNaoCadastrado => 'Livro não cadastrado';
+
+  @override
+  String simplesNaoCadastradoTexto(String isbn) {
+    return 'Lemos o ISBN $isbn, mas ele não está entre os livros cadastrados.';
+  }
+
+  @override
+  String get simplesLivroLido => 'Livro lido';
+
+  @override
+  String get simplesLerOutro => 'Ler outro livro';
+
+  @override
+  String get simplesVerCatalogo => 'Livros cadastrados';
+
+  @override
+  String simplesIsbn(String isbn) {
+    return 'ISBN $isbn';
+  }
 }

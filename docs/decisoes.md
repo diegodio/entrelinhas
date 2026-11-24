@@ -67,6 +67,19 @@ ajustada), com o motivo. Ordem: aproximadamente cronológica.
 - **OpenAI e Google** exigem `MODELO_LLM` explícito: não escrevi identificadores de modelo
   desses provedores de memória.
 
+## Modo simples (padrão por enquanto)
+
+- **Pedido do usuário:** ler o código de barras e mostrar só o nome do livro, com um catálogo
+  de uns 5 títulos. Foi escolhido catálogo fixo no app (sem servidor) e o resto do app
+  escondido, não apagado: `main.dart` abre `AppSimples` a menos que
+  `--dart-define=MODO_COMPLETO=true`.
+- **Leitor de EAN-13 próprio em Dart** (`app/lib/simples/ean13.dart`) para a web, já que o
+  ML Kit não roda no navegador, o pacote `zxing2` só lê QR Code e a API `BarcodeDetector`
+  não existe no Safari nem no Chrome de Windows/Linux. Aceita só leituras com dígito
+  verificador correto e escolhe por votação entre várias linhas e colunas.
+- **ISBNs do catálogo não conferidos:** a rede do ambiente bloqueou os sites de ISBN; os
+  números vieram de memória (todos com dígito verificador válido).
+
 ## Reconhecimento
 
 - **Só código de barras, por enquanto** (pedido do usuário). Saíram o detector TFLite, o OCR

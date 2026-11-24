@@ -38,14 +38,35 @@ Testes do backend (sem rede e sem chaves; usam um Postgres de teste):
 TEST_DATABASE_URL="postgresql+psycopg://postgres@localhost/entrelinhas_teste" .venv/bin/python -m pytest testes
 ```
 
-## App
+## Modo simples (padrão, por enquanto)
+
+O app abre direto no leitor: aponte a câmera para o código de barras e ele mostra o nome do
+livro. Não precisa de servidor.
+
+- **Catálogo:** `app/assets/catalogo.json`, com 5 livros (ISBN de 13 dígitos sem traços,
+  título e autor). **Os ISBNs vieram de memória e não foram conferidos**, porque a rede
+  deste ambiente bloqueou os sites de ISBN. Confira no verso dos seus livros e corrija o
+  arquivo; dá para trocar por quaisquer livros.
+- **Leitura:**
+  - celular: ML Kit, ao vivo;
+  - web: uma foto da prévia a cada ~0,9 s, lida em Dart (`app/lib/simples/ean13.dart`);
+  - também dá para escolher uma foto da galeria ou digitar o ISBN.
+- **Resultado:** o nome e o autor do livro; "Livro não cadastrado" para ISBN fora do
+  catálogo; aviso quando o código não é de livro.
+
+```bash
+cd app
+flutter run -d chrome          # modo simples
+```
+
+## App completo
 
 ```bash
 cd app
 flutter pub get
 flutter gen-l10n
 flutter test
-flutter run -d chrome --dart-define=API_URL=http://localhost:8000
+flutter run -d chrome --dart-define=MODO_COMPLETO=true --dart-define=API_URL=http://localhost:8000
 ```
 
 Build web sem CDN: `flutter build web --release --no-web-resources-cdn --dart-define=API_URL=...`.
@@ -77,14 +98,17 @@ posição do contorno sobre a prévia (sistema de coordenadas do ML Kit) e o con
 ## GitHub Pages (app web)
 
 `.github/workflows/pages.yml` publica o app web a cada push na `main`, em
-`https://<dono>.github.io/<repositório>/`. Antes da primeira execução:
+`https://<dono>.github.io/<repositório>/`. Antes da primeira execução, em Settings → Pages,
+escolha Source: **GitHub Actions**. O modo simples (padrão) não precisa de mais nada.
 
-1. Settings → Pages → Source: **GitHub Actions**.
-2. Settings → Secrets and variables → Actions → **Variables**: `API_URL` com o endereço
-   público da API. O Pages hospeda só o app estático; o backend (FastAPI, Postgres, Redis)
-   precisa de hospedagem própria. Sem `API_URL`, o app abre, mas busca e fichas mostram
-   "Sem conexão".
+Para publicar o app completo:
+
+1. Acrescente `--dart-define=MODO_COMPLETO=true` ao build no `pages.yml`.
+2. Crie a variável `API_URL` (Settings → Secrets and variables → Actions → **Variables**)
+   com o endereço público da API, que precisa de hospedagem própria.
 3. Inclua o domínio do Pages em `CORS_ORIGENS` e `URL_PUBLICA_APP` da API.
+
+A câmera na web exige HTTPS, que o Pages já oferece.
 
 Links diretos (`/obra/...`, `/ficha/...`) funcionam porque o build copia `index.html` para
 `404.html`. Verificado localmente imitando o Pages; a publicação em si não foi executada.

@@ -2107,6 +2107,42 @@ abstract class Textos {
   /// In pt, this message translates to:
   /// **'Ver faixa recalculada'**
   String get botaoPrevia;
+
+  /// No description provided for @simplesNaoCadastrado.
+  ///
+  /// In pt, this message translates to:
+  /// **'Livro não cadastrado'**
+  String get simplesNaoCadastrado;
+
+  /// No description provided for @simplesNaoCadastradoTexto.
+  ///
+  /// In pt, this message translates to:
+  /// **'Lemos o ISBN {isbn}, mas ele não está entre os livros cadastrados.'**
+  String simplesNaoCadastradoTexto(String isbn);
+
+  /// No description provided for @simplesLivroLido.
+  ///
+  /// In pt, this message translates to:
+  /// **'Livro lido'**
+  String get simplesLivroLido;
+
+  /// No description provided for @simplesLerOutro.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ler outro livro'**
+  String get simplesLerOutro;
+
+  /// No description provided for @simplesVerCatalogo.
+  ///
+  /// In pt, this message translates to:
+  /// **'Livros cadastrados'**
+  String get simplesVerCatalogo;
+
+  /// No description provided for @simplesIsbn.
+  ///
+  /// In pt, this message translates to:
+  /// **'ISBN {isbn}'**
+  String simplesIsbn(String isbn);
 }
 
 class _TextosDelegate extends LocalizationsDelegate<Textos> {

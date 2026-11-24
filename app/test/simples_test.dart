@@ -32,10 +32,11 @@ Future<TelaLeitorSimplesState> abrir(WidgetTester tester) async {
 }
 
 void main() {
-  test('o catálogo do app tem 5 livros com ISBN de livro válido', () async {
+  test('o catálogo do app tem 6 livros com ISBN de livro válido', () async {
     TestWidgetsFlutterBinding.ensureInitialized();
     final c = Catalogo.deJson(await rootBundle.loadString('assets/catalogo.json'));
-    expect(c.livros, hasLength(5));
+    expect(c.livros, hasLength(6));
+    expect(c.buscar('9788543111537')?.titulo, startsWith('Murdoku'));
     for (final l in c.livros) {
       expect(digitoVerificadorOk(l.isbn), isTrue, reason: l.isbn);
       expect(l.isbn, startsWith('978'));

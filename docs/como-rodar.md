@@ -43,8 +43,8 @@ TEST_DATABASE_URL="postgresql+psycopg://postgres@localhost/entrelinhas_teste" .v
 O app abre direto no leitor: aponte a câmera para o código de barras e ele mostra o nome do
 livro. Não precisa de servidor.
 
-- **Catálogo:** `app/assets/catalogo.json`, com 5 livros (ISBN de 13 dígitos sem traços,
-  título e autor). **Os ISBNs vieram de memória e não foram conferidos**, porque a rede
+- **Catálogo:** `app/assets/catalogo.json`, com 6 livros (ISBN de 13 dígitos sem traços,
+  título e autor). **O ISBN do Murdoku foi conferido numa foto; os outros 5 vieram de memória e não foram conferidos**, porque a rede
   deste ambiente bloqueou os sites de ISBN. Confira no verso dos seus livros e corrija o
   arquivo; dá para trocar por quaisquer livros.
 - **Leitura:**

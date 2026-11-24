@@ -15,17 +15,14 @@ import '../../../nucleo/rede/erro_api.dart';
 import '../../../nucleo/tema/tema.dart';
 import '../../busca/tela_busca.dart';
 import '../../obras/dados/obras_repositorio.dart';
-import '../dados/detector.dart';
+import '../dados/leitor.dart';
 import '../dados/reconhecimento_repositorio.dart';
 import '../dados/recorte.dart';
-import '../dominio/deteccao.dart';
 import '../dominio/maquina_scanner.dart';
 import 'sobreposicao.dart';
 
-enum ModoScanner { automatico, capa, codigo }
-
-/// Fábrica do detector (substituível nos testes).
-final fabricaDetectorProvider = Provider<DetectorDeLivro Function()>((ref) => criarDetector);
+/// Fábrica do leitor de código (substituível nos testes).
+final fabricaLeitorProvider = Provider<LeitorDeCodigo Function()>((ref) => criarLeitor);
 
 class TelaEscanear extends ConsumerStatefulWidget {
   const TelaEscanear({super.key, this.abrirIsbn = false});
@@ -42,17 +39,16 @@ class _TelaEscanearState extends ConsumerState<TelaEscanear> with WidgetsBinding
   static const _maquina = MaquinaScanner();
 
   CameraController? _camera;
-  DetectorDeLivro? _detector;
+  LeitorDeCodigo? _detector;
   EstadoScanner _estado = EstadoScanner.inicial;
-  ModoScanner _modo = ModoScanner.automatico;
   final _relogio = Stopwatch();
   Duration _ultimaAnalise = Duration.zero;
   bool _analisando = false;
   bool _lanterna = false;
   bool _semPermissao = false;
   bool _semCamera = false;
-  Uint8List? _capturaPendente; // guardada quando a rede falha
-  String? _dicaPendente;
+  // Guardados quando a rede falha, para "Tentar de novo" reenviar sem nova leitura.
+  Uint8List? _capturaPendente;
   String? _isbnPendente;
 
   @override
@@ -84,7 +80,7 @@ class _TelaEscanearState extends ConsumerState<TelaEscanear> with WidgetsBinding
   }
 
   Future<void> _iniciar() async {
-    _detector = ref.read(fabricaDetectorProvider)();
+    _detector = ref.read(fabricaLeitorProvider)();
     await _detector!.iniciar();
     await _iniciarCamera();
   }
@@ -163,26 +159,19 @@ class _TelaEscanearState extends ConsumerState<TelaEscanear> with WidgetsBinding
         .analisar(quadro)
         .then((analise) {
           if (!mounted) return;
-          final filtrada = _filtrarPorModo(analise);
           final antes = _estado.fase;
-          setState(() => _estado = _maquina.aoAnalisar(_estado, filtrada, _relogio.elapsed));
-          if (antes != FaseScanner.capturando && _estado.fase == FaseScanner.capturando) {
+          setState(() => _estado = _maquina.aoAnalisar(_estado, analise, _relogio.elapsed));
+          final isbn = _estado.isbn;
+          if (antes != FaseScanner.consultando &&
+              _estado.fase == FaseScanner.consultando &&
+              isbn != null) {
             HapticFeedback.mediumImpact();
-            _capturar();
+            _pararAnalise();
+            _consultarIsbn(isbn);
           }
         })
         .catchError((_) {})
         .whenComplete(() => _analisando = false);
-  }
-
-  Analise _filtrarPorModo(Analise a) {
-    if (_modo == ModoScanner.automatico) return a;
-    final tipo = _modo == ModoScanner.capa ? TipoRegiao.capa : TipoRegiao.codigoDeBarras;
-    return Analise(
-      regioes: a.regioes.where((r) => r.tipo == tipo).toList(),
-      nitidez: a.nitidez,
-      luminancia: a.luminancia,
-    );
   }
 
   QuadroCamera _converter(CameraImage i) {
@@ -205,64 +194,79 @@ class _TelaEscanearState extends ConsumerState<TelaEscanear> with WidgetsBinding
 
   // ------------------------------------------------------------------- captura
 
-  Future<void> _capturar() async {
-    final camera = _camera;
-    if (camera == null || !camera.value.isInitialized) return;
-    if (_estado.fase != FaseScanner.capturando) {
-      setState(() => _estado = _maquina.aoCapturarManual(_estado));
-    }
-    final regiao = _estado.regiao;
+  void _pararAnalise() {
+    final c = _camera;
+    if (c != null && c.value.isStreamingImages) c.stopImageStream().catchError((_) {});
+  }
+
+  /// ISBN lido ao vivo ou digitado: consulta direto, sem enviar foto.
+  Future<void> _consultarIsbn(String isbn) async {
+    _isbnPendente = null;
     try {
-      if (camera.value.isStreamingImages) await camera.stopImageStream();
-      final foto = await camera.takePicture();
-      final bytes = await foto.readAsBytes();
-      final dica = regiao == null
-          ? 'desconhecido'
-          : (regiao.tipo == TipoRegiao.codigoDeBarras ? 'codigo_de_barras' : 'capa');
-      // Código de barras: manda a foto inteira (o código é pequeno); capa: o recorte.
-      final recorte = regiao?.tipo == TipoRegiao.capa ? recorteComMargem(regiao!.caixa) : null;
-      final jpeg = await prepararEnvio(bytes, regiao: recorte);
-      await _enviar(jpeg, dica, regiao?.valor);
-    } catch (e) {
-      if (mounted) setState(() => _estado = _maquina.aoFalhar(_estado, mensagemDeErro(context, e)));
+      final obra = await ref.read(obrasRepositorioProvider).porIsbn(isbn);
+      if (mounted) context.pushReplacement('/obra/${obra.id}');
+    } on ErroApi catch (e) {
+      if (!mounted) return;
+      if (e.codigo == 'obra_nao_encontrada') {
+        context.pushReplacement('/cadastrar-obra?isbn=$isbn');
+        return;
+      }
+      if (e.semRede) _isbnPendente = isbn;
+      _falhar(e);
     }
   }
 
-  Future<void> _enviar(Uint8List jpeg, String dica, String? isbn) async {
-    setState(() => _estado = _maquina.aoEnviar(_estado));
+  /// Captura manual (web, ou quando o código não é lido ao vivo): o servidor lê na foto.
+  Future<void> _capturar() async {
+    final camera = _camera;
+    if (camera == null || !camera.value.isInitialized || !_estado.analisando) return;
+    setState(() => _estado = _maquina.aoCapturarManual(_estado));
     try {
-      final r = await ref
-          .read(reconhecimentoRepositorioProvider)
-          .enviar(jpeg, dica: dica, isbn: isbn);
-      _capturaPendente = null;
+      if (camera.value.isStreamingImages) await camera.stopImageStream();
+      final foto = await camera.takePicture();
+      await _enviarFoto(await prepararEnvio(await foto.readAsBytes()));
+    } catch (e) {
+      _falhar(e);
+    }
+  }
+
+  Future<void> _enviarFoto(Uint8List jpeg) async {
+    _capturaPendente = null;
+    try {
+      final r = await ref.read(reconhecimentoRepositorioProvider).enviar(jpeg);
       if (!mounted) return;
       setState(() => _estado = _maquina.aoReceberResultado(_estado));
-      ref.read(ultimoReconhecimentoProvider.notifier).definir(r);
       if (r.status == 'identificado' && r.obra != null) {
-        context.pushReplacement('/obra/${r.obra!.id}?reconhecido=1');
+        context.pushReplacement('/obra/${r.obra!.id}');
+      } else if (r.status == 'nao_identificado' && r.isbn != null) {
+        context.pushReplacement('/cadastrar-obra?isbn=${r.isbn}');
       } else {
         await context.push('/reconhecimento', extra: r);
         if (mounted) _recomecar();
       }
     } on ErroApi catch (e) {
-      if (!mounted) return;
-      if (e.semRede) {
-        _capturaPendente = jpeg;
-        _dicaPendente = dica;
-        _isbnPendente = isbn;
-      }
-      setState(
-        () => _estado = _maquina.aoFalhar(
-          _estado,
-          e.semRede ? Textos.of(context).semRedeCaptura : mensagemDeErro(context, e),
-        ),
-      );
+      if (e.semRede) _capturaPendente = jpeg;
+      _falhar(e);
     }
   }
 
+  void _falhar(Object e) {
+    if (!mounted) return;
+    final semRede = e is ErroApi && e.semRede;
+    final mensagem = semRede ? Textos.of(context).semRedeCaptura : mensagemDeErro(context, e);
+    setState(() => _estado = _maquina.aoFalhar(_estado, mensagem));
+  }
+
   Future<void> _recomecar() async {
+    if (_isbnPendente != null) {
+      final isbn = _isbnPendente!;
+      setState(() => _estado = _maquina.aoCapturarManual(_maquina.reiniciar(_estado)));
+      await _consultarIsbn(isbn);
+      return;
+    }
     if (_capturaPendente != null) {
-      await _enviar(_capturaPendente!, _dicaPendente!, _isbnPendente);
+      setState(() => _estado = _maquina.aoCapturarManual(_maquina.reiniciar(_estado)));
+      await _enviarFoto(_capturaPendente!);
       return;
     }
     setState(() => _estado = _maquina.reiniciar(_estado));
@@ -274,12 +278,13 @@ class _TelaEscanearState extends ConsumerState<TelaEscanear> with WidgetsBinding
 
   Future<void> _galeria() async {
     final arquivo = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (arquivo == null || !mounted) return;
+    if (arquivo == null || !mounted || !_estado.analisando) return;
+    _pararAnalise();
+    setState(() => _estado = _maquina.aoCapturarManual(_estado));
     try {
-      final jpeg = await prepararEnvio(await arquivo.readAsBytes());
-      await _enviar(jpeg, 'desconhecido', null);
+      await _enviarFoto(await prepararEnvio(await arquivo.readAsBytes()));
     } catch (e) {
-      if (mounted) setState(() => _estado = _maquina.aoFalhar(_estado, mensagemDeErro(context, e)));
+      _falhar(e);
     }
   }
 
@@ -311,20 +316,9 @@ class _TelaEscanearState extends ConsumerState<TelaEscanear> with WidgetsBinding
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(t.isbnInvalido)));
       return;
     }
-    try {
-      final obra = await ref
-          .read(obrasRepositorioProvider)
-          .porIsbn(RegrasBusca.normalizarIsbn(isbn));
-      if (mounted) context.pushReplacement('/obra/${obra.id}');
-    } on ErroApi catch (e) {
-      if (!mounted) return;
-      if (e.codigo == 'obra_nao_encontrada') {
-        context.pushReplacement('/cadastrar-obra?isbn=${RegrasBusca.normalizarIsbn(isbn)}');
-      } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(mensagemDeErro(context, e))));
-      }
-    }
+    _pararAnalise();
+    setState(() => _estado = _maquina.aoCapturarManual(_maquina.reiniciar(_estado)));
+    await _consultarIsbn(RegrasBusca.normalizarIsbn(isbn));
   }
 
   Future<void> _alternarLanterna() async {
@@ -334,11 +328,6 @@ class _TelaEscanearState extends ConsumerState<TelaEscanear> with WidgetsBinding
       await c.setFlashMode(_lanterna ? FlashMode.off : FlashMode.torch);
       setState(() => _lanterna = !_lanterna);
     } catch (_) {}
-  }
-
-  void _aoTocar(TapUpDetails d, Size tamanho) {
-    final ponto = Offset(d.localPosition.dx / tamanho.width, d.localPosition.dy / tamanho.height);
-    setState(() => _estado = _maquina.aoTocar(_estado, ponto));
   }
 
   // --------------------------------------------------------------------- tela
@@ -412,19 +401,12 @@ class _TelaEscanearState extends ConsumerState<TelaEscanear> with WidgetsBinding
             child: SizedBox(
               width: larg,
               height: alt,
-              child: GestureDetector(
-                onTapUp: (d) => _aoTocar(d, Size(larg, alt)),
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    CameraPreview(camera),
-                    SobreposicaoScanner(
-                      estado: _estado,
-                      progresso: _estado.progresso(_relogio.elapsed, const ParametrosScanner()),
-                      aoVivo: _detector?.aoVivo ?? false,
-                    ),
-                  ],
-                ),
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  CameraPreview(camera),
+                  SobreposicaoScanner(estado: _estado, aoVivo: _detector?.aoVivo ?? false),
+                ],
               ),
             ),
           ),
@@ -437,13 +419,13 @@ class _TelaEscanearState extends ConsumerState<TelaEscanear> with WidgetsBinding
     final t = Textos.of(context);
     final e = context.estilos;
     final branco = e.corpo.copyWith(color: Colors.white);
+    final aoVivo = _detector?.aoVivo ?? false;
     final mensagem = switch (_estado.fase) {
-      FaseScanner.enviando || FaseScanner.capturando => t.identificando,
+      FaseScanner.consultando || FaseScanner.resultado => t.identificando,
       FaseScanner.erro => _estado.mensagemErro ?? t.erroGenerico,
-      FaseScanner.estavel => t.dicaSegurar,
+      _ when _estado.naoELivro => t.naoELivro,
       _ when _estado.poucaLuz => t.poucaLuz,
-      _ when _estado.variasRegioes => t.dicaVariosLivros,
-      _ => t.enquadre,
+      _ => aoVivo ? t.enquadre : t.enquadreManual,
     };
     return Container(
       padding: const EdgeInsets.fromLTRB(Espaco.m, Espaco.s, Espaco.m, Espaco.l),
@@ -466,26 +448,6 @@ class _TelaEscanearState extends ConsumerState<TelaEscanear> with WidgetsBinding
             FilledButton(onPressed: _recomecar, child: Text(t.botaoTentarDeNovo)),
           ],
           const SizedBox(height: Espaco.s),
-          if (_detector?.aoVivo ?? false)
-            SegmentedButton<ModoScanner>(
-              style: SegmentedButton.styleFrom(
-                foregroundColor: Colors.white,
-                selectedForegroundColor: context.cores.tinta,
-                selectedBackgroundColor: context.cores.superficie,
-                side: const BorderSide(color: Colors.white54),
-              ),
-              segments: [
-                ButtonSegment(value: ModoScanner.automatico, label: Text(t.modoAutomatico)),
-                ButtonSegment(value: ModoScanner.capa, label: Text(t.modoCapa)),
-                ButtonSegment(value: ModoScanner.codigo, label: Text(t.modoCodigo)),
-              ],
-              selected: {_modo},
-              showSelectedIcon: false,
-              onSelectionChanged: (s) => setState(() {
-                _modo = s.first;
-                _estado = _maquina.reiniciar(_estado);
-              }),
-            ),
           const SizedBox(height: Espaco.s),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

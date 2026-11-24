@@ -103,10 +103,10 @@ def test_leitores_limite_do_plano(cliente, usuario, sessao):
 
 def test_privacidade_consentimento_exportacao_e_exclusao(cliente, usuario, sessao):
     h = cabecalho(usuario)
-    r = cliente.patch("/v1/eu", json={"contribuir_imagens": True}, headers=h).json()
-    assert r["contribuir_imagens"] is True
+    r = cliente.patch("/v1/eu", json={"nome": "Ana"}, headers=h).json()
+    assert r["nome"] == "Ana" and "contribuir_imagens" not in r
     exp = cliente.get("/v1/eu/exportacao", headers=h).json()
-    assert any(c["documento"] == "imagens" for c in exp["consentimentos"])
+    assert exp["conta"]["nome"] == "Ana" and "consentimentos" in exp
     assert cliente.delete("/v1/eu", headers=h).status_code == 204
     assert cliente.get("/v1/eu", headers=h).status_code == 401
 

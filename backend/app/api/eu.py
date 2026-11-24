@@ -10,7 +10,6 @@ from pydantic import BaseModel, Field
 from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
-from app.api.auth import VERSAO_TERMOS
 from app.db import obter_sessao
 from app.erros import ErroApi, nao_encontrado
 from app.modelos import (
@@ -46,7 +45,6 @@ def usuario_json(sessao: Session, usuario: Usuario) -> dict:
         "email": usuario.email,
         "nome": usuario.nome,
         "papel": usuario.papel,
-        "contribuir_imagens": usuario.contribuir_imagens,
         "organizacoes": organizacoes_do_usuario(sessao, usuario),
         "uso": planos.uso(sessao, usuario),
     }
@@ -59,7 +57,6 @@ def eu(usuario: Usuario = Depends(usuario_obrigatorio), sessao: Session = Depend
 
 class AtualizacaoConta(BaseModel):
     nome: str | None = Field(default=None, max_length=120)
-    contribuir_imagens: bool | None = None
 
 
 @rotas.patch("/eu")
@@ -70,20 +67,6 @@ def atualizar(
 ):
     if dados.nome is not None:
         usuario.nome = dados.nome.strip()
-    if (
-        dados.contribuir_imagens is not None
-        and dados.contribuir_imagens != usuario.contribuir_imagens
-    ):
-        usuario.contribuir_imagens = dados.contribuir_imagens
-        # Cada mudança do consentimento fica registrada, com data e versão do texto.
-        sessao.add(
-            Consentimento(
-                usuario_id=usuario.id,
-                documento="imagens",
-                versao=VERSAO_TERMOS,
-                aceito=dados.contribuir_imagens,
-            )
-        )
     sessao.commit()
     return usuario_json(sessao, usuario)
 
@@ -115,7 +98,6 @@ def exportar(
             "email": usuario.email,
             "nome": usuario.nome,
             "criado_em": _data(usuario.criado_em),
-            "contribuir_imagens": usuario.contribuir_imagens,
         },
         "consentimentos": [
             {

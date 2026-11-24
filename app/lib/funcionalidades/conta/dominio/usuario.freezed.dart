@@ -292,7 +292,7 @@ as String,
 /// @nodoc
 mixin _$Usuario {
 
- String get id; String get email; String get nome; String get papel; bool get contribuirImagens; List<MembroDe> get organizacoes; Uso? get uso;
+ String get id; String get email; String get nome; String get papel; List<MembroDe> get organizacoes; Uso? get uso;
 /// Create a copy of Usuario
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -306,20 +306,20 @@ $UsuarioCopyWith<Usuario> get copyWith => _$UsuarioCopyWithImpl<Usuario>(this as
 @override
 bool operator ==(Object other) {
   final _this = this as Usuario;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Usuario&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.email, _this.email) || other.email == _this.email)&&(identical(other.nome, _this.nome) || other.nome == _this.nome)&&(identical(other.papel, _this.papel) || other.papel == _this.papel)&&(identical(other.contribuirImagens, _this.contribuirImagens) || other.contribuirImagens == _this.contribuirImagens)&&const DeepCollectionEquality().equals(other.organizacoes, _this.organizacoes)&&(identical(other.uso, _this.uso) || other.uso == _this.uso));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Usuario&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.email, _this.email) || other.email == _this.email)&&(identical(other.nome, _this.nome) || other.nome == _this.nome)&&(identical(other.papel, _this.papel) || other.papel == _this.papel)&&const DeepCollectionEquality().equals(other.organizacoes, _this.organizacoes)&&(identical(other.uso, _this.uso) || other.uso == _this.uso));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as Usuario;
-  return Object.hash(runtimeType,_this.id,_this.email,_this.nome,_this.papel,_this.contribuirImagens,const DeepCollectionEquality().hash(_this.organizacoes),_this.uso);
+  return Object.hash(runtimeType,_this.id,_this.email,_this.nome,_this.papel,const DeepCollectionEquality().hash(_this.organizacoes),_this.uso);
 }
 
 @override
 String toString() {
   final _this = this as Usuario;
-  return 'Usuario(id: ${_this.id}, email: ${_this.email}, nome: ${_this.nome}, papel: ${_this.papel}, contribuirImagens: ${_this.contribuirImagens}, organizacoes: ${_this.organizacoes}, uso: ${_this.uso})';
+  return 'Usuario(id: ${_this.id}, email: ${_this.email}, nome: ${_this.nome}, papel: ${_this.papel}, organizacoes: ${_this.organizacoes}, uso: ${_this.uso})';
 }
 
 
@@ -330,7 +330,7 @@ abstract mixin class $UsuarioCopyWith<$Res>  {
   factory $UsuarioCopyWith(Usuario value, $Res Function(Usuario) _then) = _$UsuarioCopyWithImpl;
 @useResult
 $Res call({
- String id, String email, String nome, String papel, bool contribuirImagens, List<MembroDe> organizacoes, Uso? uso
+ String id, String email, String nome, String papel, List<MembroDe> organizacoes, Uso? uso
 });
 
 
@@ -347,14 +347,13 @@ class _$UsuarioCopyWithImpl<$Res>
 
 /// Create a copy of Usuario
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? email = null,Object? nome = null,Object? papel = null,Object? contribuirImagens = null,Object? organizacoes = null,Object? uso = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? email = null,Object? nome = null,Object? papel = null,Object? organizacoes = null,Object? uso = freezed,}) {
   return _then(Usuario(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,nome: null == nome ? _self.nome : nome // ignore: cast_nullable_to_non_nullable
 as String,papel: null == papel ? _self.papel : papel // ignore: cast_nullable_to_non_nullable
-as String,contribuirImagens: null == contribuirImagens ? _self.contribuirImagens : contribuirImagens // ignore: cast_nullable_to_non_nullable
-as bool,organizacoes: null == organizacoes ? _self.organizacoes : organizacoes // ignore: cast_nullable_to_non_nullable
+as String,organizacoes: null == organizacoes ? _self.organizacoes : organizacoes // ignore: cast_nullable_to_non_nullable
 as List<MembroDe>,uso: freezed == uso ? _self.uso : uso // ignore: cast_nullable_to_non_nullable
 as Uso?,
   ));
@@ -453,10 +452,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String email,  String nome,  String papel,  bool contribuirImagens,  List<MembroDe> organizacoes,  Uso? uso)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String email,  String nome,  String papel,  List<MembroDe> organizacoes,  Uso? uso)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Usuario() when $default != null:
-return $default(_that.id,_that.email,_that.nome,_that.papel,_that.contribuirImagens,_that.organizacoes,_that.uso);case _:
+return $default(_that.id,_that.email,_that.nome,_that.papel,_that.organizacoes,_that.uso);case _:
   return orElse();
 
 }
@@ -474,10 +473,10 @@ return $default(_that.id,_that.email,_that.nome,_that.papel,_that.contribuirImag
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String email,  String nome,  String papel,  bool contribuirImagens,  List<MembroDe> organizacoes,  Uso? uso)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String email,  String nome,  String papel,  List<MembroDe> organizacoes,  Uso? uso)  $default,) {final _that = this;
 switch (_that) {
 case _Usuario():
-return $default(_that.id,_that.email,_that.nome,_that.papel,_that.contribuirImagens,_that.organizacoes,_that.uso);case _:
+return $default(_that.id,_that.email,_that.nome,_that.papel,_that.organizacoes,_that.uso);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -494,10 +493,10 @@ return $default(_that.id,_that.email,_that.nome,_that.papel,_that.contribuirImag
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String email,  String nome,  String papel,  bool contribuirImagens,  List<MembroDe> organizacoes,  Uso? uso)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String email,  String nome,  String papel,  List<MembroDe> organizacoes,  Uso? uso)?  $default,) {final _that = this;
 switch (_that) {
 case _Usuario() when $default != null:
-return $default(_that.id,_that.email,_that.nome,_that.papel,_that.contribuirImagens,_that.organizacoes,_that.uso);case _:
+return $default(_that.id,_that.email,_that.nome,_that.papel,_that.organizacoes,_that.uso);case _:
   return null;
 
 }
@@ -509,14 +508,13 @@ return $default(_that.id,_that.email,_that.nome,_that.papel,_that.contribuirImag
 @JsonSerializable()
 
 class _Usuario extends Usuario {
-  const _Usuario({required this.id, required this.email, this.nome = '', this.papel = 'usuario', this.contribuirImagens = false,  List<MembroDe> organizacoes = const <MembroDe>[], this.uso}): _organizacoes = organizacoes,super._();
+  const _Usuario({required this.id, required this.email, this.nome = '', this.papel = 'usuario',  List<MembroDe> organizacoes = const <MembroDe>[], this.uso}): _organizacoes = organizacoes,super._();
   factory _Usuario.fromJson(Map<String, dynamic> json) => _$UsuarioFromJson(json);
 
 @override final  String id;
 @override final  String email;
 @override@JsonKey() final  String nome;
 @override@JsonKey() final  String papel;
-@override@JsonKey() final  bool contribuirImagens;
  final  List<MembroDe> _organizacoes;
 @override@JsonKey() List<MembroDe> get organizacoes {
   if (_organizacoes is EqualUnmodifiableListView) return _organizacoes;
@@ -539,18 +537,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Usuario&&(identical(other.id, id) || other.id == id)&&(identical(other.email, email) || other.email == email)&&(identical(other.nome, nome) || other.nome == nome)&&(identical(other.papel, papel) || other.papel == papel)&&(identical(other.contribuirImagens, contribuirImagens) || other.contribuirImagens == contribuirImagens)&&const DeepCollectionEquality().equals(other.organizacoes, _organizacoes)&&(identical(other.uso, uso) || other.uso == uso));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Usuario&&(identical(other.id, id) || other.id == id)&&(identical(other.email, email) || other.email == email)&&(identical(other.nome, nome) || other.nome == nome)&&(identical(other.papel, papel) || other.papel == papel)&&const DeepCollectionEquality().equals(other.organizacoes, _organizacoes)&&(identical(other.uso, uso) || other.uso == uso));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,email,nome,papel,contribuirImagens,const DeepCollectionEquality().hash(_organizacoes),uso);
+    return Object.hash(runtimeType,id,email,nome,papel,const DeepCollectionEquality().hash(_organizacoes),uso);
 }
 
 @override
 String toString() {
-    return 'Usuario(id: $id, email: $email, nome: $nome, papel: $papel, contribuirImagens: $contribuirImagens, organizacoes: $organizacoes, uso: $uso)';
+    return 'Usuario(id: $id, email: $email, nome: $nome, papel: $papel, organizacoes: $organizacoes, uso: $uso)';
 }
 
 
@@ -561,7 +559,7 @@ abstract mixin class _$UsuarioCopyWith<$Res> implements $UsuarioCopyWith<$Res> {
   factory _$UsuarioCopyWith(_Usuario value, $Res Function(_Usuario) _then) = __$UsuarioCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String email, String nome, String papel, bool contribuirImagens, List<MembroDe> organizacoes, Uso? uso
+ String id, String email, String nome, String papel, List<MembroDe> organizacoes, Uso? uso
 });
 
 
@@ -578,14 +576,13 @@ class __$UsuarioCopyWithImpl<$Res>
 
 /// Create a copy of Usuario
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? email = null,Object? nome = null,Object? papel = null,Object? contribuirImagens = null,Object? organizacoes = null,Object? uso = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? email = null,Object? nome = null,Object? papel = null,Object? organizacoes = null,Object? uso = freezed,}) {
   return _then(_Usuario(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,nome: null == nome ? _self.nome : nome // ignore: cast_nullable_to_non_nullable
 as String,papel: null == papel ? _self.papel : papel // ignore: cast_nullable_to_non_nullable
-as String,contribuirImagens: null == contribuirImagens ? _self.contribuirImagens : contribuirImagens // ignore: cast_nullable_to_non_nullable
-as bool,organizacoes: null == organizacoes ? _self._organizacoes : organizacoes // ignore: cast_nullable_to_non_nullable
+as String,organizacoes: null == organizacoes ? _self._organizacoes : organizacoes // ignore: cast_nullable_to_non_nullable
 as List<MembroDe>,uso: freezed == uso ? _self.uso : uso // ignore: cast_nullable_to_non_nullable
 as Uso?,
   ));

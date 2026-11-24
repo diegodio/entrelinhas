@@ -4,7 +4,7 @@ Estado do projeto ao fim da construção a partir de `docs/prompt-app-flutter.md
 
 ## 1. Funciona e foi verificado
 
-**Testes automatizados:** 171 no backend e 75 no app, todos passando. A análise estática
+**Testes automatizados:** 167 no backend e 74 no app, todos passando. A análise estática
 não acusa nenhum aviso (`ruff check` e `flutter analyze --fatal-infos`).
 
 **Método**
@@ -40,20 +40,16 @@ Tudo testado contra Postgres real com pgvector.
 - análise por blocos com consolidação;
 - parâmetros enviados ao SDK da Anthropic (simulado) e tratamento de recusa.
 
-**Reconhecimento no servidor**
-- Leitura de EAN-13: em pé, girado e "não é livro".
-- Recorte em perspectiva.
-- Fusão de OCR e capa, com a decisão entre identificado, candidatos e não identificado.
-- Amostras gravadas só com consentimento e apagadas ao excluir a conta.
-
-**Avaliação real com capas sintéticas** (detalhes em `docs/reconhecimento.md`): top-1 da fusão 66%, top-5 89%, mediana de 314 ms por consulta. Os limiares foram calibrados com esses números.
+**Código de barras no servidor** (escopo atual: só código de barras; detalhes em `docs/reconhecimento.md`)
+- Leitura de EAN-13: em pé, girado, pequeno numa foto grande e "não é livro".
+- Rota com identificado, ISBN fora do catálogo, não é livro, sem código e ISBN vindo do aparelho.
 
 **App web percorrido no navegador**, contra a API real:
 - Boas-vindas, Início, Busca, Ficha (resumo e completa), login, Perfil, Listas, Metodologia e Planos.
 - Fila de revisão e edição de ficha.
 - Acervo, tabela da lista e relatório.
 - O trilho lateral aparece em tela larga.
-- **Scanner web de ponta a ponta:** a câmera falsa do Chromium mostrava uma foto simulada do livro; a captura manual identificou "O Jardim de Vidro" e abriu a ficha com "É este o livro?".
+- **Scanner web de ponta a ponta:** a câmera falsa do Chromium mostrava o verso de um livro com código de barras; a captura manual leu o ISBN no servidor e abriu a ficha de "O Jardim de Vidro".
 
 **Testes do app**
 - Imagens de referência: ficha completa, ficha em duas colunas e limite atingido.
@@ -68,23 +64,21 @@ Tudo testado contra Postgres real com pgvector.
 
 | Parte | Motivo |
 |---|---|
-| Scanner nativo (ML Kit e TFLite no celular, rotação das caixas, recorte em alta resolução) | Não há aparelho nem SDK Android ou Xcode aqui. O detector TFLite foi testado só em Python. |
+| Scanner nativo (leitura ao vivo do EAN-13 pelo ML Kit, posição do contorno) | Não há aparelho nem SDK Android ou Xcode aqui |
 | Builds Android e iOS | Sem SDK Android nem macOS |
 | `docker compose` e Dockerfile | Sem daemon Docker neste ambiente |
 | Classificação com LLM real (Anthropic, OpenAI, Google) | Sem chaves |
 | Google Books, Open Library e Wikipédia ao vivo | 429 por cota e bloqueio de rede deste ambiente |
-| DINOv2 e ajuste fino (`ml/treinar.py`) | Pesos do Hugging Face e PyTorch inacessíveis aqui |
 | Stripe (checkout e webhook reais), App Store, Google Play | Sem credenciais. A verificação de assinatura do webhook tem teste. |
 | Login com Google e Apple | O backend verifica ID tokens via JWKS, mas não foi exercitado. No app só existe a interface; os pacotes não foram adicionados. |
-| Envio de e-mail por SMTP e OCR do Google Vision | Sem credenciais |
+| Envio de e-mail por SMTP | Sem credenciais |
 
 ## 3. O que falta
 
-- **Fotos reais rotuladas** para medir e recalibrar o reconhecimento. Hoje só há medição com capas sintéticas.
+- **Reconhecimento pela capa:** retirado por enquanto; ver `docs/reconhecimento.md` para voltar.
 - **Login social no app:** implementar `ProvedorLoginSocial` com `google_sign_in` e `sign_in_with_apple`.
 - **Tema escuro.** Os tokens já estão prontos para recebê-lo.
 - **Validação editorial do método:** especialistas em educação, biblioteconomia e desenvolvimento infantojuvenil, como recomendaram os avaliadores do Centelha.
-- **Índice ANN no pgvector** quando o catálogo crescer (instruções em `docs/reconhecimento.md`).
 - **Escala da importação:** o acompanhamento no app desiste depois de 2 minutos, e importações muito grandes podem precisar de paginação do resultado.
 - **Navegação por teclado na web:** os componentes usam elementos semânticos, mas o percurso por teclado não foi testado.
 - **Revisão jurídica** dos rascunhos de política e termos (`docs/rascunhos/`).
@@ -94,8 +88,7 @@ Tudo testado contra Postgres real com pgvector.
 Lista completa em `docs/decisoes.md`. As mais importantes:
 
 - **Cor da faixa 14+:** o terracota passou de `#B4532A` para `#B05129`, porque o teste de contraste reprovou a cor original como texto.
-- **Detector no aparelho:** COCO SSD MobileNet. Ele classifica capas como "tv"/"book", então o app aceita classes retangulares com checagem de geometria.
-- **Modelo de capa padrão:** "histograma", enquanto o DINOv2 não for medido.
+- **Só código de barras:** ISBN lido no celular consulta direto, sem enviar foto; ISBN fora do catálogo abre "Cadastrar obra" já preenchido.
 - **Fonte de resenhas:** Wikipédia em português.
 - **Limites não definidos no prompt:** 3 listas no plano gratuito; PDF só nos planos pagos; importação e relatório só no plano Escola.
 - **Obras de demonstração sem ISBN,** para não colidir com ISBNs de livros reais.

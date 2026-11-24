@@ -65,12 +65,8 @@ class ContaRepositorio {
 
   Future<Usuario> eu() async => Usuario.fromJson(await api.get<Map<String, dynamic>>('/v1/eu'));
 
-  Future<Usuario> atualizar({String? nome, bool? contribuirImagens}) async => Usuario.fromJson(
-    await api.patch<Map<String, dynamic>>(
-      '/v1/eu',
-      dados: {'nome': ?nome, 'contribuir_imagens': ?contribuirImagens},
-    ),
-  );
+  Future<Usuario> atualizar({String? nome}) async =>
+      Usuario.fromJson(await api.patch<Map<String, dynamic>>('/v1/eu', dados: {'nome': ?nome}));
 
   Future<Map<String, dynamic>> exportarDados() =>
       api.get<Map<String, dynamic>>('/v1/eu/exportacao');
@@ -147,8 +143,8 @@ class SessaoNotifier extends AsyncNotifier<Usuario?> {
 
   Future<void> recarregar() async => state = AsyncData(await _repo.eu());
 
-  Future<void> atualizar({String? nome, bool? contribuirImagens}) async =>
-      state = AsyncData(await _repo.atualizar(nome: nome, contribuirImagens: contribuirImagens));
+  Future<void> atualizar({String? nome}) async =>
+      state = AsyncData(await _repo.atualizar(nome: nome));
 
   Future<void> sair() async {
     await _repo.sair();

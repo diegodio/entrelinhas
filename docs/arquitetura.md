@@ -3,10 +3,9 @@
 ```
 app/        Flutter (Android, iOS, web) ── HTTP/JSON ──▶ backend/  FastAPI ──▶ PostgreSQL + pgvector
                                                             │  ├─▶ Redis + RQ (worker: análises, importações)
-                                                            │  ├─▶ S3/MinIO (amostras consentidas)
-                                                            │  └─▶ provedores: LLM, OCR, capa, metadados,
-                                                            │        resenhas, pagamento, e-mail
-ml/         índice, avaliação e ajuste fino do modelo de capas (usa o pacote `app` do backend)
+                                                            │  ├─▶ S3/MinIO (PDFs e arquivos)
+                                                            │  └─▶ provedores: LLM, metadados, resenhas,
+                                                            │        pagamento, e-mail
 ```
 
 ## Backend (`backend/app`)
@@ -18,8 +17,8 @@ ml/         índice, avaliação e ajuste fino do modelo de capas (usa o pacote 
 | `core/ficha.py` | Monta a ficha (contrato 4.3); campos calculados sempre pelo código |
 | `core/isbn.py`, `core/textos.py` | ISBN; textos gerados pelo backend |
 | `motor/` | Prompt do classificador, validador, pipeline (coleta → classificação → validação → cálculo → publicação) |
-| `reconhecimento/` | Código de barras, localização da capa, fusão de sinais |
-| `provedores/` | Interfaces e adaptadores trocáveis: `llm`, `ocr`, `modelo_capa`, `metadados`, `resenhas`, `pagamento`, `email`, `login_social`. Cada um tem implementação falsa |
+| `reconhecimento/` | Leitura do código de barras (EAN-13/ISBN) numa foto |
+| `provedores/` | Interfaces e adaptadores trocáveis: `llm`, `metadados`, `resenhas`, `pagamento`, `email`, `login_social`. Cada um tem implementação falsa |
 | `servicos/` | Regras de uso: planos e limite mensal, flags, fichas, obras, importação, relatórios, PDF, armazenamento, limitador |
 | `api/` | Rotas `/v1` (OpenAPI em `/docs`) |
 | `tarefas.py`, `worker.py` | Fila (RQ) e execução das tarefas |

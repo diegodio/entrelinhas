@@ -25,7 +25,6 @@ abstract class Usuario with _$Usuario {
     required String email,
     @Default('') String nome,
     @Default('usuario') String papel,
-    @Default(false) bool contribuirImagens,
     @Default(<MembroDe>[]) List<MembroDe> organizacoes,
     Uso? uso,
   }) = _Usuario;

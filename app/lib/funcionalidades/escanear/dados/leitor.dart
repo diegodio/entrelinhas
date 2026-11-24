@@ -1,12 +1,12 @@
-// Interface do detector no aparelho. Implementações por plataforma:
-//   - nativa (Android/iOS): ML Kit para código de barras + TFLite para a capa;
-//   - web: sem análise ao vivo (moldura-guia e captura manual; o servidor localiza).
+// Interface do leitor de código de barras no aparelho. Implementações por plataforma:
+//   - nativa (Android/iOS): ML Kit, EAN-13, ao vivo;
+//   - web: sem análise ao vivo (captura manual; o servidor lê o código na foto).
 // Os testes usam um detector falso.
 
 import 'dart:typed_data';
 
-import '../dominio/deteccao.dart';
-import 'detector_web.dart' if (dart.library.ffi) 'detector_nativo.dart' as plataforma;
+import '../dominio/maquina_scanner.dart';
+import 'leitor_web.dart' if (dart.library.ffi) 'leitor_nativo.dart' as plataforma;
 
 /// Formato dos bytes do quadro vindo da câmera.
 enum FormatoQuadro { nv21, yuv420, bgra8888 }
@@ -37,7 +37,7 @@ class QuadroCamera {
   final int rotacao;
 }
 
-abstract interface class DetectorDeLivro {
+abstract interface class LeitorDeCodigo {
   /// Se analisa quadros ao vivo. Na web, false: só captura manual.
   bool get aoVivo;
   Future<void> iniciar();
@@ -45,10 +45,10 @@ abstract interface class DetectorDeLivro {
   Future<void> encerrar();
 }
 
-DetectorDeLivro criarDetector() => plataforma.criarDetectorDaPlataforma();
+LeitorDeCodigo criarLeitor() => plataforma.criarLeitorDaPlataforma();
 
-class DetectorFalso implements DetectorDeLivro {
-  DetectorFalso([this.respostas = const []]);
+class LeitorFalso implements LeitorDeCodigo {
+  LeitorFalso([this.respostas = const []]);
   final List<Analise> respostas;
   int _i = 0;
 

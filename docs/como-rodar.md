@@ -2,8 +2,7 @@
 
 ## Requisitos
 
-- Python 3.12, PostgreSQL 16 com `pgvector` e `pg_trgm`, Tesseract (`tesseract-ocr`,
-  `tesseract-ocr-por`). Redis só para o modo fila.
+- Python 3.12, PostgreSQL 16 com `pgvector` e `pg_trgm`. Redis só para o modo fila.
 - Flutter 3.50 (Dart 3.14).
 - Ou Docker com Compose (sobe banco, Redis, MinIO, API e worker).
 
@@ -62,21 +61,18 @@ No emulador Android a API padrão é `http://10.0.2.2:8000`.
 | Classificador | `PROVEDOR_LLM=anthropic` + `ANTHROPIC_API_KEY` | Uma análise real; qualidade das fichas por especialistas |
 | Metadados | `FONTES_METADADOS` (Google Books pede `GOOGLE_BOOKS_API_KEY` para cota) | Neste ambiente: Google Books 429, Open Library bloqueado pela rede |
 | Resenhas | `FONTES_RESENHAS=wikipedia_pt` | Bloqueado pela rede deste ambiente |
-| OCR em nuvem | `MOTOR_OCR=google_vision` + chave | Chamada real |
-| DINOv2 | `pip install -e ".[ml]"`, `MODELO_CAPA=dinov2`, `python ml/indexar.py` | Download dos pesos e medição |
 | Stripe | `PROVEDOR_PAGAMENTO=stripe` + chaves e preços; webhook em `/v1/assinaturas/stripe/webhook` | Checkout e webhooks reais (a verificação de assinatura tem teste) |
 | App Store / Google Play | variáveis `APPLE_*`, `GOOGLE_PLAY_*`; produto em `--dart-define=PRODUTO_FAMILIA` | Compra real em aparelho |
 | Login social | `GOOGLE_CLIENT_IDS`, `APPLE_CLIENT_IDS`; no app, implementar `ProvedorLoginSocial` com os pacotes oficiais | Tudo no app; backend verifica ID tokens via JWKS |
 | E-mail | `PROVEDOR_EMAIL=smtp` + `SMTP_*` | Envio real |
-| Scanner nativo | rodar em celular Android/iOS | Fluxo ao vivo, rotação das caixas do ML Kit, desempenho |
+| Scanner nativo | rodar em celular Android/iOS | Leitura ao vivo do EAN-13 pelo ML Kit, posição do contorno, desempenho |
 
 ## Scanner em aparelho
 
-Android: `minSdk 24` (ML Kit e TFLite); permissão de câmera já declarada.
+Android: `minSdk 24` (ML Kit); permissão de câmera já declarada.
 iOS: veja `app/ios/Podfile.entrelinhas.md` (iOS 15.5+ e macros do permission_handler).
-Pontos a validar no aparelho: a orientação das caixas (`rodarCaixa` e o sistema de
-coordenadas do ML Kit), a frequência real de análise, o recorte da foto em alta resolução e
-o consumo de bateria.
+Pontos a validar no aparelho: a leitura ao vivo do EAN-13 (distância, ângulo, reflexo), a
+posição do contorno sobre a prévia (sistema de coordenadas do ML Kit) e o consumo de bateria.
 
 ## GitHub Pages (app web)
 

@@ -69,23 +69,14 @@ ajustada), com o motivo. Ordem: aproximadamente cronológica.
 
 ## Reconhecimento
 
-- **Modelo de capa padrão: "histograma"** (cor HSV + estrutura), não o DINOv2. Os pesos do
-  DINOv2 não puderam ser baixados neste ambiente (rede bloqueada para o Hugging Face), então
-  as medições foram feitas com o modelo-base. O adaptador DINOv2 está pronto
-  (`MODELO_CAPA=dinov2`). Licença do DINOv2: Apache 2.0. Não avaliei o DINOv3; antes de
-  trocar, leia a licença dele.
-- **Limiares calibrados com capas sintéticas** (ver `docs/reconhecimento.md`): piso da capa
-  0,82, limiar de identificação 0,45, margem 0,08, limiar de candidato 0,2. Os valores
-  iniciais (0,72 e 0,12) davam só ~4% de identificações diretas.
-- **Detector no aparelho:** COCO SSD MobileNet v1 (TFLite, Apache 2.0), com pós-processamento
-  embutido. O EfficientDet-Lite0 do MediaPipe foi descartado porque devolve âncoras brutas
-  (exigiria reimplementar o pós-processamento em Dart). Em fotos simuladas, capas vistas de
-  frente saem como "tv" ou "book"; o app aceita `book`, `tv`, `laptop` e `cell phone` com
-  checagem de proporção e área.
-- **Código de barras no aparelho:** ML Kit (Android/iOS). O ISBN lido vai junto, mas o
-  servidor confere dígito e prefixo antes de aceitar.
-- **Web:** sem análise de quadros ao vivo; moldura-guia, captura manual e o servidor
-  localiza o livro (`dica=desconhecido`).
+- **Só código de barras, por enquanto** (pedido do usuário). Saíram o detector TFLite, o OCR
+  (Tesseract/Google Vision), o modelo de capa (histograma/DINOv2), a fusão de sinais, a
+  pasta `ml/` e a opção de contribuir com fotos. O esquema do banco ficou como estava
+  (tabelas `capas` e `amostras_reconhecimento` sem uso) para não exigir migração destrutiva.
+- **Código de barras no aparelho:** ML Kit (Android/iOS), só EAN-13. Com ISBN de livro, o app
+  consulta direto `GET /v1/obras/isbn/{isbn}`, sem enviar foto.
+- **Web:** sem leitura ao vivo; captura manual e o servidor lê o código na foto (zxing-cpp).
+- **ISBN fora do catálogo** abre "Cadastrar obra" já preenchido, em vez de uma tela de erro.
 
 ## App
 

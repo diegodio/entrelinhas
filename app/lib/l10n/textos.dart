@@ -404,36 +404,6 @@ abstract class Textos {
   /// **'Obra fictícia de demonstração'**
   String get rotuloDemonstracaoLonga;
 
-  /// No description provided for @eEsteLivro.
-  ///
-  /// In pt, this message translates to:
-  /// **'É este o livro?'**
-  String get eEsteLivro;
-
-  /// No description provided for @naoEEste.
-  ///
-  /// In pt, this message translates to:
-  /// **'Não é este'**
-  String get naoEEste;
-
-  /// No description provided for @encontramosOpcoes.
-  ///
-  /// In pt, this message translates to:
-  /// **'Encontramos estas opções'**
-  String get encontramosOpcoes;
-
-  /// No description provided for @nenhumaDestas.
-  ///
-  /// In pt, this message translates to:
-  /// **'Nenhuma destas'**
-  String get nenhumaDestas;
-
-  /// No description provided for @naoReconhecemos.
-  ///
-  /// In pt, this message translates to:
-  /// **'Não reconhecemos este livro. Tente o código de barras na contracapa ou busque pelo título.'**
-  String get naoReconhecemos;
-
   /// No description provided for @naoELivro.
   ///
   /// In pt, this message translates to:
@@ -473,13 +443,25 @@ abstract class Textos {
   /// No description provided for @enquadre.
   ///
   /// In pt, this message translates to:
-  /// **'Enquadre a capa ou o código de barras'**
+  /// **'Aponte para o código de barras no verso do livro'**
   String get enquadre;
+
+  /// No description provided for @enquadreManual.
+  ///
+  /// In pt, this message translates to:
+  /// **'Enquadre o código de barras do verso e toque em Capturar'**
+  String get enquadreManual;
+
+  /// No description provided for @semCodigoNaFoto.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não encontramos um código de barras legível na foto. Chegue mais perto do código, com boa luz, ou digite o ISBN.'**
+  String get semCodigoNaFoto;
 
   /// No description provided for @identificando.
   ///
   /// In pt, this message translates to:
-  /// **'Identificando o livro…'**
+  /// **'Consultando o livro…'**
   String get identificando;
 
   /// No description provided for @permissaoCameraTitulo.
@@ -518,24 +500,6 @@ abstract class Textos {
   /// **'Tentar de novo'**
   String get botaoTentarDeNovo;
 
-  /// No description provided for @modoAutomatico.
-  ///
-  /// In pt, this message translates to:
-  /// **'Automático'**
-  String get modoAutomatico;
-
-  /// No description provided for @modoCapa.
-  ///
-  /// In pt, this message translates to:
-  /// **'Capa'**
-  String get modoCapa;
-
-  /// No description provided for @modoCodigo.
-  ///
-  /// In pt, this message translates to:
-  /// **'Código de barras'**
-  String get modoCodigo;
-
   /// No description provided for @botaoGaleria.
   ///
   /// In pt, this message translates to:
@@ -571,18 +535,6 @@ abstract class Textos {
   /// In pt, this message translates to:
   /// **'Enviar foto'**
   String get botaoEnviarFoto;
-
-  /// No description provided for @dicaVariosLivros.
-  ///
-  /// In pt, this message translates to:
-  /// **'Mais de um livro no quadro. Toque no que você quer consultar.'**
-  String get dicaVariosLivros;
-
-  /// No description provided for @dicaSegurar.
-  ///
-  /// In pt, this message translates to:
-  /// **'Segure firme…'**
-  String get dicaSegurar;
 
   /// No description provided for @salvarNaLista.
   ///
@@ -1357,18 +1309,6 @@ abstract class Textos {
   /// In pt, this message translates to:
   /// **'Privacidade'**
   String get privacidade;
-
-  /// No description provided for @contribuirImagens.
-  ///
-  /// In pt, this message translates to:
-  /// **'Ajudar a melhorar o reconhecimento'**
-  String get contribuirImagens;
-
-  /// No description provided for @contribuirImagensExplicacao.
-  ///
-  /// In pt, this message translates to:
-  /// **'Quando ligado, as fotos que você envia para reconhecer livros e as correções que você faz são guardadas para treinar o reconhecimento de capas. Desligado, as fotos são processadas e descartadas.'**
-  String get contribuirImagensExplicacao;
 
   /// No description provided for @exportarDados.
   ///

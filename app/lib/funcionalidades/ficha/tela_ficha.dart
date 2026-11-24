@@ -17,12 +17,11 @@ import 'acoes_ficha.dart';
 import 'estado_ficha.dart';
 
 class TelaFicha extends ConsumerWidget {
-  const TelaFicha({super.key, required this.obraId, this.confirmarReconhecimento = false});
+  const TelaFicha({super.key, required this.obraId});
 
   final String obraId;
 
   /// Quando a ficha foi aberta pelo reconhecimento, mostra a faixa "É este o livro?".
-  final bool confirmarReconhecimento;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -46,10 +45,7 @@ class TelaFicha extends ConsumerWidget {
         ],
       ),
       body: switch (estado) {
-        AsyncData(:final value) => _Conteudo(
-          estado: value,
-          confirmarReconhecimento: confirmarReconhecimento,
-        ),
+        AsyncData(:final value) => _Conteudo(estado: value),
         AsyncError(:final error) => Center(
           child: EstadoErro(
             erro: error,
@@ -63,18 +59,13 @@ class TelaFicha extends ConsumerWidget {
 }
 
 class _Conteudo extends ConsumerWidget {
-  const _Conteudo({required this.estado, required this.confirmarReconhecimento});
+  const _Conteudo({required this.estado});
   final EstadoFicha estado;
-  final bool confirmarReconhecimento;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final larga = MediaQuery.sizeOf(context).width >= Espaco.larguraLarga;
-    final cabecalho = <Widget>[
-      if (confirmarReconhecimento) _FaixaConfirmacao(obra: estado.obra),
-      CabecalhoObra(obra: estado.obra),
-      const SizedBox(height: Espaco.l),
-    ];
+    final cabecalho = <Widget>[CabecalhoObra(obra: estado.obra), const SizedBox(height: Espaco.l)];
     final List<Widget> principal;
     final List<Widget> detalhes;
     switch (estado) {
@@ -580,33 +571,6 @@ class _Rodape extends ConsumerWidget {
           ),
         Text(t.avisoIndependencia, style: context.estilos.legenda),
       ],
-    );
-  }
-}
-
-class _FaixaConfirmacao extends StatelessWidget {
-  const _FaixaConfirmacao({required this.obra});
-  final ObraDetalhe obra;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = Textos.of(context);
-    return Container(
-      margin: const EdgeInsets.only(bottom: Espaco.m),
-      padding: const EdgeInsets.symmetric(horizontal: Espaco.m, vertical: Espaco.xs),
-      decoration: BoxDecoration(
-        color: context.cores.superficieSuave,
-        borderRadius: BorderRadius.circular(Raio.campo),
-      ),
-      child: Row(
-        children: [
-          Expanded(child: Text(t.eEsteLivro, style: context.estilos.corpo)),
-          TextButton(
-            onPressed: () => context.pushReplacement('/reconhecimento/correcao', extra: obra.id),
-            child: Text(t.naoEEste),
-          ),
-        ],
-      ),
     );
   }
 }

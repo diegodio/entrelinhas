@@ -174,22 +174,6 @@ class TextosPt extends Textos {
   String get rotuloDemonstracaoLonga => 'Obra fictícia de demonstração';
 
   @override
-  String get eEsteLivro => 'É este o livro?';
-
-  @override
-  String get naoEEste => 'Não é este';
-
-  @override
-  String get encontramosOpcoes => 'Encontramos estas opções';
-
-  @override
-  String get nenhumaDestas => 'Nenhuma destas';
-
-  @override
-  String get naoReconhecemos =>
-      'Não reconhecemos este livro. Tente o código de barras na contracapa ou busque pelo título.';
-
-  @override
   String get naoELivro =>
       'O código lido não é de um livro. Procure o código ISBN, geralmente na contracapa.';
 
@@ -209,10 +193,17 @@ class TextosPt extends Textos {
   String get botaoConsultar => 'Consultar';
 
   @override
-  String get enquadre => 'Enquadre a capa ou o código de barras';
+  String get enquadre => 'Aponte para o código de barras no verso do livro';
 
   @override
-  String get identificando => 'Identificando o livro…';
+  String get enquadreManual => 'Enquadre o código de barras do verso e toque em Capturar';
+
+  @override
+  String get semCodigoNaFoto =>
+      'Não encontramos um código de barras legível na foto. Chegue mais perto do código, com boa luz, ou digite o ISBN.';
+
+  @override
+  String get identificando => 'Consultando o livro…';
 
   @override
   String get permissaoCameraTitulo => 'Precisamos da câmera';
@@ -234,15 +225,6 @@ class TextosPt extends Textos {
   String get botaoTentarDeNovo => 'Tentar de novo';
 
   @override
-  String get modoAutomatico => 'Automático';
-
-  @override
-  String get modoCapa => 'Capa';
-
-  @override
-  String get modoCodigo => 'Código de barras';
-
-  @override
   String get botaoGaleria => 'Escolher da galeria';
 
   @override
@@ -260,12 +242,6 @@ class TextosPt extends Textos {
 
   @override
   String get botaoEnviarFoto => 'Enviar foto';
-
-  @override
-  String get dicaVariosLivros => 'Mais de um livro no quadro. Toque no que você quer consultar.';
-
-  @override
-  String get dicaSegurar => 'Segure firme…';
 
   @override
   String get salvarNaLista => 'Salvar na lista';
@@ -696,13 +672,6 @@ class TextosPt extends Textos {
 
   @override
   String get privacidade => 'Privacidade';
-
-  @override
-  String get contribuirImagens => 'Ajudar a melhorar o reconhecimento';
-
-  @override
-  String get contribuirImagensExplicacao =>
-      'Quando ligado, as fotos que você envia para reconhecer livros e as correções que você faz são guardadas para treinar o reconhecimento de capas. Desligado, as fotos são processadas e descartadas.';
 
   @override
   String get exportarDados => 'Exportar meus dados';

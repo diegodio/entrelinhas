@@ -25,14 +25,12 @@ dependencies = [
   "numpy",
   "opencv-python-headless",
   "zxing-cpp",
-  "pytesseract",
   "reportlab",
   "python-multipart",
   "anthropic",
 ]
 
 [project.optional-dependencies]
-ml = ["torch", "torchvision", "transformers"]
 dev = ["pytest", "ruff"]
 
 [tool.ruff]
@@ -48,7 +46,7 @@ testpaths = ["testes"]
 addopts = "-q"
 
 [tool.ruff.lint.isort]
-known-first-party = ["app", "distorcoes"]
+known-first-party = ["app"]
 
 [tool.setuptools.packages.find]
 include = ["app*"]

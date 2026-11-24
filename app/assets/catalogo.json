@@ -1,10 +1,11 @@
 {
-  "observacao": "Catálogo do modo simples. Os ISBNs vieram de memória e NÃO foram conferidos (a rede do ambiente bloqueou os sites de ISBN): confira no verso dos livros e corrija aqui. Basta isbn (13 dígitos, sem traços), titulo e autor.",
+  "observacao": "Catálogo do modo simples. O ISBN do Murdoku foi conferido numa foto do verso do livro; os outros 5 vieram de memória e NÃO foram conferidos: confira no verso dos livros e corrija aqui. Basta isbn (13 dígitos, sem traços), titulo e autor.",
   "livros": [
     {"isbn": "9788595081512", "titulo": "O Pequeno Príncipe", "autor": "Antoine de Saint-Exupéry"},
     {"isbn": "9788532530783", "titulo": "Harry Potter e a Pedra Filosofal", "autor": "J.K. Rowling"},
     {"isbn": "9788580572438", "titulo": "Extraordinário", "autor": "R. J. Palacio"},
     {"isbn": "9788576831303", "titulo": "Diário de um Banana 1", "autor": "Jeff Kinney"},
-    {"isbn": "9788506051009", "titulo": "O Menino Maluquinho", "autor": "Ziraldo"}
+    {"isbn": "9788506051009", "titulo": "O Menino Maluquinho", "autor": "Ziraldo"},
+    {"isbn": "9788543111537", "titulo": "Murdoku: 80 mistérios para resolver usando a lógica", "autor": "Manuel Garand"}
   ]
 }

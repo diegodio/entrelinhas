@@ -6,8 +6,9 @@ Serviço brasileiro de Orientação de Leitura para livros: aponte a câmera par
 código de barras (ou busque por título, autor ou ISBN) e veja a faixa de idade recomendada,
 os alertas de conteúdo, o perfil de leitura e o valor formativo da obra.
 
-**Por enquanto o app roda no modo simples:** lê o código de barras e mostra o nome do livro
-a partir de um catálogo fixo de 6 livros (`app/assets/catalogo.json`), sem servidor. O app
+**Por enquanto o app roda no modo simples:** lê o código de barras e mostra o livro, a partir
+de um catálogo fixo (`app/assets/catalogo.json`) e, fora dele, da BrasilAPI e do Google
+Books. Não precisa de servidor próprio. O app
 completo continua no código e é ligado com `--dart-define=MODO_COMPLETO=true`
 (veja [Como rodar](docs/como-rodar.md)).
 

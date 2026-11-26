@@ -1091,24 +1091,108 @@ class TextosPt extends Textos {
   String get botaoPrevia => 'Ver faixa recalculada';
 
   @override
-  String get simplesNaoCadastrado => 'Livro não cadastrado';
-
-  @override
-  String simplesNaoCadastradoTexto(String isbn) {
-    return 'Lemos o ISBN $isbn, mas ele não está entre os livros cadastrados.';
-  }
-
-  @override
-  String get simplesLivroLido => 'Livro lido';
-
-  @override
-  String get simplesLerOutro => 'Ler outro livro';
-
-  @override
   String get simplesVerCatalogo => 'Livros cadastrados';
 
   @override
   String simplesIsbn(String isbn) {
     return 'ISBN $isbn';
+  }
+
+  @override
+  String get simplesSaudacao => 'Aponte a câmera para o código de barras e descubra o livro.';
+
+  @override
+  String get simplesBuscarDica => 'Buscar por título, autor ou ISBN';
+
+  @override
+  String get simplesEscanearTitulo => 'Escanear um livro';
+
+  @override
+  String get simplesEscanearTexto => 'Use o código de barras no verso';
+
+  @override
+  String get simplesEscanear => 'Escanear';
+
+  @override
+  String get simplesRecentes => 'Vistos recentemente';
+
+  @override
+  String get simplesVerTudo => 'Ver tudo';
+
+  @override
+  String get simplesInicio => 'Início';
+
+  @override
+  String get simplesHistorico => 'Histórico';
+
+  @override
+  String get simplesHistoricoVazio => 'Os livros que você escanear aparecem aqui.';
+
+  @override
+  String get simplesLimparHistorico => 'Limpar';
+
+  @override
+  String get simplesNadaEncontrado => 'Nenhum livro cadastrado com esse nome.';
+
+  @override
+  String get simplesDadosLivro => 'Dados do livro';
+
+  @override
+  String get simplesCampoTitulo => 'Título';
+
+  @override
+  String get simplesCampoAutor => 'Autor';
+
+  @override
+  String get simplesCampoEditora => 'Editora';
+
+  @override
+  String get simplesCampoIsbn => 'ISBN';
+
+  @override
+  String get simplesEscanearOutro => 'Escanear outro livro';
+
+  @override
+  String get simplesCadastrado => 'Livro cadastrado';
+
+  @override
+  String simplesResultados(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n resultados',
+      one: '1 resultado',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get simplesProcurando => 'Procurando o livro…';
+
+  @override
+  String get simplesNaoEncontrado => 'Livro não encontrado';
+
+  @override
+  String get simplesSemConexao => 'Sem conexão';
+
+  @override
+  String get simplesSemConexaoTexto =>
+      'Não conseguimos consultar as bases de livros agora. Confira a internet e tente de novo.';
+
+  @override
+  String get simplesFonteBrasilApi => 'Encontrado na BrasilAPI';
+
+  @override
+  String get simplesFonteGoogle => 'Encontrado no Google Books';
+
+  @override
+  String get simplesSinopse => 'Sinopse';
+
+  @override
+  String get simplesCampoAno => 'Ano';
+
+  @override
+  String simplesNaoEncontradoTexto(String isbn) {
+    return 'Lemos o ISBN $isbn, mas ele não está no catálogo nem nas bases de livros consultadas (BrasilAPI e Google Books).';
   }
 }

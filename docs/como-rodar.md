@@ -51,8 +51,15 @@ livro. Não precisa de servidor.
   - celular: ML Kit, ao vivo;
   - web: uma foto da prévia a cada ~0,9 s, lida em Dart (`app/lib/simples/ean13.dart`);
   - também dá para escolher uma foto da galeria ou digitar o ISBN.
-- **Resultado:** o nome e o autor do livro; "Livro não cadastrado" para ISBN fora do
-  catálogo; aviso quando o código não é de livro.
+- **Busca do livro:** primeiro no catálogo local; se não estiver lá, na **BrasilAPI**
+  (`brasilapi.com.br/api/isbn/v1/{isbn}`) e depois no **Google Books**
+  (`googleapis.com/books/v1/volumes?q=isbn:{isbn}`). As duas são gratuitas, sem chave, e
+  aceitam chamadas do navegador. O que vem delas fica guardado no aparelho.
+- **Resultado:** página do livro com capa (a da API, quando houver, ou uma desenhada),
+  título, autor, sinopse e dados; "Livro não encontrado" quando ninguém conhece o ISBN;
+  "Sem conexão" com "Tentar de novo" quando as APIs não respondem.
+- **Telas:** Início (busca, atalho para escanear, vistos recentemente, livros
+  cadastrados), Histórico e o botão de escanear no centro da barra inferior.
 
 ```bash
 cd app

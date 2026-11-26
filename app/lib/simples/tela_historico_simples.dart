@@ -2,7 +2,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../l10n/textos.dart';
 import '../nucleo/tema/tema.dart';
-import 'catalogo.dart';
+import 'busca_livros.dart';
 import 'componentes.dart';
 import 'historico.dart';
 
@@ -10,13 +10,13 @@ import 'historico.dart';
 class TelaHistoricoSimples extends StatelessWidget {
   const TelaHistoricoSimples({
     super.key,
-    required this.catalogo,
+    required this.busca,
     required this.historico,
     required this.aoAbrir,
     this.agora,
   });
 
-  final Catalogo catalogo;
+  final BuscaLivros busca;
   final Historico historico;
   final void Function(String isbn) aoAbrir;
   final DateTime Function()? agora;
@@ -27,7 +27,7 @@ class TelaHistoricoSimples extends StatelessWidget {
     final e = context.estilos;
     return SafeArea(
       child: ListenableBuilder(
-        listenable: historico,
+        listenable: Listenable.merge([historico, busca]),
         builder: (context, _) {
           final itens = historico.itens;
           final hoje = (agora ?? DateTime.now)();
@@ -65,10 +65,10 @@ class TelaHistoricoSimples extends StatelessWidget {
                 ),
               for (final item in itens)
                 () {
-                  final livro = catalogo.buscar(item.isbn);
+                  final livro = busca.conhecido(item.isbn);
                   return LinhaLivroSimples(
                     livro: livro,
-                    titulo: livro?.titulo ?? t.simplesNaoCadastrado,
+                    titulo: livro?.titulo ?? t.simplesNaoEncontrado,
                     apoio: '${quandoLegivel(item.quando, hoje)} · ${t.simplesIsbn(item.isbn)}',
                     aoTocar: () => aoAbrir(item.isbn),
                   );

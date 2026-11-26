@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:entrelinhas/simples/app_simples.dart';
+import 'package:entrelinhas/simples/busca_livros.dart';
 import 'package:entrelinhas/simples/catalogo.dart';
 import 'package:entrelinhas/simples/componentes.dart';
 import 'package:entrelinhas/simples/ean13.dart';
@@ -21,7 +22,11 @@ final catalogo = Catalogo(const [
 ]);
 
 /// Abre o app com um "leitor" que devolve os códigos da fila, um por vez.
-Future<Historico> abrirApp(WidgetTester tester, List<String?> leituras) async {
+Future<Historico> abrirApp(
+  WidgetTester tester,
+  List<String?> leituras, {
+  List<FonteExterna> fontes = const [],
+}) async {
   tester.view.physicalSize = const Size(1080, 2340);
   tester.view.devicePixelRatio = 3;
   addTearDown(tester.view.reset);
@@ -31,6 +36,7 @@ Future<Historico> abrirApp(WidgetTester tester, List<String?> leituras) async {
       catalogo: catalogo,
       historico: historico,
       abrirLeitor: (_) async => leituras.isEmpty ? null : leituras.removeAt(0),
+      fontesExternas: fontes,
     ),
   );
   await tester.pumpAndSettle();
@@ -90,6 +96,102 @@ void main() {
     expect(corDaCapa('9788543111537'), corDaCapa('9788543111537'));
   });
 
+  group('busca externa', () {
+    test('ordem: catálogo, depois as fontes na sequência', () async {
+      final chamadas = <String>[];
+      final b = BuscaLivros(
+        catalogo,
+        fontes: [
+          (i) async {
+            chamadas.add('brasil');
+            return null;
+          },
+          (i) async {
+            chamadas.add('google');
+            return Livro(isbn: i, titulo: 'G', fonte: FonteLivro.googleBooks);
+          },
+        ],
+      );
+      expect(await b.buscar('9780306406157'), isA<Encontrado>());
+      expect(chamadas, isEmpty); // estava no catálogo
+      final r = await b.buscar('9788535902778');
+      expect((r as Encontrado).livro.titulo, 'G');
+      expect(chamadas, ['brasil', 'google']);
+      expect(b.conhecido('9788535902778')?.titulo, 'G');
+    });
+
+    test('não encontrado x falha de todas as fontes', () async {
+      final nada = BuscaLivros(catalogo, fontes: [(_) async => null, (_) async => null]);
+      expect(await nada.buscar('9788535902778'), isA<NaoEncontrado>());
+      final fora = BuscaLivros(
+        catalogo,
+        fontes: [(_) async => throw const SemConexao(), (_) async => throw const SemConexao()],
+      );
+      expect(await fora.buscar('9788535902778'), isA<FalhaConsulta>());
+      final meio = BuscaLivros(
+        catalogo,
+        fontes: [(_) async => throw const SemConexao(), (_) async => null],
+      );
+      expect(await meio.buscar('9788535902778'), isA<NaoEncontrado>());
+    });
+
+    test('o que vem da internet fica guardado no aparelho', () async {
+      final b = BuscaLivros(
+        catalogo,
+        fontes: [(i) async => Livro(isbn: i, titulo: 'Guardado', fonte: FonteLivro.brasilApi)],
+      );
+      await b.buscar('9788535902778');
+      final depois = BuscaLivros(catalogo, fontes: const []);
+      await depois.carregar();
+      expect(depois.conhecido('9788535902778')?.titulo, 'Guardado');
+      expect(depois.conhecido('9788535902778')?.fonte, FonteLivro.brasilApi);
+    });
+
+    test('converte a resposta da BrasilAPI', () {
+      final l = livroDaBrasilApi({
+        'isbn': '9788543111537',
+        'title': 'Murdoku',
+        'subtitle': '80 mistérios para resolver usando a lógica',
+        'authors': ['Manuel Garand'],
+        'publisher': 'Sextante',
+        'synopsis': 'Quebra-cabeças.',
+        'year': 2024,
+        'cover_url': 'http://exemplo.org/capa.jpg',
+      }, '9788543111537')!;
+      expect(l.titulo, 'Murdoku: 80 mistérios para resolver usando a lógica');
+      expect(l.autor, 'Manuel Garand');
+      expect(l.editora, 'Sextante');
+      expect(l.ano, '2024');
+      expect(l.capaUrl, 'https://exemplo.org/capa.jpg');
+      expect(l.fonte, FonteLivro.brasilApi);
+      expect(livroDaBrasilApi({'title': ''}, '1'), isNull);
+    });
+
+    test('converte a resposta do Google Books', () {
+      final l = livroDoGoogleBooks({
+        'totalItems': 1,
+        'items': [
+          {
+            'volumeInfo': {
+              'title': 'O Pequeno Príncipe',
+              'authors': ['Antoine de Saint-Exupéry', 'Tradução X'],
+              'publisher': 'HarperCollins',
+              'publishedDate': '2018-03-01',
+              'description': 'Clássico.',
+              'imageLinks': {'thumbnail': 'http://books.google.com/x.jpg'},
+            },
+          },
+        ],
+      }, '9788595081512')!;
+      expect(l.titulo, 'O Pequeno Príncipe');
+      expect(l.autor, 'Antoine de Saint-Exupéry, Tradução X');
+      expect(l.ano, '2018');
+      expect(l.capaUrl, 'https://books.google.com/x.jpg');
+      expect(l.fonte, FonteLivro.googleBooks);
+      expect(livroDoGoogleBooks({'totalItems': 0}, '1'), isNull);
+    });
+  });
+
   test('datas legíveis', () {
     final agora = DateTime(2026, 11, 26, 18);
     expect(quandoLegivel(DateTime(2026, 11, 26, 9, 5), agora), 'Hoje, 09:05');
@@ -125,16 +227,61 @@ void main() {
     expect(find.textContaining('Hoje, 10:30'), findsOneWidget);
   });
 
-  testWidgets('ISBN fora do catálogo e "escanear outro"', (tester) async {
-    await abrirApp(tester, ['9788535902778', '9788543111537']);
+  testWidgets('ISBN que ninguém conhece e "escanear outro"', (tester) async {
+    await abrirApp(tester, ['9788535902778', '9788543111537'], fontes: [(_) async => null]);
     await tester.tap(find.byTooltip('Escanear'));
     await tester.pumpAndSettle();
-    expect(find.text('Fora do catálogo'), findsOneWidget);
+    expect(find.text('Livro não encontrado'), findsWidgets);
     expect(find.textContaining('9788535902778'), findsWidgets);
     await tester.tap(find.text('Escanear outro livro'));
     await tester.pumpAndSettle();
     expect(find.text('Murdoku'), findsWidgets);
     expect(find.text('Livro cadastrado'), findsOneWidget);
+  });
+
+  testWidgets('ISBN fora do catálogo vem da API, com sinopse, e fica no histórico', (tester) async {
+    const externo = Livro(
+      isbn: '9788535902778',
+      titulo: 'Livro da Internet',
+      autor: 'Pessoa Autora',
+      editora: 'Editora X',
+      ano: '2004',
+      sinopse: 'Uma história qualquer.',
+      fonte: FonteLivro.brasilApi,
+    );
+    await abrirApp(tester, ['9788535902778'], fontes: [(_) async => externo]);
+    await tester.tap(find.byTooltip('Escanear'));
+    await tester.pumpAndSettle();
+    expect(find.text('Encontrado na BrasilAPI'), findsOneWidget);
+    expect(find.text('Uma história qualquer.'), findsOneWidget);
+    expect(find.text('2004'), findsOneWidget);
+    await tester.tap(find.byType(BackButton));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Histórico'));
+    await tester.pumpAndSettle();
+    expect(find.text('Livro da Internet'), findsWidgets);
+  });
+
+  testWidgets('sem conexão: avisa e deixa tentar de novo', (tester) async {
+    var falhar = true;
+    await abrirApp(
+      tester,
+      ['9788535902778'],
+      fontes: [
+        (isbn) async {
+          if (falhar) throw const SemConexao();
+          return Livro(isbn: isbn, titulo: 'Achado na segunda', fonte: FonteLivro.googleBooks);
+        },
+      ],
+    );
+    await tester.tap(find.byTooltip('Escanear'));
+    await tester.pumpAndSettle();
+    expect(find.text('Sem conexão'), findsOneWidget);
+    falhar = false;
+    await tester.tap(find.text('Tentar de novo'));
+    await tester.pumpAndSettle();
+    expect(find.text('Encontrado no Google Books'), findsOneWidget);
+    expect(find.text('Achado na segunda'), findsWidgets);
   });
 
   testWidgets('fechar o leitor sem ler não muda nada', (tester) async {

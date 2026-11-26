@@ -378,9 +378,6 @@
   "situacaoEmRevisao": "Em revisão",
   "situacaoIndisponivel": "Indisponível",
   "botaoPrevia": "Ver faixa recalculada",
-  "simplesNaoCadastrado": "Livro não cadastrado",
-  "simplesNaoCadastradoTexto": "Lemos o ISBN {isbn}, mas ele não está entre os livros cadastrados.",
-  "@simplesNaoCadastradoTexto": {"placeholders": {"isbn": {"type": "String"}}},
   "simplesVerCatalogo": "Livros cadastrados",
   "simplesIsbn": "ISBN {isbn}",
   "@simplesIsbn": {"placeholders": {"isbn": {"type": "String"}}},
@@ -403,7 +400,16 @@
   "simplesCampoIsbn": "ISBN",
   "simplesEscanearOutro": "Escanear outro livro",
   "simplesCadastrado": "Livro cadastrado",
-  "simplesForaDoCatalogo": "Fora do catálogo",
   "simplesResultados": "{n, plural, =1{1 resultado} other{{n} resultados}}",
-  "@simplesResultados": {"placeholders": {"n": {"type": "int"}}}
+  "@simplesResultados": {"placeholders": {"n": {"type": "int"}}},
+  "simplesProcurando": "Procurando o livro…",
+  "simplesNaoEncontrado": "Livro não encontrado",
+  "simplesSemConexao": "Sem conexão",
+  "simplesSemConexaoTexto": "Não conseguimos consultar as bases de livros agora. Confira a internet e tente de novo.",
+  "simplesFonteBrasilApi": "Encontrado na BrasilAPI",
+  "simplesFonteGoogle": "Encontrado no Google Books",
+  "simplesSinopse": "Sinopse",
+  "simplesCampoAno": "Ano",
+  "simplesNaoEncontradoTexto": "Lemos o ISBN {isbn}, mas ele não está no catálogo nem nas bases de livros consultadas (BrasilAPI e Google Books).",
+  "@simplesNaoEncontradoTexto": {"placeholders": {"isbn": {"type": "String"}}}
 }

@@ -5,21 +5,21 @@ import 'package:material_ui/material_ui.dart';
 
 import '../l10n/textos.dart';
 import '../nucleo/tema/tema.dart';
-import 'catalogo.dart';
+import 'busca_livros.dart';
 import 'componentes.dart';
 import 'historico.dart';
 
 class TelaInicioSimples extends StatefulWidget {
   const TelaInicioSimples({
     super.key,
-    required this.catalogo,
+    required this.busca,
     required this.historico,
     required this.aoEscanear,
     required this.aoAbrir,
     required this.aoVerHistorico,
   });
 
-  final Catalogo catalogo;
+  final BuscaLivros busca;
   final Historico historico;
   final VoidCallback aoEscanear;
   final void Function(String isbn) aoAbrir;
@@ -37,7 +37,7 @@ class _TelaInicioSimplesState extends State<TelaInicioSimples> {
     final t = Textos.of(context);
     final e = context.estilos;
     final c = context.cores;
-    final resultados = widget.catalogo.filtrar(_termo);
+    final resultados = widget.busca.catalogo.filtrar(_termo);
     return SafeArea(
       child: ListView(
         // Espaço no fim para o botão central da barra não cobrir o último item.
@@ -69,7 +69,7 @@ class _TelaInicioSimplesState extends State<TelaInicioSimples> {
             const SizedBox(height: Espaco.m),
             _CartaoEscanear(aoTocar: widget.aoEscanear),
             ListenableBuilder(
-              listenable: widget.historico,
+              listenable: Listenable.merge([widget.historico, widget.busca]),
               builder: (context, _) {
                 final recentes = widget.historico.itens.take(10).toList();
                 if (recentes.isEmpty) return const SizedBox.shrink();
@@ -89,10 +89,10 @@ class _TelaInicioSimplesState extends State<TelaInicioSimples> {
                         separatorBuilder: (_, _) => const SizedBox(width: Espaco.s),
                         itemBuilder: (context, i) {
                           final isbn = recentes[i].isbn;
-                          final livro = widget.catalogo.buscar(isbn);
+                          final livro = widget.busca.conhecido(isbn);
                           return Semantics(
                             button: true,
-                            label: livro?.titulo ?? t.simplesNaoCadastrado,
+                            label: livro?.titulo ?? t.simplesNaoEncontrado,
                             child: InkWell(
                               onTap: () => widget.aoAbrir(isbn),
                               child: SizedBox(

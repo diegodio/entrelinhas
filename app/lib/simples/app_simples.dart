@@ -4,6 +4,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../l10n/textos.dart';
 import '../nucleo/tema/tema.dart';
+import 'busca_livros.dart';
 import 'catalogo.dart';
 import 'historico.dart';
 import 'tela_historico_simples.dart';
@@ -14,12 +15,19 @@ import 'tela_livro_simples.dart';
 /// App do modo simples: Início e Histórico em abas, com o botão de escanear no centro da
 /// barra inferior. Ler um código abre a página do livro.
 class AppSimples extends StatelessWidget {
-  const AppSimples({super.key, this.catalogo, this.historico, this.abrirLeitor});
+  const AppSimples({
+    super.key,
+    this.catalogo,
+    this.historico,
+    this.abrirLeitor,
+    this.fontesExternas,
+  });
 
   /// Injetáveis nos testes.
   final Catalogo? catalogo;
   final Historico? historico;
   final Future<String?> Function(BuildContext)? abrirLeitor;
+  final List<FonteExterna>? fontesExternas;
 
   @override
   Widget build(BuildContext context) => MaterialApp(
@@ -35,34 +43,52 @@ class AppSimples extends StatelessWidget {
       GlobalWidgetsLocalizations.delegate,
       GlobalCupertinoLocalizations.delegate,
     ],
-    home: TelaPrincipalSimples(catalogo: catalogo, historico: historico, abrirLeitor: abrirLeitor),
+    home: TelaPrincipalSimples(
+      catalogo: catalogo,
+      historico: historico,
+      abrirLeitor: abrirLeitor,
+      fontesExternas: fontesExternas,
+    ),
   );
 }
 
 class TelaPrincipalSimples extends StatefulWidget {
-  const TelaPrincipalSimples({super.key, this.catalogo, this.historico, this.abrirLeitor});
+  const TelaPrincipalSimples({
+    super.key,
+    this.catalogo,
+    this.historico,
+    this.abrirLeitor,
+    this.fontesExternas,
+  });
 
   final Catalogo? catalogo;
   final Historico? historico;
   final Future<String?> Function(BuildContext)? abrirLeitor;
+  final List<FonteExterna>? fontesExternas;
 
   @override
   State<TelaPrincipalSimples> createState() => _TelaPrincipalSimplesState();
 }
 
 class _TelaPrincipalSimplesState extends State<TelaPrincipalSimples> {
-  Catalogo? _catalogo;
+  BuscaLivros? _busca;
   late final Historico _historico = widget.historico ?? Historico();
   int _aba = 0;
 
   @override
   void initState() {
     super.initState();
-    _catalogo = widget.catalogo;
-    if (_catalogo == null) {
-      Catalogo.carregar().then((c) => mounted ? setState(() => _catalogo = c) : null);
+    final catalogo = widget.catalogo;
+    if (catalogo != null) {
+      _usarCatalogo(catalogo);
+    } else {
+      Catalogo.carregar().then((c) => mounted ? setState(() => _usarCatalogo(c)) : null);
     }
     if (widget.historico == null) _historico.carregar();
+  }
+
+  void _usarCatalogo(Catalogo c) {
+    _busca = BuscaLivros(c, fontes: widget.fontesExternas)..carregar();
   }
 
   Future<String?> _abrirLeitorPadrao(BuildContext context) =>
@@ -77,10 +103,12 @@ class _TelaPrincipalSimplesState extends State<TelaPrincipalSimples> {
   }
 
   void _abrir(String isbn) {
+    final busca = _busca;
+    if (busca == null) return;
     Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (c) => TelaLivroSimples(
-          livro: _catalogo?.buscar(isbn),
+          busca: busca,
           isbn: isbn,
           aoEscanearOutro: () {
             Navigator.of(c).pop();
@@ -95,21 +123,21 @@ class _TelaPrincipalSimplesState extends State<TelaPrincipalSimples> {
   Widget build(BuildContext context) {
     final t = Textos.of(context);
     final c = context.cores;
-    final catalogo = _catalogo;
+    final busca = _busca;
     return Scaffold(
-      body: catalogo == null
+      body: busca == null
           ? const Center(child: CircularProgressIndicator())
           : IndexedStack(
               index: _aba,
               children: [
                 TelaInicioSimples(
-                  catalogo: catalogo,
+                  busca: busca,
                   historico: _historico,
                   aoEscanear: _escanear,
                   aoAbrir: _abrir,
                   aoVerHistorico: () => setState(() => _aba = 1),
                 ),
-                TelaHistoricoSimples(catalogo: catalogo, historico: _historico, aoAbrir: _abrir),
+                TelaHistoricoSimples(busca: busca, historico: _historico, aoAbrir: _abrir),
               ],
             ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

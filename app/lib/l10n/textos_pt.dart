@@ -1091,14 +1091,6 @@ class TextosPt extends Textos {
   String get botaoPrevia => 'Ver faixa recalculada';
 
   @override
-  String get simplesNaoCadastrado => 'Livro não cadastrado';
-
-  @override
-  String simplesNaoCadastradoTexto(String isbn) {
-    return 'Lemos o ISBN $isbn, mas ele não está entre os livros cadastrados.';
-  }
-
-  @override
   String get simplesVerCatalogo => 'Livros cadastrados';
 
   @override
@@ -1164,9 +1156,6 @@ class TextosPt extends Textos {
   String get simplesCadastrado => 'Livro cadastrado';
 
   @override
-  String get simplesForaDoCatalogo => 'Fora do catálogo';
-
-  @override
   String simplesResultados(int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
@@ -1175,5 +1164,35 @@ class TextosPt extends Textos {
       one: '1 resultado',
     );
     return '$_temp0';
+  }
+
+  @override
+  String get simplesProcurando => 'Procurando o livro…';
+
+  @override
+  String get simplesNaoEncontrado => 'Livro não encontrado';
+
+  @override
+  String get simplesSemConexao => 'Sem conexão';
+
+  @override
+  String get simplesSemConexaoTexto =>
+      'Não conseguimos consultar as bases de livros agora. Confira a internet e tente de novo.';
+
+  @override
+  String get simplesFonteBrasilApi => 'Encontrado na BrasilAPI';
+
+  @override
+  String get simplesFonteGoogle => 'Encontrado no Google Books';
+
+  @override
+  String get simplesSinopse => 'Sinopse';
+
+  @override
+  String get simplesCampoAno => 'Ano';
+
+  @override
+  String simplesNaoEncontradoTexto(String isbn) {
+    return 'Lemos o ISBN $isbn, mas ele não está no catálogo nem nas bases de livros consultadas (BrasilAPI e Google Books).';
   }
 }

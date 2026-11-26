@@ -36,72 +36,99 @@ class CapaGerada extends StatelessWidget {
     final altura = largura * 1.5;
     final grande = largura >= 100;
     final cor = livro == null ? c.superficieSuave : corDaCapa(livro!.isbn);
-    return ExcludeSemantics(
-      child: Container(
-        width: largura,
-        height: altura,
-        decoration: BoxDecoration(
-          color: cor,
-          borderRadius: BorderRadius.circular(grande ? 8 : 4),
-          boxShadow: grande
-              ? [
-                  BoxShadow(
-                    color: c.tinta.withValues(alpha: 0.22),
-                    blurRadius: 18,
-                    offset: const Offset(0, 8),
-                  ),
-                ]
-              : null,
-        ),
-        padding: EdgeInsets.all(largura * 0.09),
-        child: livro == null
-            ? Icon(Icons.help_outline, color: c.tintaFraca, size: largura * 0.4)
-            : largura < 70
-            // Capa pequena: só a inicial, legível.
-            ? Center(
-                child: Text(
-                  livro!.titulo.characters.first.toUpperCase(),
-                  style: TextStyle(
-                    fontFamily: Fontes.editorial,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                    fontSize: largura * 0.5,
+    final desenhada = Container(
+      width: largura,
+      height: altura,
+      decoration: BoxDecoration(
+        color: cor,
+        borderRadius: BorderRadius.circular(grande ? 8 : 4),
+        boxShadow: grande
+            ? [
+                BoxShadow(
+                  color: c.tinta.withValues(alpha: 0.22),
+                  blurRadius: 18,
+                  offset: const Offset(0, 8),
+                ),
+              ]
+            : null,
+      ),
+      padding: EdgeInsets.all(largura * 0.09),
+      child: livro == null
+          ? Icon(Icons.help_outline, color: c.tintaFraca, size: largura * 0.4)
+          : largura < 70
+          // Capa pequena: só a inicial, legível.
+          ? Center(
+              child: Text(
+                livro!.titulo.characters.first.toUpperCase(),
+                style: TextStyle(
+                  fontFamily: Fontes.editorial,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                  fontSize: largura * 0.5,
+                ),
+              ),
+            )
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(height: largura * 0.025, width: largura * 0.3, color: Colors.white54),
+                SizedBox(height: largura * 0.08),
+                Expanded(
+                  child: Text(
+                    livro!.titulo,
+                    maxLines: grande ? 5 : 4,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontFamily: Fontes.editorial,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                      fontSize: largura * (grande ? 0.12 : 0.16),
+                      height: 1.15,
+                    ),
                   ),
                 ),
-              )
-            : Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(height: largura * 0.025, width: largura * 0.3, color: Colors.white54),
-                  SizedBox(height: largura * 0.08),
-                  Expanded(
-                    child: Text(
-                      livro!.titulo,
-                      maxLines: grande ? 5 : 4,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontFamily: Fontes.editorial,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                        fontSize: largura * (grande ? 0.12 : 0.16),
-                        height: 1.15,
-                      ),
+                if (grande && livro!.autor.isNotEmpty)
+                  Text(
+                    livro!.autor,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontFamily: Fontes.interface,
+                      color: Colors.white70,
+                      fontSize: largura * 0.075,
                     ),
                   ),
-                  if (grande && livro!.autor.isNotEmpty)
-                    Text(
-                      livro!.autor,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontFamily: Fontes.interface,
-                        color: Colors.white70,
-                        fontSize: largura * 0.075,
-                      ),
-                    ),
-                ],
+              ],
+            ),
+    );
+    final url = livro?.capaUrl;
+    return ExcludeSemantics(
+      child: url == null
+          ? desenhada
+          : Container(
+              width: largura,
+              height: altura,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(grande ? 8 : 4),
+                boxShadow: grande
+                    ? [
+                        BoxShadow(
+                          color: c.tinta.withValues(alpha: 0.22),
+                          blurRadius: 18,
+                          offset: const Offset(0, 8),
+                        ),
+                      ]
+                    : null,
               ),
-      ),
+              clipBehavior: Clip.antiAlias,
+              child: Image.network(
+                url,
+                fit: BoxFit.cover,
+                // Sem imagem (rede, CORS, link quebrado): a capa desenhada.
+                errorBuilder: (_, _, _) => desenhada,
+                loadingBuilder: (_, filho, progresso) => progresso == null ? filho : desenhada,
+              ),
+            ),
     );
   }
 }

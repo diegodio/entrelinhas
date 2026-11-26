@@ -2108,18 +2108,6 @@ abstract class Textos {
   /// **'Ver faixa recalculada'**
   String get botaoPrevia;
 
-  /// No description provided for @simplesNaoCadastrado.
-  ///
-  /// In pt, this message translates to:
-  /// **'Livro não cadastrado'**
-  String get simplesNaoCadastrado;
-
-  /// No description provided for @simplesNaoCadastradoTexto.
-  ///
-  /// In pt, this message translates to:
-  /// **'Lemos o ISBN {isbn}, mas ele não está entre os livros cadastrados.'**
-  String simplesNaoCadastradoTexto(String isbn);
-
   /// No description provided for @simplesVerCatalogo.
   ///
   /// In pt, this message translates to:
@@ -2246,17 +2234,65 @@ abstract class Textos {
   /// **'Livro cadastrado'**
   String get simplesCadastrado;
 
-  /// No description provided for @simplesForaDoCatalogo.
-  ///
-  /// In pt, this message translates to:
-  /// **'Fora do catálogo'**
-  String get simplesForaDoCatalogo;
-
   /// No description provided for @simplesResultados.
   ///
   /// In pt, this message translates to:
   /// **'{n, plural, =1{1 resultado} other{{n} resultados}}'**
   String simplesResultados(int n);
+
+  /// No description provided for @simplesProcurando.
+  ///
+  /// In pt, this message translates to:
+  /// **'Procurando o livro…'**
+  String get simplesProcurando;
+
+  /// No description provided for @simplesNaoEncontrado.
+  ///
+  /// In pt, this message translates to:
+  /// **'Livro não encontrado'**
+  String get simplesNaoEncontrado;
+
+  /// No description provided for @simplesSemConexao.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sem conexão'**
+  String get simplesSemConexao;
+
+  /// No description provided for @simplesSemConexaoTexto.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não conseguimos consultar as bases de livros agora. Confira a internet e tente de novo.'**
+  String get simplesSemConexaoTexto;
+
+  /// No description provided for @simplesFonteBrasilApi.
+  ///
+  /// In pt, this message translates to:
+  /// **'Encontrado na BrasilAPI'**
+  String get simplesFonteBrasilApi;
+
+  /// No description provided for @simplesFonteGoogle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Encontrado no Google Books'**
+  String get simplesFonteGoogle;
+
+  /// No description provided for @simplesSinopse.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sinopse'**
+  String get simplesSinopse;
+
+  /// No description provided for @simplesCampoAno.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ano'**
+  String get simplesCampoAno;
+
+  /// No description provided for @simplesNaoEncontradoTexto.
+  ///
+  /// In pt, this message translates to:
+  /// **'Lemos o ISBN {isbn}, mas ele não está no catálogo nem nas bases de livros consultadas (BrasilAPI e Google Books).'**
+  String simplesNaoEncontradoTexto(String isbn);
 }
 
 class _TextosDelegate extends LocalizationsDelegate<Textos> {

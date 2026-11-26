@@ -4,12 +4,51 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart' show rootBundle;
 
+/// De onde veio o livro.
+enum FonteLivro { catalogo, brasilApi, googleBooks }
+
 class Livro {
-  const Livro({required this.isbn, required this.titulo, this.autor = '', this.editora = ''});
+  const Livro({
+    required this.isbn,
+    required this.titulo,
+    this.autor = '',
+    this.editora = '',
+    this.ano = '',
+    this.sinopse = '',
+    this.capaUrl,
+    this.fonte = FonteLivro.catalogo,
+  });
+
   final String isbn;
   final String titulo;
   final String autor;
   final String editora;
+  final String ano;
+  final String sinopse;
+  final String? capaUrl;
+  final FonteLivro fonte;
+
+  Map<String, dynamic> toJson() => {
+    'isbn': isbn,
+    'titulo': titulo,
+    'autor': autor,
+    'editora': editora,
+    'ano': ano,
+    'sinopse': sinopse,
+    'capa_url': capaUrl,
+    'fonte': fonte.name,
+  };
+
+  factory Livro.fromJson(Map<String, dynamic> j) => Livro(
+    isbn: j['isbn'] as String,
+    titulo: j['titulo'] as String,
+    autor: j['autor'] as String? ?? '',
+    editora: j['editora'] as String? ?? '',
+    ano: j['ano'] as String? ?? '',
+    sinopse: j['sinopse'] as String? ?? '',
+    capaUrl: j['capa_url'] as String?,
+    fonte: FonteLivro.values.asNameMap()[j['fonte']] ?? FonteLivro.catalogo,
+  );
 }
 
 class Catalogo {

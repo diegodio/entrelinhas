@@ -78,6 +78,7 @@ flutter:
   generate: true
   assets:
     - assets/catalogo.json
+    - assets/capas/
   fonts:
     - family: Fraunces
       fonts:

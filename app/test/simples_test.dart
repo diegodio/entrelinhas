@@ -192,6 +192,23 @@ void main() {
     });
   });
 
+  test('capas: catálogo/API primeiro, depois Open Library pelo ISBN', () async {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    const comCapa = Livro(isbn: '9788543111537', titulo: 'M', capaUrl: 'assets/capas/x.jpg');
+    expect(fontesDeCapa(comCapa), [
+      'assets/capas/x.jpg',
+      'https://covers.openlibrary.org/b/isbn/9788543111537-M.jpg?default=false',
+    ]);
+    const semCapa = Livro(isbn: '9780306406157', titulo: 'T');
+    expect(fontesDeCapa(semCapa, grande: true), [
+      'https://covers.openlibrary.org/b/isbn/9780306406157-L.jpg?default=false',
+    ]);
+    // A capa do Murdoku (foto enviada pelo usuário) existe no app.
+    final c = Catalogo.deJson(await rootBundle.loadString('assets/catalogo.json'));
+    final capa = c.buscar('9788543111537')!.capaUrl!;
+    expect((await rootBundle.load(capa)).lengthInBytes, greaterThan(10000));
+  });
+
   test('datas legíveis', () {
     final agora = DateTime(2026, 11, 26, 18);
     expect(quandoLegivel(DateTime(2026, 11, 26, 9, 5), agora), 'Hoje, 09:05');

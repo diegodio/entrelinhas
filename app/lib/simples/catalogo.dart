@@ -63,6 +63,7 @@ class Catalogo {
           titulo: l['titulo'] as String,
           autor: l['autor'] as String? ?? '',
           editora: l['editora'] as String? ?? '',
+          capaUrl: l['capa'] as String?,
         ),
     ]);
   }

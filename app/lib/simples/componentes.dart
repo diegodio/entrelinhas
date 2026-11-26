@@ -101,9 +101,10 @@ class CapaGerada extends StatelessWidget {
               ],
             ),
     );
-    final url = livro?.capaUrl;
+    final l = livro;
+    final fontes = l == null ? const <String>[] : fontesDeCapa(l, grande: grande);
     return ExcludeSemantics(
-      child: url == null
+      child: fontes.isEmpty
           ? desenhada
           : Container(
               width: largura,
@@ -121,14 +122,67 @@ class CapaGerada extends StatelessWidget {
                     : null,
               ),
               clipBehavior: Clip.antiAlias,
-              child: Image.network(
-                url,
-                fit: BoxFit.cover,
-                // Sem imagem (rede, CORS, link quebrado): a capa desenhada.
-                errorBuilder: (_, _, _) => desenhada,
-                loadingBuilder: (_, filho, progresso) => progresso == null ? filho : desenhada,
-              ),
+              child: _CapaEmCadeia(fontes: fontes, reserva: desenhada),
             ),
+    );
+  }
+}
+
+/// Onde procurar a capa, em ordem: a do catálogo ou da API, depois a da Open Library pelo
+/// ISBN (gratuita, sem chave; `default=false` devolve 404 quando não há capa). A capa
+/// desenhada fica por último.
+List<String> fontesDeCapa(Livro livro, {bool grande = false}) => [
+  if (livro.capaUrl != null && livro.capaUrl!.isNotEmpty) livro.capaUrl!,
+  'https://covers.openlibrary.org/b/isbn/${livro.isbn}-${grande ? 'L' : 'M'}.jpg?default=false',
+];
+
+/// Tenta cada fonte até uma funcionar; se nenhuma funcionar, mostra [reserva].
+class _CapaEmCadeia extends StatefulWidget {
+  const _CapaEmCadeia({required this.fontes, required this.reserva});
+  final List<String> fontes;
+  final Widget reserva;
+
+  @override
+  State<_CapaEmCadeia> createState() => _CapaEmCadeiaState();
+}
+
+class _CapaEmCadeiaState extends State<_CapaEmCadeia> {
+  int _i = 0;
+
+  @override
+  void didUpdateWidget(_CapaEmCadeia antigo) {
+    super.didUpdateWidget(antigo);
+    if (antigo.fontes.join() != widget.fontes.join()) _i = 0;
+  }
+
+  void _proxima() {
+    // Chamado durante o build do errorBuilder: avança no próximo quadro.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && _i < widget.fontes.length) setState(() => _i++);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_i >= widget.fontes.length) return widget.reserva;
+    final url = widget.fontes[_i];
+    Widget erro(BuildContext _, Object _, StackTrace? _) {
+      _proxima();
+      return widget.reserva;
+    }
+
+    if (url.startsWith('assets/')) {
+      return Image.asset(url, fit: BoxFit.cover, errorBuilder: erro);
+    }
+    return Image.network(
+      url,
+      key: ValueKey(url),
+      fit: BoxFit.cover,
+      // Na web, imagens de sites sem CORS (como as capas do Google Books) são mostradas
+      // por um elemento <img> em vez de falhar.
+      webHtmlElementStrategy: WebHtmlElementStrategy.fallback,
+      errorBuilder: erro,
+      loadingBuilder: (_, filho, progresso) => progresso == null ? filho : widget.reserva,
     );
   }
 }

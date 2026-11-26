@@ -55,7 +55,10 @@ livro. Não precisa de servidor.
   (`brasilapi.com.br/api/isbn/v1/{isbn}`) e depois no **Google Books**
   (`googleapis.com/books/v1/volumes?q=isbn:{isbn}`). As duas são gratuitas, sem chave, e
   aceitam chamadas do navegador. O que vem delas fica guardado no aparelho.
-- **Resultado:** página do livro com capa (a da API, quando houver, ou uma desenhada),
+- **Capas**, nesta ordem: a do catálogo (`capa`, imagem em `app/assets/capas/` ou endereço), a
+  da API, a da **Open Library** pelo ISBN (`covers.openlibrary.org`, gratuita) e, por fim,
+  uma capa desenhada com o título.
+- **Resultado:** página do livro com capa,
   título, autor, sinopse e dados; "Livro não encontrado" quando ninguém conhece o ISBN;
   "Sem conexão" com "Tentar de novo" quando as APIs não respondem.
 - **Telas:** Início (busca, atalho para escanear, vistos recentemente, livros

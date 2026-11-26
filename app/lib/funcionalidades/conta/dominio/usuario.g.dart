@@ -28,9 +28,7 @@ _Usuario _$UsuarioFromJson(Map<String, dynamic> json) => _Usuario(
           ?.map((e) => MembroDe.fromJson(e as Map<String, dynamic>))
           .toList() ??
       const <MembroDe>[],
-  uso: json['uso'] == null
-      ? null
-      : Uso.fromJson(json['uso'] as Map<String, dynamic>),
+  uso: json['uso'] == null ? null : Uso.fromJson(json['uso'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$UsuarioToJson(_Usuario instance) => <String, dynamic>{
@@ -42,18 +40,16 @@ Map<String, dynamic> _$UsuarioToJson(_Usuario instance) => <String, dynamic>{
   'uso': instance.uso?.toJson(),
 };
 
-_PerfilLeitor _$PerfilLeitorFromJson(Map<String, dynamic> json) =>
-    _PerfilLeitor(
-      id: json['id'] as String,
-      apelido: json['apelido'] as String,
-      anoNascimento: (json['ano_nascimento'] as num).toInt(),
-      icone: json['icone'] as String? ?? 'livro',
-    );
+_PerfilLeitor _$PerfilLeitorFromJson(Map<String, dynamic> json) => _PerfilLeitor(
+  id: json['id'] as String,
+  apelido: json['apelido'] as String,
+  anoNascimento: (json['ano_nascimento'] as num).toInt(),
+  icone: json['icone'] as String? ?? 'livro',
+);
 
-Map<String, dynamic> _$PerfilLeitorToJson(_PerfilLeitor instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'apelido': instance.apelido,
-      'ano_nascimento': instance.anoNascimento,
-      'icone': instance.icone,
-    };
+Map<String, dynamic> _$PerfilLeitorToJson(_PerfilLeitor instance) => <String, dynamic>{
+  'id': instance.id,
+  'apelido': instance.apelido,
+  'ano_nascimento': instance.anoNascimento,
+  'icone': instance.icone,
+};

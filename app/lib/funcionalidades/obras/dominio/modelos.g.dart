@@ -11,8 +11,7 @@ _ObraResumo _$ObraResumoFromJson(Map<String, dynamic> json) => _ObraResumo(
   titulo: json['titulo'] as String,
   subtitulo: json['subtitulo'] as String?,
   autores:
-      (json['autores'] as List<dynamic>?)?.map((e) => e as String).toList() ??
-      const <String>[],
+      (json['autores'] as List<dynamic>?)?.map((e) => e as String).toList() ?? const <String>[],
   capaUrl: json['capa_url'] as String?,
   isbn13: json['isbn13'] as String?,
   faixaFinal: json['faixa_final'] as String?,
@@ -21,19 +20,18 @@ _ObraResumo _$ObraResumoFromJson(Map<String, dynamic> json) => _ObraResumo(
   demonstracao: json['demonstracao'] as bool? ?? false,
 );
 
-Map<String, dynamic> _$ObraResumoToJson(_ObraResumo instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'titulo': instance.titulo,
-      'subtitulo': instance.subtitulo,
-      'autores': instance.autores,
-      'capa_url': instance.capaUrl,
-      'isbn13': instance.isbn13,
-      'faixa_final': instance.faixaFinal,
-      'status_ficha': instance.statusFicha,
-      'origem': instance.origem,
-      'demonstracao': instance.demonstracao,
-    };
+Map<String, dynamic> _$ObraResumoToJson(_ObraResumo instance) => <String, dynamic>{
+  'id': instance.id,
+  'titulo': instance.titulo,
+  'subtitulo': instance.subtitulo,
+  'autores': instance.autores,
+  'capa_url': instance.capaUrl,
+  'isbn13': instance.isbn13,
+  'faixa_final': instance.faixaFinal,
+  'status_ficha': instance.statusFicha,
+  'origem': instance.origem,
+  'demonstracao': instance.demonstracao,
+};
 
 _Edicao _$EdicaoFromJson(Map<String, dynamic> json) => _Edicao(
   id: json['id'] as String,
@@ -58,8 +56,7 @@ _ObraDetalhe _$ObraDetalheFromJson(Map<String, dynamic> json) => _ObraDetalhe(
   titulo: json['titulo'] as String,
   subtitulo: json['subtitulo'] as String?,
   autores:
-      (json['autores'] as List<dynamic>?)?.map((e) => e as String).toList() ??
-      const <String>[],
+      (json['autores'] as List<dynamic>?)?.map((e) => e as String).toList() ?? const <String>[],
   capaUrl: json['capa_url'] as String?,
   isbn13: json['isbn13'] as String?,
   faixaFinal: json['faixa_final'] as String?,
@@ -77,43 +74,39 @@ _ObraDetalhe _$ObraDetalheFromJson(Map<String, dynamic> json) => _ObraDetalhe(
       const <Edicao>[],
 );
 
-Map<String, dynamic> _$ObraDetalheToJson(_ObraDetalhe instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'titulo': instance.titulo,
-      'subtitulo': instance.subtitulo,
-      'autores': instance.autores,
-      'capa_url': instance.capaUrl,
-      'isbn13': instance.isbn13,
-      'faixa_final': instance.faixaFinal,
-      'status_ficha': instance.statusFicha,
-      'origem': instance.origem,
-      'demonstracao': instance.demonstracao,
-      'sinopse': instance.sinopse,
-      'genero': instance.genero,
-      'paginas': instance.paginas,
-      'idioma': instance.idioma,
-      'edicoes': instance.edicoes.map((e) => e.toJson()).toList(),
-    };
+Map<String, dynamic> _$ObraDetalheToJson(_ObraDetalhe instance) => <String, dynamic>{
+  'id': instance.id,
+  'titulo': instance.titulo,
+  'subtitulo': instance.subtitulo,
+  'autores': instance.autores,
+  'capa_url': instance.capaUrl,
+  'isbn13': instance.isbn13,
+  'faixa_final': instance.faixaFinal,
+  'status_ficha': instance.statusFicha,
+  'origem': instance.origem,
+  'demonstracao': instance.demonstracao,
+  'sinopse': instance.sinopse,
+  'genero': instance.genero,
+  'paginas': instance.paginas,
+  'idioma': instance.idioma,
+  'edicoes': instance.edicoes.map((e) => e.toJson()).toList(),
+};
 
-_ResultadoBusca _$ResultadoBuscaFromJson(Map<String, dynamic> json) =>
-    _ResultadoBusca(
-      resultados:
-          (json['resultados'] as List<dynamic>?)
-              ?.map((e) => ObraResumo.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const <ObraResumo>[],
-      isbn: json['isbn'] as String?,
-      fontesExternasIndisponiveis:
-          json['fontes_externas_indisponiveis'] as bool? ?? false,
-    );
+_ResultadoBusca _$ResultadoBuscaFromJson(Map<String, dynamic> json) => _ResultadoBusca(
+  resultados:
+      (json['resultados'] as List<dynamic>?)
+          ?.map((e) => ObraResumo.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const <ObraResumo>[],
+  isbn: json['isbn'] as String?,
+  fontesExternasIndisponiveis: json['fontes_externas_indisponiveis'] as bool? ?? false,
+);
 
-Map<String, dynamic> _$ResultadoBuscaToJson(_ResultadoBusca instance) =>
-    <String, dynamic>{
-      'resultados': instance.resultados.map((e) => e.toJson()).toList(),
-      'isbn': instance.isbn,
-      'fontes_externas_indisponiveis': instance.fontesExternasIndisponiveis,
-    };
+Map<String, dynamic> _$ResultadoBuscaToJson(_ResultadoBusca instance) => <String, dynamic>{
+  'resultados': instance.resultados.map((e) => e.toJson()).toList(),
+  'isbn': instance.isbn,
+  'fontes_externas_indisponiveis': instance.fontesExternasIndisponiveis,
+};
 
 _EixoFicha _$EixoFichaFromJson(Map<String, dynamic> json) => _EixoFicha(
   nivel: (json['nivel'] as num).toInt(),
@@ -121,12 +114,11 @@ _EixoFicha _$EixoFichaFromJson(Map<String, dynamic> json) => _EixoFicha(
   justificativa: json['justificativa'] as String? ?? '',
 );
 
-Map<String, dynamic> _$EixoFichaToJson(_EixoFicha instance) =>
-    <String, dynamic>{
-      'nivel': instance.nivel,
-      'faixa': instance.faixa,
-      'justificativa': instance.justificativa,
-    };
+Map<String, dynamic> _$EixoFichaToJson(_EixoFicha instance) => <String, dynamic>{
+  'nivel': instance.nivel,
+  'faixa': instance.faixa,
+  'justificativa': instance.justificativa,
+};
 
 _Evidencia _$EvidenciaFromJson(Map<String, dynamic> json) => _Evidencia(
   eixo: json['eixo'] as String,
@@ -136,23 +128,18 @@ _Evidencia _$EvidenciaFromJson(Map<String, dynamic> json) => _Evidencia(
   localizacao: json['localizacao'] as String?,
 );
 
-Map<String, dynamic> _$EvidenciaToJson(_Evidencia instance) =>
-    <String, dynamic>{
-      'eixo': instance.eixo,
-      'parafrase': instance.parafrase,
-      'trecho_literal': instance.trechoLiteral,
-      'fonte': instance.fonte,
-      'localizacao': instance.localizacao,
-    };
+Map<String, dynamic> _$EvidenciaToJson(_Evidencia instance) => <String, dynamic>{
+  'eixo': instance.eixo,
+  'parafrase': instance.parafrase,
+  'trecho_literal': instance.trechoLiteral,
+  'fonte': instance.fonte,
+  'localizacao': instance.localizacao,
+};
 
 _CamadaB _$CamadaBFromJson(Map<String, dynamic> json) => _CamadaB(
-  flags:
-      (json['flags'] as List<dynamic>?)?.map((e) => e as String).toList() ??
-      const <String>[],
+  flags: (json['flags'] as List<dynamic>?)?.map((e) => e as String).toList() ?? const <String>[],
   justificativas:
-      (json['justificativas'] as Map<String, dynamic>?)?.map(
-        (k, e) => MapEntry(k, e as String),
-      ) ??
+      (json['justificativas'] as Map<String, dynamic>?)?.map((k, e) => MapEntry(k, e as String)) ??
       const <String, String>{},
 );
 
@@ -161,23 +148,18 @@ Map<String, dynamic> _$CamadaBToJson(_CamadaB instance) => <String, dynamic>{
   'justificativas': instance.justificativas,
 };
 
-_ValorFormativo _$ValorFormativoFromJson(Map<String, dynamic> json) =>
-    _ValorFormativo(
-      nivel: json['nivel'] as String,
-      marcadores:
-          (json['marcadores'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const <String>[],
-      justificativa: json['justificativa'] as String? ?? '',
-    );
+_ValorFormativo _$ValorFormativoFromJson(Map<String, dynamic> json) => _ValorFormativo(
+  nivel: json['nivel'] as String,
+  marcadores:
+      (json['marcadores'] as List<dynamic>?)?.map((e) => e as String).toList() ?? const <String>[],
+  justificativa: json['justificativa'] as String? ?? '',
+);
 
-Map<String, dynamic> _$ValorFormativoToJson(_ValorFormativo instance) =>
-    <String, dynamic>{
-      'nivel': instance.nivel,
-      'marcadores': instance.marcadores,
-      'justificativa': instance.justificativa,
-    };
+Map<String, dynamic> _$ValorFormativoToJson(_ValorFormativo instance) => <String, dynamic>{
+  'nivel': instance.nivel,
+  'marcadores': instance.marcadores,
+  'justificativa': instance.justificativa,
+};
 
 _CamadaC _$CamadaCFromJson(Map<String, dynamic> json) => _CamadaC(
   vocabulario: (json['vocabulario'] as num).toInt(),
@@ -187,13 +169,9 @@ _CamadaC _$CamadaCFromJson(Map<String, dynamic> json) => _CamadaC(
   nivelLeitura: (json['nivel_leitura'] as num).toInt(),
   rotuloNivelLeitura: json['rotulo_nivel_leitura'] as String,
   exigenciaRepertorio:
-      (json['exigencia_repertorio'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList() ??
+      (json['exigencia_repertorio'] as List<dynamic>?)?.map((e) => e as String).toList() ??
       const <String>[],
-  valorFormativo: ValorFormativo.fromJson(
-    json['valor_formativo'] as Map<String, dynamic>,
-  ),
+  valorFormativo: ValorFormativo.fromJson(json['valor_formativo'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$CamadaCToJson(_CamadaC instance) => <String, dynamic>{
@@ -208,13 +186,12 @@ Map<String, dynamic> _$CamadaCToJson(_CamadaC instance) => <String, dynamic>{
 };
 
 _FonteProcedencia _$FonteProcedenciaFromJson(Map<String, dynamic> json) =>
-    _FonteProcedencia(
-      tipo: json['tipo'] as String,
-      url: json['url'] as String?,
-    );
+    _FonteProcedencia(tipo: json['tipo'] as String, url: json['url'] as String?);
 
-Map<String, dynamic> _$FonteProcedenciaToJson(_FonteProcedencia instance) =>
-    <String, dynamic>{'tipo': instance.tipo, 'url': instance.url};
+Map<String, dynamic> _$FonteProcedenciaToJson(_FonteProcedencia instance) => <String, dynamic>{
+  'tipo': instance.tipo,
+  'url': instance.url,
+};
 
 _Procedencia _$ProcedenciaFromJson(Map<String, dynamic> json) => _Procedencia(
   fonteDaAnalise: json['fonte_da_analise'] as String,
@@ -229,15 +206,14 @@ _Procedencia _$ProcedenciaFromJson(Map<String, dynamic> json) => _Procedencia(
   revisadaEm: json['revisada_em'] as String?,
 );
 
-Map<String, dynamic> _$ProcedenciaToJson(_Procedencia instance) =>
-    <String, dynamic>{
-      'fonte_da_analise': instance.fonteDaAnalise,
-      'confianca': instance.confianca,
-      'modelo': instance.modelo,
-      'fontes': instance.fontes.map((e) => e.toJson()).toList(),
-      'revisada_por_humano': instance.revisadaPorHumano,
-      'revisada_em': instance.revisadaEm,
-    };
+Map<String, dynamic> _$ProcedenciaToJson(_Procedencia instance) => <String, dynamic>{
+  'fonte_da_analise': instance.fonteDaAnalise,
+  'confianca': instance.confianca,
+  'modelo': instance.modelo,
+  'fontes': instance.fontes.map((e) => e.toJson()).toList(),
+  'revisada_por_humano': instance.revisadaPorHumano,
+  'revisada_em': instance.revisadaEm,
+};
 
 _Ficha _$FichaFromJson(Map<String, dynamic> json) => _Ficha(
   obraId: json['obra_id'] as String,
@@ -260,9 +236,7 @@ _Ficha _$FichaFromJson(Map<String, dynamic> json) => _Ficha(
       const <Evidencia>[],
   camadaB: CamadaB.fromJson(json['camada_b'] as Map<String, dynamic>),
   camadaC: CamadaC.fromJson(json['camada_c'] as Map<String, dynamic>),
-  procedencia: Procedencia.fromJson(
-    json['procedencia'] as Map<String, dynamic>,
-  ),
+  procedencia: Procedencia.fromJson(json['procedencia'] as Map<String, dynamic>),
   atualizadaEm: json['atualizada_em'] as String,
   slug: json['slug'] as String?,
   avisoA5: json['aviso_a5'] as String?,
@@ -306,19 +280,18 @@ _ResumoFicha _$ResumoFichaFromJson(Map<String, dynamic> json) => _ResumoFicha(
   revisadaPorHumano: json['revisada_por_humano'] as bool? ?? false,
 );
 
-Map<String, dynamic> _$ResumoFichaToJson(_ResumoFicha instance) =>
-    <String, dynamic>{
-      'obra_id': instance.obraId,
-      'slug': instance.slug,
-      'status': instance.status,
-      'faixa_final': instance.faixaFinal,
-      'recomendacao_contextual': instance.recomendacaoContextual,
-      'texto_recomendacao': instance.textoRecomendacao,
-      'fonte_da_analise': instance.fonteDaAnalise,
-      'texto_fonte_analise': instance.textoFonteAnalise,
-      'confianca': instance.confianca,
-      'revisada_por_humano': instance.revisadaPorHumano,
-    };
+Map<String, dynamic> _$ResumoFichaToJson(_ResumoFicha instance) => <String, dynamic>{
+  'obra_id': instance.obraId,
+  'slug': instance.slug,
+  'status': instance.status,
+  'faixa_final': instance.faixaFinal,
+  'recomendacao_contextual': instance.recomendacaoContextual,
+  'texto_recomendacao': instance.textoRecomendacao,
+  'fonte_da_analise': instance.fonteDaAnalise,
+  'texto_fonte_analise': instance.textoFonteAnalise,
+  'confianca': instance.confianca,
+  'revisada_por_humano': instance.revisadaPorHumano,
+};
 
 _Uso _$UsoFromJson(Map<String, dynamic> json) => _Uso(
   plano: json['plano'] as String? ?? 'gratuito',
@@ -338,20 +311,14 @@ Map<String, dynamic> _$UsoToJson(_Uso instance) => <String, dynamic>{
   'consultas_limite': instance.consultasLimite,
 };
 
-_RespostaFicha _$RespostaFichaFromJson(Map<String, dynamic> json) =>
-    _RespostaFicha(
-      statusFicha: json['status_ficha'] as String,
-      ficha: json['ficha'] == null
-          ? null
-          : Ficha.fromJson(json['ficha'] as Map<String, dynamic>),
-      uso: json['uso'] == null
-          ? null
-          : Uso.fromJson(json['uso'] as Map<String, dynamic>),
-    );
+_RespostaFicha _$RespostaFichaFromJson(Map<String, dynamic> json) => _RespostaFicha(
+  statusFicha: json['status_ficha'] as String,
+  ficha: json['ficha'] == null ? null : Ficha.fromJson(json['ficha'] as Map<String, dynamic>),
+  uso: json['uso'] == null ? null : Uso.fromJson(json['uso'] as Map<String, dynamic>),
+);
 
-Map<String, dynamic> _$RespostaFichaToJson(_RespostaFicha instance) =>
-    <String, dynamic>{
-      'status_ficha': instance.statusFicha,
-      'ficha': instance.ficha?.toJson(),
-      'uso': instance.uso?.toJson(),
-    };
+Map<String, dynamic> _$RespostaFichaToJson(_RespostaFicha instance) => <String, dynamic>{
+  'status_ficha': instance.statusFicha,
+  'ficha': instance.ficha?.toJson(),
+  'uso': instance.uso?.toJson(),
+};

@@ -1,5 +1,5 @@
-// Modo simples: aponta a câmera para o código de barras e mostra o nome do livro, a partir
-// de um catálogo fixo (assets/catalogo.json). Não usa servidor.
+// Leitor do modo simples: câmera em tela cheia. Ao ler um ISBN de livro, fecha e devolve o
+// código (Navigator.pop) para quem abriu, que mostra a página do livro.
 //
 // Leitura: no celular, ML Kit ao vivo (LeitorNativo); na web, uma foto da prévia a cada
 // ~0,9 s lida pelo decodificador em Dart (ean13.dart). Galeria e "Digitar ISBN" também.
@@ -18,50 +18,11 @@ import '../funcionalidades/escanear/dados/leitor.dart';
 import '../funcionalidades/escanear/dominio/maquina_scanner.dart';
 import '../l10n/textos.dart';
 import '../nucleo/tema/tema.dart';
-import 'catalogo.dart';
 import 'ean13.dart';
 
-/// O que aparece no painel depois de uma leitura.
-sealed class Leitura {
-  const Leitura();
-}
-
-class LivroEncontrado extends Leitura {
-  const LivroEncontrado(this.livro);
-  final Livro livro;
-}
-
-class NaoCadastrado extends Leitura {
-  const NaoCadastrado(this.isbn);
-  final String isbn;
-}
-
-class NaoELivro extends Leitura {
-  const NaoELivro();
-}
-
-class SemCodigo extends Leitura {
-  const SemCodigo();
-}
-
-/// Regra pura: código lido -> o que mostrar.
-Leitura interpretar(String? codigo, Catalogo catalogo) {
-  if (codigo == null) return const SemCodigo();
-  if (!eIsbnDeLivro(codigo)) return const NaoELivro();
-  final livro = catalogo.buscar(codigo);
-  return livro == null ? NaoCadastrado(codigo) : LivroEncontrado(livro);
-}
-
 class TelaLeitorSimples extends StatefulWidget {
-  const TelaLeitorSimples({
-    super.key,
-    this.catalogo,
-    this.fabricaLeitor = criarLeitor,
-    this.usarCamera = true,
-  });
+  const TelaLeitorSimples({super.key, this.fabricaLeitor = criarLeitor, this.usarCamera = true});
 
-  /// Injetável nos testes; senão, carregado de assets/catalogo.json.
-  final Catalogo? catalogo;
   final LeitorDeCodigo Function() fabricaLeitor;
 
   /// Falso nos testes de widget (sem plugin de câmera).
@@ -76,7 +37,6 @@ class TelaLeitorSimplesState extends State<TelaLeitorSimples> with WidgetsBindin
   static const _intervaloWeb = Duration(milliseconds: 900);
   static const _maquina = MaquinaScanner();
 
-  Catalogo? _catalogo;
   CameraController? _camera;
   late final LeitorDeCodigo _leitor = widget.fabricaLeitor();
   EstadoScanner _estado = EstadoScanner.inicial;
@@ -87,16 +47,12 @@ class TelaLeitorSimplesState extends State<TelaLeitorSimples> with WidgetsBindin
   bool _semPermissao = false;
   bool _semCamera = false;
   Timer? _lacoWeb;
-  Leitura? _leitura;
+  bool _entregue = false;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _catalogo = widget.catalogo;
-    if (_catalogo == null) {
-      Catalogo.carregar().then((c) => mounted ? setState(() => _catalogo = c) : null);
-    }
     if (widget.usarCamera) {
       _leitor.iniciar().then((_) => _iniciarCamera());
     }
@@ -180,7 +136,7 @@ class TelaLeitorSimplesState extends State<TelaLeitorSimples> with WidgetsBindin
 
   void _retomarLeitura() {
     final c = _camera;
-    if (c == null || _leitura != null) return;
+    if (c == null || _entregue) return;
     if (_leitor.aoVivo && !kIsWeb) {
       if (!c.value.isStreamingImages) c.startImageStream(_aoQuadro).catchError((_) {});
     } else {
@@ -200,16 +156,16 @@ class TelaLeitorSimplesState extends State<TelaLeitorSimples> with WidgetsBindin
   /// Celular: quadros do ML Kit.
   void _aoQuadro(CameraImage imagem) {
     final agora = _relogio.elapsed;
-    if (_analisando || agora - _ultimaAnalise < _intervaloNativo || _leitura != null) return;
+    if (_analisando || agora - _ultimaAnalise < _intervaloNativo || _entregue) return;
     _analisando = true;
     _ultimaAnalise = agora;
     _leitor
         .analisar(_converter(imagem))
         .then((analise) {
-          if (!mounted || _leitura != null) return;
+          if (!mounted || _entregue) return;
           setState(() => _estado = _maquina.aoAnalisar(_estado, analise, _relogio.elapsed));
           final isbn = _estado.isbn;
-          if (_estado.fase == FaseScanner.consultando && isbn != null) mostrar(isbn);
+          if (_estado.fase == FaseScanner.consultando && isbn != null) entregar(isbn);
         })
         .catchError((_) {})
         .whenComplete(() => _analisando = false);
@@ -218,14 +174,14 @@ class TelaLeitorSimplesState extends State<TelaLeitorSimples> with WidgetsBindin
   /// Web: tira uma foto da prévia e procura o código em Dart.
   Future<void> _fotografarELer() async {
     final c = _camera;
-    if (_analisando || c == null || !c.value.isInitialized || _leitura != null) return;
+    if (_analisando || c == null || !c.value.isInitialized || _entregue) return;
     _analisando = true;
     try {
       final foto = await c.takePicture();
       final codigo = await lerEan13DeFoto(await foto.readAsBytes());
-      if (!mounted || _leitura != null) return;
+      if (!mounted || _entregue) return;
       if (codigo != null && eIsbnDeLivro(codigo)) {
-        mostrar(codigo);
+        entregar(codigo);
       } else {
         setState(
           () => _estado = EstadoScanner(fase: FaseScanner.procurando, naoELivro: codigo != null),
@@ -253,29 +209,28 @@ class TelaLeitorSimplesState extends State<TelaLeitorSimples> with WidgetsBindin
     rotacao: _camera?.description.sensorOrientation ?? 90,
   );
 
-  /// Mostra o resultado de um código (ou da falta dele) e pausa a câmera.
-  void mostrar(String? codigo) {
-    final catalogo = _catalogo;
-    if (catalogo == null) return;
-    final leitura = interpretar(codigo, catalogo);
-    if (leitura is LivroEncontrado || leitura is NaoCadastrado) HapticFeedback.mediumImpact();
+  /// Código de livro: vibra, para a câmera e devolve o ISBN. Outro código ou nenhum: avisa
+  /// e continua lendo.
+  void entregar(String? codigo) {
+    if (_entregue || !mounted) return;
+    if (codigo == null || !eIsbnDeLivro(codigo)) {
+      final t = Textos.of(context);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(codigo == null ? t.semCodigoNaFoto : t.naoELivro)));
+      _retomarLeitura();
+      return;
+    }
+    _entregue = true;
+    HapticFeedback.mediumImpact();
     _pausarLeitura();
-    setState(() => _leitura = leitura);
-  }
-
-  void _lerOutro() {
-    setState(() {
-      _leitura = null;
-      _estado = _maquina.reiniciar(_estado);
-    });
-    _retomarLeitura();
+    Navigator.of(context).pop(codigo);
   }
 
   Future<void> _galeria() async {
     final arquivo = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (arquivo == null || !mounted) return;
     _pausarLeitura();
-    mostrar(await lerEan13DeFoto(await arquivo.readAsBytes()));
+    entregar(await lerEan13DeFoto(await arquivo.readAsBytes()));
   }
 
   Future<void> _digitarIsbn() async {
@@ -307,7 +262,7 @@ class TelaLeitorSimplesState extends State<TelaLeitorSimples> with WidgetsBindin
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(t.isbnInvalido)));
       return;
     }
-    mostrar(limpo);
+    entregar(limpo);
   }
 
   Future<void> _alternarLanterna() async {
@@ -317,32 +272,6 @@ class TelaLeitorSimplesState extends State<TelaLeitorSimples> with WidgetsBindin
       await c.setFlashMode(_lanterna ? FlashMode.off : FlashMode.torch);
       setState(() => _lanterna = !_lanterna);
     } catch (_) {}
-  }
-
-  void _verCatalogo() {
-    final catalogo = _catalogo;
-    if (catalogo == null) return;
-    final t = Textos.of(context);
-    showModalBottomSheet<void>(
-      context: context,
-      showDragHandle: true,
-      builder: (c) => SafeArea(
-        child: ListView(
-          shrinkWrap: true,
-          padding: const EdgeInsets.fromLTRB(Espaco.m, 0, Espaco.m, Espaco.m),
-          children: [
-            Text(t.simplesVerCatalogo, style: c.estilos.tituloSecao),
-            const SizedBox(height: Espaco.xs),
-            for (final l in catalogo.livros)
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Text(l.titulo, style: c.estilos.destaque),
-                subtitle: Text('${l.autor} · ${t.simplesIsbn(l.isbn)}', style: c.estilos.apoio),
-              ),
-          ],
-        ),
-      ),
-    );
   }
 
   // -------------------------------------------------------------------- tela
@@ -356,15 +285,15 @@ class TelaLeitorSimplesState extends State<TelaLeitorSimples> with WidgetsBindin
         child: Stack(
           children: [
             Positioned.fill(child: _corpo(context)),
-            if (_camera != null && _leitura == null && mostrarGuia(_estado, !kIsWeb))
+            if (_camera != null && mostrarGuia(_estado, !kIsWeb))
               const Positioned.fill(bottom: 200, child: IgnorePointer(child: MolduraGuia())),
             Positioned(
               top: Espaco.xs,
               left: Espaco.xs,
               child: _BotaoRedondo(
-                icone: Icons.menu_book_outlined,
-                rotulo: t.simplesVerCatalogo,
-                aoTocar: _verCatalogo,
+                icone: Icons.close,
+                rotulo: t.botaoFechar,
+                aoTocar: () => Navigator.of(context).maybePop(),
               ),
             ),
             if (_camera != null)
@@ -430,8 +359,6 @@ class TelaLeitorSimplesState extends State<TelaLeitorSimples> with WidgetsBindin
 
   Widget _painel(BuildContext context) {
     final t = Textos.of(context);
-    final leitura = _leitura;
-    if (leitura != null) return _CartaoLeitura(leitura: leitura, aoLerOutro: _lerOutro);
     final mensagem = switch (_estado) {
       EstadoScanner(naoELivro: true) => t.naoELivro,
       EstadoScanner(poucaLuz: true) => t.poucaLuz,
@@ -473,60 +400,6 @@ class TelaLeitorSimplesState extends State<TelaLeitorSimples> with WidgetsBindin
               ),
             ],
           ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Cartão com o resultado: o nome do livro em destaque.
-class _CartaoLeitura extends StatelessWidget {
-  const _CartaoLeitura({required this.leitura, required this.aoLerOutro});
-  final Leitura leitura;
-  final VoidCallback aoLerOutro;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = Textos.of(context);
-    final e = context.estilos;
-    final (rotulo, titulo, detalhe) = switch (leitura) {
-      LivroEncontrado(:final livro) => (
-        t.simplesLivroLido,
-        livro.titulo,
-        [if (livro.autor.isNotEmpty) livro.autor, t.simplesIsbn(livro.isbn)].join(' · '),
-      ),
-      NaoCadastrado(:final isbn) => (
-        t.simplesIsbn(isbn),
-        t.simplesNaoCadastrado,
-        t.simplesNaoCadastradoTexto(isbn),
-      ),
-      NaoELivro() => (null, t.naoELivro, null),
-      SemCodigo() => (null, t.semCodigoNaFoto, null),
-    };
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(Espaco.l, Espaco.l, Espaco.l, Espaco.l),
-      decoration: BoxDecoration(
-        color: context.cores.papel,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(Raio.cartao)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          if (rotulo != null) Text(rotulo.toUpperCase(), style: e.rotuloMaiusculo),
-          const SizedBox(height: Espaco.xs),
-          Semantics(
-            liveRegion: true,
-            header: true,
-            child: Text(titulo, style: leitura is LivroEncontrado ? e.tituloObra : e.tituloSecao),
-          ),
-          if (detalhe != null) ...[
-            const SizedBox(height: Espaco.xs),
-            Text(detalhe, style: e.apoio),
-          ],
-          const SizedBox(height: Espaco.l),
-          FilledButton(onPressed: aoLerOutro, child: Text(t.simplesLerOutro)),
         ],
       ),
     );

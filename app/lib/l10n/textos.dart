@@ -2120,18 +2120,6 @@ abstract class Textos {
   /// **'Lemos o ISBN {isbn}, mas ele não está entre os livros cadastrados.'**
   String simplesNaoCadastradoTexto(String isbn);
 
-  /// No description provided for @simplesLivroLido.
-  ///
-  /// In pt, this message translates to:
-  /// **'Livro lido'**
-  String get simplesLivroLido;
-
-  /// No description provided for @simplesLerOutro.
-  ///
-  /// In pt, this message translates to:
-  /// **'Ler outro livro'**
-  String get simplesLerOutro;
-
   /// No description provided for @simplesVerCatalogo.
   ///
   /// In pt, this message translates to:
@@ -2143,6 +2131,132 @@ abstract class Textos {
   /// In pt, this message translates to:
   /// **'ISBN {isbn}'**
   String simplesIsbn(String isbn);
+
+  /// No description provided for @simplesSaudacao.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aponte a câmera para o código de barras e descubra o livro.'**
+  String get simplesSaudacao;
+
+  /// No description provided for @simplesBuscarDica.
+  ///
+  /// In pt, this message translates to:
+  /// **'Buscar por título, autor ou ISBN'**
+  String get simplesBuscarDica;
+
+  /// No description provided for @simplesEscanearTitulo.
+  ///
+  /// In pt, this message translates to:
+  /// **'Escanear um livro'**
+  String get simplesEscanearTitulo;
+
+  /// No description provided for @simplesEscanearTexto.
+  ///
+  /// In pt, this message translates to:
+  /// **'Use o código de barras no verso'**
+  String get simplesEscanearTexto;
+
+  /// No description provided for @simplesEscanear.
+  ///
+  /// In pt, this message translates to:
+  /// **'Escanear'**
+  String get simplesEscanear;
+
+  /// No description provided for @simplesRecentes.
+  ///
+  /// In pt, this message translates to:
+  /// **'Vistos recentemente'**
+  String get simplesRecentes;
+
+  /// No description provided for @simplesVerTudo.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ver tudo'**
+  String get simplesVerTudo;
+
+  /// No description provided for @simplesInicio.
+  ///
+  /// In pt, this message translates to:
+  /// **'Início'**
+  String get simplesInicio;
+
+  /// No description provided for @simplesHistorico.
+  ///
+  /// In pt, this message translates to:
+  /// **'Histórico'**
+  String get simplesHistorico;
+
+  /// No description provided for @simplesHistoricoVazio.
+  ///
+  /// In pt, this message translates to:
+  /// **'Os livros que você escanear aparecem aqui.'**
+  String get simplesHistoricoVazio;
+
+  /// No description provided for @simplesLimparHistorico.
+  ///
+  /// In pt, this message translates to:
+  /// **'Limpar'**
+  String get simplesLimparHistorico;
+
+  /// No description provided for @simplesNadaEncontrado.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum livro cadastrado com esse nome.'**
+  String get simplesNadaEncontrado;
+
+  /// No description provided for @simplesDadosLivro.
+  ///
+  /// In pt, this message translates to:
+  /// **'Dados do livro'**
+  String get simplesDadosLivro;
+
+  /// No description provided for @simplesCampoTitulo.
+  ///
+  /// In pt, this message translates to:
+  /// **'Título'**
+  String get simplesCampoTitulo;
+
+  /// No description provided for @simplesCampoAutor.
+  ///
+  /// In pt, this message translates to:
+  /// **'Autor'**
+  String get simplesCampoAutor;
+
+  /// No description provided for @simplesCampoEditora.
+  ///
+  /// In pt, this message translates to:
+  /// **'Editora'**
+  String get simplesCampoEditora;
+
+  /// No description provided for @simplesCampoIsbn.
+  ///
+  /// In pt, this message translates to:
+  /// **'ISBN'**
+  String get simplesCampoIsbn;
+
+  /// No description provided for @simplesEscanearOutro.
+  ///
+  /// In pt, this message translates to:
+  /// **'Escanear outro livro'**
+  String get simplesEscanearOutro;
+
+  /// No description provided for @simplesCadastrado.
+  ///
+  /// In pt, this message translates to:
+  /// **'Livro cadastrado'**
+  String get simplesCadastrado;
+
+  /// No description provided for @simplesForaDoCatalogo.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fora do catálogo'**
+  String get simplesForaDoCatalogo;
+
+  /// No description provided for @simplesResultados.
+  ///
+  /// In pt, this message translates to:
+  /// **'{n, plural, =1{1 resultado} other{{n} resultados}}'**
+  String simplesResultados(int n);
 }
 
 class _TextosDelegate extends LocalizationsDelegate<Textos> {
